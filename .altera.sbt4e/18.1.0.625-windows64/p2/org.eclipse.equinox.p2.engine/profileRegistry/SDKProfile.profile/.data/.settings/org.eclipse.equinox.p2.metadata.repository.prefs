@@ -1,0 +1,16 @@
+eclipse.preferences.version=1
+repositories/file\:_C\:_Users_Lenovo%20X13_.altera.sbt4e_18.1.0.625-windows64_configuration_org.eclipse.osgi_224_data_listener_1925729951/description=
+repositories/file\:_C\:_Users_Lenovo%20X13_.altera.sbt4e_18.1.0.625-windows64_configuration_org.eclipse.osgi_224_data_listener_1925729951/isSystem=true
+repositories/file\:_C\:_Users_Lenovo%20X13_.altera.sbt4e_18.1.0.625-windows64_configuration_org.eclipse.osgi_224_data_listener_1925729951/name=dropins
+repositories/file\:_C\:_Users_Lenovo%20X13_.altera.sbt4e_18.1.0.625-windows64_configuration_org.eclipse.osgi_224_data_listener_1925729951/provider=
+repositories/file\:_C\:_Users_Lenovo%20X13_.altera.sbt4e_18.1.0.625-windows64_configuration_org.eclipse.osgi_224_data_listener_1925729951/type=org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository
+repositories/file\:_C\:_Users_Lenovo%20X13_.altera.sbt4e_18.1.0.625-windows64_configuration_org.eclipse.osgi_224_data_listener_1925729951/uri=file\:/C\:/Users/Lenovo%20X13/.altera.sbt4e/18.1.0.625-windows64/configuration/org.eclipse.osgi/224/data/listener_1925729951/
+repositories/file\:_C\:_Users_Lenovo%20X13_.altera.sbt4e_18.1.0.625-windows64_configuration_org.eclipse.osgi_224_data_listener_1925729951/version=1
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/description=
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/enabled=true
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/isSystem=true
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/name=C\:\\intelFPGA_lite\\18.1\\nios2eds\\bin\\eclipse_nios2\\.eclipseextension
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/provider=
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/type=org.eclipse.equinox.p2.extensionlocation.metadataRepository
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/uri=file\:/C\:/intelFPGA_lite/18.1/nios2eds/bin/eclipse_nios2/.eclipseextension
+repositories/file\:_C\:_intelFPGA_lite_18.1_nios2eds_bin_eclipse_nios2_.eclipseextension/version=1
