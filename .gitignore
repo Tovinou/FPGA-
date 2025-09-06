@@ -1,22 +1,18 @@
-# Build and synthesis output directories
-output_files/
-db/
-incremental_db/
+# Build and synthesis output directories for the fso_satcom project
+fso_satcom/output_files/
+fso_satcom/db/
+fso_satcom/incremental_db/
 
-# Simulation generated files
-simulation/modelsim/rtl_work/
-simulation/modelsim/msim_transcript
-simulation/modelsim/modelsim.ini
+# Simulation generated files for the fso_satcom project
+fso_satcom/simulation/modelsim/rtl_work/
+fso_satcom/simulation/modelsim/msim_transcript
+fso_satcom/simulation/modelsim/modelsim.ini
+
+# Global ignores
 *.wlf
-
-# Backup files
 *.bak
 *.vhd.bak
 *.vht.bak
-
-# Report files
 *.rpt
 *.summary
-
-# User-specified
 *.txt
