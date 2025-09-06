@@ -1,0 +1,495 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dD:/VHDL_2/acc_top_sys/simulation/modelsim
+Eacc_top_sys
+Z1 w1717567959
+Z2 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z3 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z4 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z5 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z6 8D:/VHDL_2/acc_top_sys/acc_top_sys.vhd
+Z7 FD:/VHDL_2/acc_top_sys/acc_top_sys.vhd
+l0
+L15
+VARhbbgDF3cEPhW3ag17::2
+!s100 glYXocZHDW2M9cIoW?JCE1
+Z8 OV;C;10.5b;63
+33
+Z9 !s110 1717660347
+!i10b 1
+Z10 !s108 1717660347.000000
+Z11 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/acc_top_sys.vhd|
+Z12 !s107 D:/VHDL_2/acc_top_sys/acc_top_sys.vhd|
+!i113 1
+Z13 o-2008 -work work
+Z14 tExplicit 1 CvgOpt 0
+Abehavior
+R2
+R3
+R4
+R5
+DEx4 work 11 acc_top_sys 0 22 ARhbbgDF3cEPhW3ag17::2
+l167
+L41
+VgJ8Ei5QBHoPoCiU4cg`<B2
+!s100 ]ICD:SoiY9^BI6]3XYjCf3
+R8
+33
+R9
+!i10b 1
+R10
+R11
+R12
+!i113 1
+R13
+R14
+Eacc_top_sys_vhd_tst
+Z15 w1717423986
+R4
+R5
+R0
+Z16 8D:/VHDL_2/acc_top_sys/simulation/modelsim/acc_top_sys.vht
+Z17 FD:/VHDL_2/acc_top_sys/simulation/modelsim/acc_top_sys.vht
+l0
+L30
+VVcdVVR_Sg06WPe[Cn`3760
+!s100 N=R1ne`1;F7RQMgzX^1VJ0
+R8
+33
+R9
+!i10b 1
+R10
+Z18 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/simulation/modelsim/acc_top_sys.vht|
+Z19 !s107 D:/VHDL_2/acc_top_sys/simulation/modelsim/acc_top_sys.vht|
+!i113 1
+R13
+R14
+Aacc_top_sys_arch
+R4
+R5
+DEx4 work 19 acc_top_sys_vhd_tst 0 22 VcdVVR_Sg06WPe[Cn`3760
+l68
+L32
+V@dni<3[P;g^_`j79U`2L=1
+!s100 QkhMd``PUoz`ZjJahhUGa1
+R8
+33
+R9
+!i10b 1
+R10
+R18
+R19
+!i113 1
+R13
+R14
+Eaccel_display
+Z20 w1716494832
+R3
+R4
+R5
+R0
+Z21 8D:/VHDL_2/acc_top_sys/Accel_Display.vhd
+Z22 FD:/VHDL_2/acc_top_sys/Accel_Display.vhd
+l0
+L5
+V[AmN3AX36B6OFolP]Y72d2
+!s100 l`:OFmIYiAzFSUn3Vndf30
+R8
+33
+Z23 !s110 1717660346
+!i10b 1
+Z24 !s108 1717660346.000000
+Z25 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/Accel_Display.vhd|
+Z26 !s107 D:/VHDL_2/acc_top_sys/Accel_Display.vhd|
+!i113 1
+R13
+R14
+Abehavioral
+R3
+R4
+R5
+DEx4 work 13 accel_display 0 22 [AmN3AX36B6OFolP]Y72d2
+l30
+L19
+VLMo>B97XPmMDmfaE3JNLN3
+!s100 LzSH8`8WkQMh`Se`58n2T3
+R8
+33
+R23
+!i10b 1
+R24
+R25
+R26
+!i113 1
+R13
+R14
+Eaccelerometer_adxl345
+Z27 w1717590489
+R3
+R4
+R5
+R0
+Z28 8D:/VHDL_2/acc_top_sys/accelerometer_adxl345.vhd
+Z29 FD:/VHDL_2/acc_top_sys/accelerometer_adxl345.vhd
+l0
+L5
+VRzj>VD3]`NUYWU5?fUBK_2
+!s100 @CBcR2JnFXkOc<WBVFj7E3
+R8
+33
+R9
+!i10b 1
+R10
+Z30 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/accelerometer_adxl345.vhd|
+Z31 !s107 D:/VHDL_2/acc_top_sys/accelerometer_adxl345.vhd|
+!i113 1
+R13
+R14
+Abehavior
+R3
+R4
+R5
+DEx4 work 21 accelerometer_adxl345 0 22 Rzj>VD3]`NUYWU5?fUBK_2
+l42
+L27
+V=4OgQ:RVfLFll^H3dbPf21
+!s100 Mz@7bBPz6Ynn?GSnOl^I93
+R8
+33
+R9
+!i10b 1
+R10
+R30
+R31
+!i113 1
+R13
+R14
+Edata_interface
+Z32 w1717591560
+R3
+R4
+R5
+R0
+Z33 8D:/VHDL_2/acc_top_sys/data_interface.vhd
+Z34 FD:/VHDL_2/acc_top_sys/data_interface.vhd
+l0
+L5
+Vfz`e4aAWQ]e9DXTEkNfc^0
+!s100 m@[4E1RWUf<@CbcF`^i`10
+R8
+33
+R23
+!i10b 1
+R24
+Z35 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/data_interface.vhd|
+Z36 !s107 D:/VHDL_2/acc_top_sys/data_interface.vhd|
+!i113 1
+R13
+R14
+Abehavior
+R3
+R4
+R5
+DEx4 work 14 data_interface 0 22 fz`e4aAWQ]e9DXTEkNfc^0
+l21
+L17
+Vm2eYK20IVWLo12HmH2am=3
+!s100 L[n>KiYU=CdFIdWR?_iU<2
+R8
+33
+R23
+!i10b 1
+R24
+R35
+R36
+!i113 1
+R13
+R14
+Edpram
+Z37 w1716498238
+R3
+R4
+R5
+R0
+Z38 8D:/VHDL_2/acc_top_sys/DPRAM.vhd
+Z39 FD:/VHDL_2/acc_top_sys/DPRAM.vhd
+l0
+L12
+VX?G;nPUm8nf=3ZH_7zXg01
+!s100 ?^4ml=ne@;<^]@9V_bAKd0
+R8
+33
+R9
+!i10b 1
+R10
+Z40 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/DPRAM.vhd|
+Z41 !s107 D:/VHDL_2/acc_top_sys/DPRAM.vhd|
+!i113 1
+R13
+R14
+Artl
+R3
+R4
+R5
+DEx4 work 5 dpram 0 22 X?G;nPUm8nf=3ZH_7zXg01
+l37
+L33
+VAQAh79A9feg1jET<oJRfn2
+!s100 6eoig1V_SY]83<b4;eWN<0
+R8
+33
+R9
+!i10b 1
+R10
+R40
+R41
+!i113 1
+R13
+R14
+Emetastability
+Z42 w1717567814
+R3
+R2
+Z43 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+R4
+R5
+R0
+Z44 8D:/VHDL_2/acc_top_sys/metastability.vhd
+Z45 FD:/VHDL_2/acc_top_sys/metastability.vhd
+l0
+L6
+VOi`CgH[P@3_Y_BL^O>b^X1
+!s100 542knH_kSMn82d3KiSTQk1
+R8
+33
+R23
+!i10b 1
+R24
+Z46 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/metastability.vhd|
+Z47 !s107 D:/VHDL_2/acc_top_sys/metastability.vhd|
+!i113 1
+R13
+R14
+Artl
+R3
+R2
+R43
+R4
+R5
+DEx4 work 13 metastability 0 22 Oi`CgH[P@3_Y_BL^O>b^X1
+l24
+L19
+V<l@@2K9BlWI:BdAPPz5R<3
+!s100 N[VIHTIU_llI;bA:dI6Z^1
+R8
+33
+R23
+!i10b 1
+R24
+R46
+R47
+!i113 1
+R13
+R14
+Epll
+Z48 w1716405714
+R4
+R5
+R0
+Z49 8D:/VHDL_2/pll.vhd
+Z50 FD:/VHDL_2/pll.vhd
+l0
+L42
+VTKbM7lfIlBhc=B^kICUJ80
+!s100 ;3VW;k?_[aJ0F9TI[MU9l0
+R8
+33
+R9
+!i10b 1
+R10
+Z51 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/pll.vhd|
+Z52 !s107 D:/VHDL_2/pll.vhd|
+!i113 1
+R13
+R14
+Asyn
+R4
+R5
+DEx4 work 3 pll 0 22 TKbM7lfIlBhc=B^kICUJ80
+l125
+L51
+V0>JOZOcG:216i01nK]SR82
+!s100 aWA2afl5lYhGhbVe;gMFL2
+R8
+33
+R9
+!i10b 1
+R10
+R51
+R52
+!i113 1
+R13
+R14
+vpll_altpll
+R23
+!i10b 1
+!s100 Ef?M1Hncon6LhJnfYF3GU0
+ITgSlP<Z=h=TologBnF8o;0
+VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1716063529
+8D:/VHDL_2/acc_top_sys/db/pll_altpll.v
+FD:/VHDL_2/acc_top_sys/db/pll_altpll.v
+L0 29
+OV;L;10.5b;63
+r1
+!s85 0
+31
+R24
+!s107 D:/VHDL_2/acc_top_sys/db/pll_altpll.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+D:/VHDL_2/acc_top_sys/db|D:/VHDL_2/acc_top_sys/db/pll_altpll.v|
+!i113 1
+o-vlog01compat -work work
+!s92 -vlog01compat -work work +incdir+D:/VHDL_2/acc_top_sys/db
+tCvgOpt 0
+Espi_master
+Z53 w1717567739
+R43
+R2
+R4
+R5
+R0
+Z54 8D:/VHDL_2/acc_top_sys/spi_master.vhd
+Z55 FD:/VHDL_2/acc_top_sys/spi_master.vhd
+l0
+L6
+V4AYz[C8[OC:Al>;P05RYz0
+!s100 C>aUkh0kB@h]l8aS1DL973
+R8
+33
+R9
+!i10b 1
+R10
+Z56 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/spi_master.vhd|
+Z57 !s107 D:/VHDL_2/acc_top_sys/spi_master.vhd|
+!i113 1
+R13
+R14
+Artl
+R43
+R2
+R4
+R5
+DEx4 work 10 spi_master 0 22 4AYz[C8[OC:Al>;P05RYz0
+l41
+L27
+V6?c^>9I]AXG:DGNfGJo]41
+!s100 l=8IjTh[`UR[gJ?aK_@4N3
+R8
+33
+R9
+!i10b 1
+R10
+R56
+R57
+!i113 1
+R13
+R14
+Evga_komponent
+Z58 w1716818525
+R3
+R2
+R43
+R4
+R5
+R0
+Z59 8D:/VHDL_2/acc_top_sys/VGA_KOMPONENT.vhd
+Z60 FD:/VHDL_2/acc_top_sys/VGA_KOMPONENT.vhd
+l0
+L6
+VO<7Jae7bcESLTnBiTC_a53
+!s100 CjcE[Y:2=9]a@T4YAG?fb2
+R8
+33
+R9
+!i10b 1
+R10
+Z61 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/VGA_KOMPONENT.vhd|
+Z62 !s107 D:/VHDL_2/acc_top_sys/VGA_KOMPONENT.vhd|
+!i113 1
+R13
+R14
+Abehavioral
+R3
+R2
+R43
+R4
+R5
+DEx4 work 13 vga_komponent 0 22 O<7Jae7bcESLTnBiTC_a53
+l78
+L23
+VAIBgSLB5CYifE=<[60DBh0
+!s100 >BJX=I@30a0;zQKao0C8:2
+R8
+33
+R9
+!i10b 1
+R10
+R61
+R62
+!i113 1
+R13
+R14
+Evga_sync
+Z63 w1716397958
+R3
+R2
+R43
+R4
+R5
+R0
+Z64 8D:/VHDL_2/acc_top_sys/VGA_Sync.vhd
+Z65 FD:/VHDL_2/acc_top_sys/VGA_Sync.vhd
+l0
+L18
+VY>8c@BSE2ezQ8@n`QiR;f0
+!s100 DUoMinG07YCQ0`2XjRKRV0
+R8
+33
+R9
+!i10b 1
+R10
+Z66 !s90 -reportprogress|300|-2008|-work|work|D:/VHDL_2/acc_top_sys/VGA_Sync.vhd|
+Z67 !s107 D:/VHDL_2/acc_top_sys/VGA_Sync.vhd|
+!i113 1
+R13
+R14
+Artl
+R3
+R2
+R43
+R4
+R5
+DEx4 work 8 vga_sync 0 22 Y>8c@BSE2ezQ8@n`QiR;f0
+l54
+L37
+V?<:V2<A6aCAF1d2h`ZdQg3
+!s100 ;R1DXc7QRHzD;k<8<4_>c3
+R8
+33
+R9
+!i10b 1
+R10
+R66
+R67
+!i113 1
+R13
+R14

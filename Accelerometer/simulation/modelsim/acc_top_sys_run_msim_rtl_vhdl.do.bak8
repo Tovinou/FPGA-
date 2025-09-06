@@ -1,0 +1,39 @@
+transcript on
+if {[file exists rtl_work]} {
+	vdel -lib rtl_work -all
+}
+vlib rtl_work
+vmap work rtl_work
+
+vlog -vlog01compat -work work +incdir+D:/VHDL_2/acc_top_sys/db {D:/VHDL_2/acc_top_sys/db/pll_altpll.v}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/Accel_Display.vhd}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/pll.vhd}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/VGA_Sync.vhd}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/VGA_KOMPONENT.vhd}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/DPRAM.vhd}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/spi_master.vhd}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/accelerometer_adxl345.vhd}
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/acc_top_sys.vhd}
+
+vcom -93 -work work {D:/VHDL_2/acc_top_sys/simulation/modelsim/acc_top_sys.vht}
+
+vsim -t 1ps -L altera -L lpm -L sgate -L altera_mf -L altera_lnsim -L fiftyfivenm -L rtl_work -L work -voptargs="+acc"  acc_top_sys_vhd_tst
+
+add wave *
+
+add wave -position insertpoint  \
+sim:/acc_top_sys_vhd_tst/i1/s_scaler \
+sim:/acc_top_sys_vhd_tst/i1/s_cpol \
+sim:/acc_top_sys_vhd_tst/i1/s_dv \
+sim:/acc_top_sys_vhd_tst/i1/s_busy \
+sim:/acc_top_sys_vhd_tst/i1/sclk_accel \
+sim:/acc_top_sys_vhd_tst/i1/i_spi_rx_data \
+sim:/acc_top_sys_vhd_tst/i1/o_spi_tx_data \
+sim:/acc_top_sys_vhd_tst/i1/o_spi_start \
+sim:/acc_top_sys_vhd_tst/i1/acceleration_x \
+sim:/acc_top_sys_vhd_tst/i1/acceleration_y \
+sim:/acc_top_sys_vhd_tst/i1/acceleration_z
+
+view structure
+view signals
+run -all

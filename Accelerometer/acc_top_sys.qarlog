@@ -1,0 +1,35 @@
+Quartus Prime Archive log --	D:/VHDL_2/acc_top_sys/acc_top_sys.qarlog
+
+Archive:	D:/VHDL_2/acc_top_sys/acc_top_sys.qar
+Date:		Thu Jun 06 07:39:05 2024
+Quartus Prime		18.1.0 Build 625 09/12/2018 SJ Lite Edition
+
+	=========== Files Selected: ===========
+D:/VHDL_2/acc_top_sys/Accel_Display.vhd
+D:/VHDL_2/acc_top_sys/DPRAM.vhd
+D:/VHDL_2/acc_top_sys/VGA_KOMPONENT.vhd
+D:/VHDL_2/acc_top_sys/VGA_Sync.vhd
+D:/VHDL_2/acc_top_sys/acc_top_sys.qpf
+D:/VHDL_2/acc_top_sys/acc_top_sys.qsf
+D:/VHDL_2/acc_top_sys/acc_top_sys.sdc
+D:/VHDL_2/acc_top_sys/acc_top_sys.vhd
+D:/VHDL_2/acc_top_sys/accelerometer_adxl345.vhd
+D:/VHDL_2/acc_top_sys/data_interface.vhd
+D:/VHDL_2/acc_top_sys/db/stp1_auto_stripped.stp
+D:/VHDL_2/acc_top_sys/metastability.vhd
+D:/VHDL_2/acc_top_sys/output_files/acc_top_sys.jdi
+D:/VHDL_2/acc_top_sys/output_files/acc_top_sys.pof
+D:/VHDL_2/acc_top_sys/output_files/acc_top_sys.sld
+D:/VHDL_2/acc_top_sys/output_files/acc_top_sys.sof
+D:/VHDL_2/acc_top_sys/output_files/stp1.stp
+D:/VHDL_2/acc_top_sys/simulation/modelsim/acc_top_sys.vht
+D:/VHDL_2/acc_top_sys/spi_master.vhd
+D:/VHDL_2/pll.cmp
+D:/VHDL_2/pll.ppf
+D:/VHDL_2/pll.qip
+D:/VHDL_2/pll.vhd
+c:/intelfpga_lite/18.1/quartus/bin64/assignment_defaults.qdf
+	======= Total: 24 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.
