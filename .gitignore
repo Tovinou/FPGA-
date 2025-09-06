@@ -1,0 +1,22 @@
+# Build and synthesis output directories
+output_files/
+db/
+incremental_db/
+
+# Simulation generated files
+simulation/modelsim/rtl_work/
+simulation/modelsim/msim_transcript
+simulation/modelsim/modelsim.ini
+*.wlf
+
+# Backup files
+*.bak
+*.vhd.bak
+*.vht.bak
+
+# Report files
+*.rpt
+*.summary
+
+# User-specified
+*.txt
