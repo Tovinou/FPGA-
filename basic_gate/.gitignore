@@ -1,0 +1,48 @@
+# Xilinx Vivado
+# Generated files, logs, etc.
+
+# Project files
+*.xpr
+*.xpr.jou
+*.xpr.pb
+*.xpr.log
+*.xpr.str
+webtalk.log
+webtalk.jou
+webtalk.pb
+*.wpr
+*.wdb
+
+# Implementation and Synthesis
+*.runs/
+*.sdk/
+*.ip_user_files/
+*.ipdefs/
+*.cache/
+*.hw/
+*.hwh
+*.hdf
+*.bit
+*.bin
+*.mcs
+*.prm
+*.ltx
+*.dcp
+*.rbt
+*.sysdef
+
+# Simulation
+*.sim/
+
+# Reports
+*.rpt
+*.html
+*.xml
+
+# Other
+_xmsgs/
+.Xil/
+*.jou
+*.log
+*~
+*.str
