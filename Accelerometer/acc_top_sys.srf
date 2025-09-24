@@ -1,0 +1,13 @@
+{ "" "" "" "VHDL Signal Declaration warning at acc_top_sys.vhd(34): used explicit default value for signal \"s_scaler\" because signal was never assigned a value" {  } {  } 0 10540 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "VHDL Signal Declaration warning at acc_top_sys.vhd(47): used explicit default value for signal \"write_VGA\" because signal was never assigned a value" {  } {  } 0 10540 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "VHDL Signal Declaration warning at acc_top_sys.vhd(45): used explicit default value for signal \"adress_vga_w\" because signal was never assigned a value" {  } {  } 0 10540 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "VHDL Signal Declaration warning at VGA_Sync.vhd(33): used explicit default value for signal \"adress\" because signal was never assigned a value" {  } {  } 0 10540 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "VHDL Process Statement warning at Accel_Display.vhd(30): signal \"i_accel_x\" is read inside the Process Statement but isn't in the Process Statement's sensitivity list" {  } {  } 0 10492 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "VHDL Signal Declaration warning at acc_top_sys.vhd(46): used explicit default value for signal \"data_vga_w\" because signal was never assigned a value" {  } {  } 0 10540 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "VHDL Signal Declaration warning at accelerometer_adxl345.vhd(25): used explicit default value for signal \"acc_start\" because signal was never assigned a value" {  } {  } 0 10540 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "VHDL Process Statement warning at accelerometer_adxl345.vhd(67): inferring latch(es) for signal or variable \"ss_n\", which holds its previous value in one or more paths through the process" {  } {  } 0 10631 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "Design contains 1 input pin(s) that do not drive logic" {  } {  } 0 21074 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "Ignored filter at acc_top_sys.sdc(16): o_mosi, could not be matched with a port" {  } {  } 0 332174 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "Ignored filter at acc_top_sys.sdc(17): mosi, could not be matched with a port" {  } {  } 0 332174 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "1 hierarchies have connectivity warnings - see the Connectivity Checks report folder" {  } {  } 0 12241 "" 0 0 "Design Software" 0 -1 0 ""}
+{ "" "" "" "*" {  } {  } 0 10036 "" 0 0 "Design Software" 0 -1 0 ""}
