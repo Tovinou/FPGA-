@@ -1,3 +1,3 @@
-# Vivado Projects
+# FPGA Projects
 
-This repository contains various Vivado projects for FPGA development.
+This repository contains various Vivado and Altera projects for FPGA development.
