@@ -1,0 +1,47 @@
+# Vivado project artifacts
+*.jou
+*.log
+*.str
+*.pb
+*.rpx
+*.rpt
+*.dcp
+*.wdb
+*.wcfg
+*.sdb
+
+# Vivado-generated directories
+.Xil/
+.cache/
+ip_user_files/
+**/*.ip_user_files/
+*.runs/
+*.sim/
+*.gen/
+*.hw/
+
+# Project-local generated dirs
+ethernet.runs/
+ethernet.sim/
+ethernet.gen/
+ethernet.ip_user_files/
+
+# XSIM/ModelSim/Questa
+xsim.dir/
+transcript
+vsim.wlf
+work/
+
+# Checkpoints and intermediate netlists
+**/design_1_wrapper*.dcp
+**/*.dcp
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Backups/temps
+*.tmp
+*.bak
+~$*
+
