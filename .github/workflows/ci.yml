@@ -1,0 +1,32 @@
+name: FPGA Verification
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  verification:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install GHDL
+      uses: ghdl/setup-ghdl-ci@v1
+      with:
+        backend: mcode  # fast compilation, good for simulation
+
+    - name: Install Cocotb
+      run: |
+        pip install cocotb cocotb-test pytest
+
+    - name: Run Verification
+      run: |
+        python run_verification.py --simulator ghdl
