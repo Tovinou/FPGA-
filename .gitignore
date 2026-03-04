@@ -78,3 +78,6 @@ __pycache__/
 
 # Specific generated files
 .srcs/utils_1/imports/synth_1/dfx_runtime.txt
+
+# Quartus/Vivado caches
+*.cache/
