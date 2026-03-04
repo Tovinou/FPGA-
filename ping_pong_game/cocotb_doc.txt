@@ -1,0 +1,89 @@
+# Cocotb Implementation & Verification Guide
+# This document tracks the commands and steps used to set up the verification environment for the FPGA Ping Pong Game.
+
+# ---------------------------------------------------------------------------
+# 1. Environment & Tool Verification
+# ---------------------------------------------------------------------------
+# Check if GHDL (open source VHDL simulator) is installed (optional if using Questa/ModelSim)
+ghdl --version
+
+# Check if ModelSim/Questa is installed and in the system PATH
+vsim -version
+
+# Check if Cocotb is installed in the current Python environment
+pip show cocotb
+
+# Check if Pygame is installed (used for potential visualization, though not core to Cocotb)
+pip show pygame
+
+# Check if Make is installed (Cocotb traditionally uses Makefiles, though we used a Python runner)
+make --version
+
+# Check if Chocolatey package manager is installed (for installing tools on Windows)
+choco --version
+
+# Check if Scoop package manager is installed (alternative to Chocolatey)
+scoop --version
+
+# ---------------------------------------------------------------------------
+# 2. Installation & Setup
+# ---------------------------------------------------------------------------
+# Upgrade pip to ensure smooth package installation
+python.exe -m pip install --upgrade pip
+
+# Install Cocotb and testing utilities
+# - cocotb: The core co-simulation library
+# - cocotb-test: Helper to run cocotb with pytest (optional but good practice)
+# - pytest: Standard Python testing framework
+pip install cocotb cocotb-test pytest
+
+# Install GHDL and Make using Chocolatey (if you don't have ModelSim/Questa)
+# - ghdl: VHDL simulator
+# - make: Build tool
+choco install ghdl make -y
+
+# ---------------------------------------------------------------------------
+# 3. Project Initialization
+# ---------------------------------------------------------------------------
+# Create a dedicated directory for test files to keep the project clean
+mkdir tests
+
+# Verify Cocotb runner availability (checks if the library is correctly loaded)
+python -c "import cocotb.runner; print(cocotb.runner)"
+
+# Run a custom diagnostic script to check Python-Simulator compatibility
+python check_cocotb.py
+
+# ---------------------------------------------------------------------------
+# 4. Running Verification
+# ---------------------------------------------------------------------------
+# Run the custom Python verification runner
+# This script:
+# 1. Compiles all VHDL files
+# 2. Sets up the simulation environment
+# 3. Launches the simulator (Questa/ModelSim)
+# 4. Connects Python tests to the simulation
+python run_verification.py
+
+# Run verification in GUI mode (with Waveforms)
+# - Launches Questa GUI
+# - Adds signals to wave window
+# - Keeps simulation open for debugging
+python run_verification.py --gui
+
+# ---------------------------------------------------------------------------
+# 5. Debugging & Simulator Configuration
+# ---------------------------------------------------------------------------
+# Manually run a simulation batch script (for debugging simulator crashes)
+vsim -c -do test_vsim.do
+
+# Check License Server Environment Variables (Crucial for Questa/ModelSim)
+# SALT_LICENSE_SERVER: Used by some Mentor Graphics tools
+Get-ChildItem Env:SALT_LICENSE_SERVER
+
+# LM_LICENSE_FILE: The standard FlexLM license file variable (Intel/Altera uses this)
+Get-ChildItem Env:LM_LICENSE_FILE
+
+# Kill stuck simulator processes (if you get "File locked" or permission errors)
+taskkill /F /IM vsim.exe
+taskkill /F /IM vcom.exe

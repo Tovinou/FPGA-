@@ -12,6 +12,7 @@ Each project demonstrates specific digital design concepts, IP integration, or c
 - `ethernet/` – Vivado project (`ethernet.xpr`) featuring AXI Ethernet and MicroBlaze system
 - `fso_satcom/` – Free-space optical satcom HDL modules and top-level integration
 - `full_adder/` – Full and half-adder modules with simulation
+- `ping_pong_game/` – Simple ping pong game design with VGA output and testbench
 
 🧰 Tools & Requirements
 
