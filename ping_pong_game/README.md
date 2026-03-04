@@ -22,12 +22,12 @@ The design is modular, with the `ping_pong_game` top-level entity orchestrating 
 ```mermaid
 graph TD
     subgraph Inputs
-        CLK[50MHz Clock]
+        CLK["50MHz Clock"]
         SW[Switches]
     end
 
     subgraph Core Logic
-        PLL[PLL (25MHz)]
+        PLL["PLL (25MHz)"]
         DEB[Button Debouncers]
         GSM[Game State Manager]
         PHY[Ball Physics]
@@ -158,7 +158,7 @@ Here is the game running on the actual DE10-Lite hardware.
 ### Live Gameplay
 [![DE10-Lite Ping Pong Gameplay](https://img.youtube.com/vi/9x95ZKHR_uE/0.jpg)](https://youtube.com/shorts/9x95ZKHR_uE)
 
-> **Click the image above to watch the gameplay video on YouTube.**
+**[🎥 Click here to watch the gameplay video on YouTube](https://youtube.com/shorts/9x95ZKHR_uE)**
 
 ### Hardware Setup
 ![Hardware Setup showing DE10-Lite and VGA Monitor](image.png)
