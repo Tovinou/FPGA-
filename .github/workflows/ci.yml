@@ -19,9 +19,10 @@ jobs:
         python-version: '3.11'
 
     - name: Install GHDL
-      uses: ghdl/setup-ghdl-ci@v1
+      uses: ghdl/setup-ghdl@v1
       with:
-        backend: mcode  # fast compilation, good for simulation
+        version: nightly
+        backend: mcode
 
     - name: Install Cocotb
       run: |
@@ -29,5 +30,4 @@ jobs:
 
     - name: Run Verification
       run: |
-        # Updated path to include directory prefix
         python ping_pong_game/run_verification.py --simulator ghdl
