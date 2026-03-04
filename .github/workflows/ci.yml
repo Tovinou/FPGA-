@@ -2,9 +2,9 @@ name: FPGA Verification
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
   verification:
@@ -29,4 +29,5 @@ jobs:
 
     - name: Run Verification
       run: |
-        python run_verification.py --simulator ghdl
+        # Updated path to include directory prefix
+        python ping_pong_game/run_verification.py --simulator ghdl
