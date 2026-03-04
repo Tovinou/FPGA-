@@ -1,4 +1,57 @@
 
+import os
+import sys
+import shutil
+import argparse
+import subprocess
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+TOP_ENTITY = "ping_pong_game"
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+def run(cmd, cwd=None, env=None):
+    print(f"Running: {' '.join(cmd)}")
+    subprocess.check_call(cmd, cwd=cwd, env=env)
+
+def find_ghdl():
+    return shutil.which("ghdl") or "ghdl"
+
+def find_vsim():
+    return shutil.which("vsim") or "vsim"
+
+def find_cocotb_fli():
+    try:
+        # Try using cocotb-config
+        cmd = ["cocotb-config", "--lib-name-path", "fli", "questa"]
+        if sys.platform == "win32":
+            cmd[-1] = "modelsim" # usually maps to modelsim on windows? or questa?
+        # Actually, let's just try "questa" first, then "modelsim"
+        try:
+            return subprocess.check_output(["cocotb-config", "--lib-name-path", "fli", "questa"], encoding="utf-8").strip()
+        except:
+            return subprocess.check_output(["cocotb-config", "--lib-name-path", "fli", "modelsim"], encoding="utf-8").strip()
+    except:
+        # Fallback to manual search
+        import cocotb
+        lib_dir = os.path.join(os.path.dirname(cocotb.__file__), "libs")
+        potential_libs = [
+            "libcocotbfli_modelsim.dll",
+            "cocotbfli_modelsim.dll",
+            "libcocotbfli_questa.dll", 
+            "cocotbfli_questa.dll"
+        ]
+        for lib in potential_libs:
+            path = os.path.join(lib_dir, lib)
+            if os.path.exists(path):
+                return path
+        # If still not found, return empty string or raise
+        print("WARNING: Could not find Cocotb FLI library automatically.")
+        return ""
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
