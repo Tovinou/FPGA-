@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - H counter wraps 0->799->0
+simulation stopped @46140ns with status 0

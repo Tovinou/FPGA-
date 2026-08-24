@@ -1,0 +1,275 @@
+--- camera_subsystem/camera_interface.vhd ---
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity camera_interface is
+  generic (
+    TDATA_WIDTH : natural := 20
+  );
+  port (
+    clk          : in  std_logic;
+    rst_n        : in  std_logic;
+    hsync        : in  std_logic;
+    vsync        : in  std_logic;
+    pclk         : in  std_logic;
+    data_in      : in  std_logic_vector(TDATA_WIDTH-1 downto 0);
+    i2c_scl      : out std_logic;
+    i2c_sda      : inout std_logic;
+    i2c_rdy     : out std_logic;
+    i2c_valid   : out std_logic;
+    i2c_data_in : in  std_logic_vector(7 downto 0);
+    i2c_data_out: out std_logic_vector(7 downto 0)
+  );
+end entity camera_interface;
+
+architecture rtl of camera_interface is
+
+  constant VSYNC_WIDTH   : natural := 16;
+  constant HSYNC_WIDTH   : natural := 16;
+  constant FRAME_PERIOD  : natural := 25_000_000; -- ~40 fps @ 720x480
+  constant LINE_PERIOD   : natural := 39_600;     -- ~25.5 µs
+
+  signal vsync_cnt      : unsigned(VSYNC_WIDTH-1 downto 0) := (others => '0');
+  signal hsync_cnt      : unsigned(HSYNC_WIDTH-1 downto 0) := (others => '0');
+  signal frame_active   : std_logic;
+  signal line_active    : std_logic;
+
+begin
+
+  process(clk, rst_n) is
+  begin
+    if rst_n = '0' then
+      vsync_cnt <= (others => '0');
+      hsync_cnt <= (others => '0');
+      frame_active   <= '0';
+      line_active    <= '0';
+    elsif rising_edge(clk) then
+      -- Frame counter: 40 fps → ~25 M cycles per frame
+      if vsync_cnt = FRAME_PERIOD-1 then
+        vsync_cnt <= (others => '0');
+        frame_active   <= '0';
+      else
+        vsync_cnt <= vsync_cnt + 1;
+        frame_active   <= '1';
+      end if;
+
+      -- Line counter: ~39.6 M cycles per line
+      if hsync_cnt = LINE_PERIOD-1 then
+        hsync_cnt <= (others => '0');
+        line_active    <= '0';
+      else
+        hsync_cnt <= hsync_cnt + 1;
+        line_active    <= '1';
+      end if;
+
+    end if;
+  end process;
+
+  -- Output active flags to downstream logic
+  frame_active_out : process(frame_active) is
+  begin
+    if rising_edge(clk) then
+      i2c_rdy     <= frame_active;
+      i2c_valid   <= frame_active and line_active;
+    end if;
+  end process;
+
+end architecture rtl;
+
+--- camera_subsystem/i2c_top.vhd ---
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity i2c_top is
+  port (
+    clk          : in  std_logic;
+    rst_n        : in  std_logic;
+    scl          : out std_logic;
+    sda          : inout std_logic;
+    start        : in  std_logic;
+    stop         : in  std_logic;
+    addr_in      : in  std_logic_vector(7 downto 0);
+    data_in      : in  std_logic_vector(7 downto 0);
+    rx_data_out  : out std_logic_vector(7 downto 0)
+  );
+end entity i2c_top;
+
+architecture rtl of i2c_top is
+
+  constant SCL_HIGH     : natural := 1_000_000;   -- 1 MHz → 1 µs high
+  constant SDA_HOLD     : natural := 500_000;    -- hold during ack window
+  constant ACK_WINDOW   : natural := 200_000;    -- ~200 µs for slave ack
+
+  signal scl_high_cnt   : unsigned(31 downto 0) := (others => '0');
+  signal sda_hold_cnt   : unsigned(31 downto 0) := (others => '0');
+  signal ack_window     : std_logic;
+  signal rx_data        : std_logic_vector(7 downto 0);
+
+begin
+
+  scl <= '1' when scl_high_cnt < SCL_HIGH else '0';
+  sda_hold_cnt <= sda_hold_cnt + 1 when scl = '1' and ack_window = '1' else (others => '0');
+  sda <= rx_data(7) when sda_hold_cnt < SDA_HOLD else data_in;
+
+end architecture rtl;
+
+--- camera_subsystem/asyn_fifo.vhd ---
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity asyn_fifo is
+  generic (
+    DATA_WIDTH : natural := 20
+  );
+  port (
+    wr_clk      : in  std_logic;
+    wr_en       : in  std_logic;
+    wr_data     : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+    rd_clk      : in  std_logic;
+    rd_en       : in  std_logic;
+    rd_data     : out std_logic_vector(DATA_WIDTH-1 downto 0)
+  );
+end entity asyn_fifo;
+
+architecture rtl of asyn_fifo is
+
+  constant FIFO_DEPTH : natural := 256;
+  signal wr_ptr      : unsigned(7 downto 0);
+  signal rd_ptr      : unsigned(7 downto 0);
+  signal full        : std_logic;
+  signal empty       : std_logic;
+
+begin
+
+  -- Write pointer increments on write enable (wr_clk domain)
+  process(wr_clk) is
+  begin
+    if rising_edge(wr_clk) then
+      if wr_en = '1' then
+        wr_ptr <= wr_ptr + 1;
+      end if;
+    end if;
+  end process;
+
+  -- Read pointer increments on read enable (rd_clk domain)
+  process(rd_clk) is
+  begin
+    if rising_edge(rd_clk) then
+      if rd_en = '1' and not empty then
+        rd_ptr <= rd_ptr + 1;
+      end if;
+    end if;
+  end process;
+
+end architecture rtl;
+
+--- camera_subsystem/run.py ---
+#!/usr/bin/env python3
+"""
+Camera subsystem test harness.
+Spins up the FPGA bitstream, captures a live video stream from the OV7670 sensor,
+and writes frames to disk for later inspection.
+"""
+
+import argparse
+import asyncio
+import logging
+import os
+from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# Imports and constants
+# ---------------------------------------------------------------------------
+
+import numpy as np
+from PIL import Image
+from vunit import VUnit
+
+logger = logging.getLogger(__name__)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Camera subsystem test harness")
+    parser.add_argument(
+        "--bitstream",
+        required=True,
+        help="Path to the compiled FPGA bitstream (e.g. stream_top.sof)",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=Path("camera_subsystem/output_files"),
+        help="Directory where captured frames will be stored",
+    )
+    return parser.parse_args()
+
+
+async def main(args: argparse.Namespace) -> None:
+    """
+    Main entry point for the camera subsystem test harness.
+
+    This function performs the following steps:
+      1. Load the FPGA bitstream and configure the device.
+      2. Instantiate the camera subsystem (OV7670 sensor + I²C controller).
+      3. Capture video frames at a configurable frame rate.
+      4. Write each captured frame to disk as a PNG file.
+
+    The function is async because the FPGA simulation environment uses an
+    event loop for non-blocking I/O (e.g., reading from the sensor FIFO).
+    """
+
+    # -----------------------------------------------------------------------
+    # Setup logging and output directory
+    # -----------------------------------------------------------------------
+
+    log_file = Path("camera_subsystem/output_files/camera_test.log")
+    log_file.parent.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+    )
+    logger.info(f"Logging to {log_file}")
+
+    # -----------------------------------------------------------------------
+    # Load bitstream and configure FPGA
+    # -----------------------------------------------------------------------
+
+    bitstream_path = Path(args.bitstream)
+    if not bitstream_path.is_file():
+        raise FileNotFoundError(f"Bitstream not found: {bitstream_path}")
+
+    logger.info(f"Loading bitstream from {bitstream_path}")
+    # (In a real environment this would call the FPGA SDK to load the .sof file.)
+
+    # -----------------------------------------------------------------------
+    # Instantiate camera subsystem
+    # -----------------------------------------------------------------------
+
+    # The actual instantiation code lives in the VUnit test harness; here we
+    # just note that it creates an instance of `camera_subsystem` and connects
+    # it to the top-level clock and reset.
+    logger.info("Instantiating camera subsystem")
+
+    # -----------------------------------------------------------------------
+    # Capture frames
+    # -----------------------------------------------------------------------
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    frame_count = 0
+    while True:
+        # (In the real harness we would read from the sensor FIFO and convert
+        # the raw data into a 720×480 RGB image.)
+        logger.info("Capturing next frame")
+        # Placeholder for actual capture logic.
+
+        if frame_count == 0:
+            logger.info("First frame captured – ready to inspect output.")
+        frame_count += 1
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    asyncio.run(main(args))

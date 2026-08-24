@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - frame_done swaps write bank in integrated system
+simulation stopped @150715ns with status 0

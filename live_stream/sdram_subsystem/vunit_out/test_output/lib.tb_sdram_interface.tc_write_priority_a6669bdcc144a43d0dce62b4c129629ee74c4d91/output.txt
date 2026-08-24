@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Write (camera) processed before read (VGA) when both ready
+simulation stopped @185ns with status 0

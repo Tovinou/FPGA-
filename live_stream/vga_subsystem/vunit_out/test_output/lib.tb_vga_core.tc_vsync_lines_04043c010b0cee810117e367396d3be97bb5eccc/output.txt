@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - VSYNC low for exactly 2 lines
+simulation stopped @16768180ns with status 0

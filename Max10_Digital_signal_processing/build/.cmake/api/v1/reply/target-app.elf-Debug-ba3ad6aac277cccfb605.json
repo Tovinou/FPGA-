@@ -1,0 +1,741 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "app.elf"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"add_link_options",
+			"include",
+			"target_link_libraries",
+			"add_compile_options",
+			"add_compile_definitions",
+			"target_include_directories",
+			"target_sources"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt",
+			"C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/toolchain.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 13,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 37,
+				"parent" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 31,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 27,
+				"parent" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 42,
+				"parent" : 3
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 25,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 15,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-DALT_SINGLE_THREADED"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-Wformat-security"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-Wformat"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-fstack-protector-strong"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-march=rv32i"
+				},
+				{
+					"backtrace" : 6,
+					"fragment" : "-mabi=ilp32"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 7,
+					"define" : "ALT_LOG_FLAGS=0"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "__hal__"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 8,
+					"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/app/src"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/."
+				},
+				{
+					"backtrace" : 5,
+					"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "hal2_bsp::@1cbadb1d2583371ff3e0"
+		}
+	],
+	"id" : "app.elf::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "-march=rv32i",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "-mabi=ilp32",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "-nostdlib",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-T",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/linker.x",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-nostdlib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-Wl,--start-group",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "hal_bsp/libhal2_bsp.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-lc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-lstdc++",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-lgcc",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-lm",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-Wl,--end-group",
+				"role" : "libraries"
+			}
+		],
+		"language" : "C"
+	},
+	"name" : "app.elf",
+	"nameOnDisk" : "app.elf",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				61,
+				62,
+				63,
+				64,
+				65,
+				66,
+				67,
+				68,
+				69,
+				70,
+				71,
+				72,
+				73,
+				74,
+				75
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 9,
+			"compileGroupIndex" : 0,
+			"path" : "src/main.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 9,
+			"compileGroupIndex" : 0,
+			"path" : "src/test_common.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 9,
+			"compileGroupIndex" : 0,
+			"path" : "src/timer_hw_ip_test.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 9,
+			"compileGroupIndex" : 0,
+			"path" : "src/adc_test.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 9,
+			"compileGroupIndex" : 0,
+			"path" : "src/pio_led_test.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 9,
+			"compileGroupIndex" : 0,
+			"path" : "src/irq_test.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/alt_niosv_int_mode.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/alt_types.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_fpga_api.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_fpga_platform.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_fpga_platform_api.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_niosv.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_niosv_irq.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_niosv_m.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_niosv_m_irq.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/io.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/os/alt_flag.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/os/alt_hooks.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/os/alt_sem.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/os/alt_syscall.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_alarm.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_busy_sleep.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_dev_llist.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_exception_handler_registry.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_file.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_iic_isr_register.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_irq_table.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_no_error.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/intel_niosv_gmon_data.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_alarm.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_cache.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_debug.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_dev.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_dma.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_dma_dev.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_driver.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_ecc_error_inject.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_ecc_exception.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_errno.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_exceptions.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_flash.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_flash_dev.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_flash_types.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_irq.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_llist.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_load.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_log_printf.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_set_args.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_sim.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_stack.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_stdio.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_sys_init.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_sys_wrappers.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_timestamp.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_tls.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_warning.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_api_cmn_dfl.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_api_cmn_inf.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_api_cmn_msg.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_api_niosv.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_platform_api_niosv.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_platform_niosv.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/ioctl.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/msw_interrupt.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/termios.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_avalon_jtag_uart.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_avalon_jtag_uart_fd.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_avalon_jtag_uart_regs.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_avalon_pio_regs.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_avalon_timer.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_avalon_timer_regs.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_modular_adc.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_modular_adc_sample_store_regs.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/altera_modular_adc_sequencer_regs.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/drivers/inc/timer_hw_ip.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 5,
+			"path" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/system.h",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "EXECUTABLE"
+}

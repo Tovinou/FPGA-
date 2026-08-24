@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Pixel fed to camera FIFO is written to SDRAM
+simulation stopped @150395ns with status 0

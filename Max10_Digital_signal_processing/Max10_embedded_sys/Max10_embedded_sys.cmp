@@ -1,0 +1,20 @@
+	component Max10_embedded_sys is
+		port (
+			adc_fifo_0_status_level             : out std_logic_vector(31 downto 0);                    -- level
+			adc_fifo_0_status_empty             : out std_logic;                                        -- empty
+			adc_fifo_0_status_full              : out std_logic;                                        -- full
+			adc_fifo_0_status_almost_full       : out std_logic;                                        -- almost_full
+			adc_fifo_0_status_almost_empty      : out std_logic;                                        -- almost_empty
+			adc_reader_0_control_enable         : in  std_logic                     := 'X';             -- enable
+			adc_reader_0_control_busy           : out std_logic;                                        -- busy
+			altpll_0_locked_conduit_export      : out std_logic;                                        -- export
+			button_export                       : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- export
+			cap_conduit                         : in  std_logic                     := 'X';             -- conduit
+			clk_clk                             : in  std_logic                     := 'X';             -- clk
+			ledr_export                         : out std_logic_vector(9 downto 0);                     -- export
+			modular_adc_0_adc_pll_locked_export : in  std_logic                     := 'X';             -- export
+			pwm_conduit                         : out std_logic;                                        -- conduit
+			reset_reset_n                       : in  std_logic                     := 'X'              -- reset_n
+		);
+	end component Max10_embedded_sys;
+

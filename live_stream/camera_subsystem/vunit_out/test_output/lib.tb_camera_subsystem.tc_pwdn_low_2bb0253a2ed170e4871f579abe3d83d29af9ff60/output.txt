@@ -1,0 +1,6 @@
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:116:9:warning: instance "u_fifo" of component "dcfifo" is not bound [-Wbinding]
+        u_fifo : dcfifo
+        ^
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:33:14:warning: (in default configuration of asyn_fifo(rtl))
+               0 fs - default              -    INFO - cam_pwdn must always be '0' (camera powered)
+simulation stopped @4312534500fs with status 0

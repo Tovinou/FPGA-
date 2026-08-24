@@ -1,0 +1,6 @@
+               0 fs - default              -    INFO - frame_done held for >= 2 PCLK cycles
+      1145842500 fs - check                -   ERROR - frame_done must be high for >= 2 cycles, got 0
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@1145842500fs:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_camera_interface/main
+ghdl:error: simulation failed

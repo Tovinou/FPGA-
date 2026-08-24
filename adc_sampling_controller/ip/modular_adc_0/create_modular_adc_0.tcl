@@ -1,0 +1,25 @@
+package require -exact qsys 25.1
+
+set output_qsys [file join [pwd] ip modular_adc_0 modular_adc_0.qsys]
+
+create_system modular_adc_0
+
+add_instance modular_adc_0 altera_modular_adc
+set_instance_parameter_value modular_adc_0 CORE_VAR 3
+set_instance_parameter_value modular_adc_0 ENABLE_DEBUG 0
+set_instance_parameter_value modular_adc_0 FAMILY "MAX 10"
+set_instance_parameter_value modular_adc_0 DEVICE_PART "10M50DA"
+set_instance_parameter_value modular_adc_0 ip_is_for_which_adc 1
+set_instance_parameter_value modular_adc_0 is_this_first_or_second_adc 1
+set_instance_parameter_value modular_adc_0 sample_rate 0
+set_instance_parameter_value modular_adc_0 clkdiv 2
+set_instance_parameter_value modular_adc_0 refsel 0
+set_instance_parameter_value modular_adc_0 external_vref 2.5
+set_instance_parameter_value modular_adc_0 use_ch1 true
+set_instance_parameter_value modular_adc_0 use_ch2 true
+set_instance_parameter_value modular_adc_0 use_ch3 true
+set_instance_parameter_value modular_adc_0 use_ch4 true
+set_instance_parameter_value modular_adc_0 use_ch5 true
+set_instance_parameter_value modular_adc_0 use_ch6 true
+
+save_system $output_qsys

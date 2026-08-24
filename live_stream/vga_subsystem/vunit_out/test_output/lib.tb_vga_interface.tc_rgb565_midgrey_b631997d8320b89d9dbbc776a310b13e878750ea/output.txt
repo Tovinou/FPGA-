@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Mid grey: R5=01111 G6=011111 B5=01111
+simulation stopped @260ns with status 0

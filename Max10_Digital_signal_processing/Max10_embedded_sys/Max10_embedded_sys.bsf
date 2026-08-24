@@ -1,0 +1,188 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2025  Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus Prime License Agreement,
+the Altera IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Altera and sold by Altera or its authorized distributors.  Please
+refer to the Altera Software License Subscription Agreements 
+on the Quartus Prime software download page.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 496 544)
+	(text "Max10_embedded_sys" (rect 182 -1 276 11)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 528 20 540)(font "Arial" ))
+	(port
+		(pt 0 176)
+		(input)
+		(text "adc_reader_0_control_enable" (rect 0 0 119 12)(font "Arial" (font_size 8)))
+		(text "adc_reader_0_control_enable" (rect 4 165 166 176)(font "Arial" (font_size 8)))
+		(line (pt 0 176)(pt 208 176)(line_width 1))
+	)
+	(port
+		(pt 0 272)
+		(input)
+		(text "button_export[1..0]" (rect 0 0 73 12)(font "Arial" (font_size 8)))
+		(text "button_export[1..0]" (rect 4 261 118 272)(font "Arial" (font_size 8)))
+		(line (pt 0 272)(pt 208 272)(line_width 3))
+	)
+	(port
+		(pt 0 312)
+		(input)
+		(text "cap_conduit" (rect 0 0 47 12)(font "Arial" (font_size 8)))
+		(text "cap_conduit" (rect 4 301 70 312)(font "Arial" (font_size 8)))
+		(line (pt 0 312)(pt 208 312)(line_width 1))
+	)
+	(port
+		(pt 0 352)
+		(input)
+		(text "clk_clk" (rect 0 0 27 12)(font "Arial" (font_size 8)))
+		(text "clk_clk" (rect 4 341 46 352)(font "Arial" (font_size 8)))
+		(line (pt 0 352)(pt 208 352)(line_width 1))
+	)
+	(port
+		(pt 0 432)
+		(input)
+		(text "modular_adc_0_adc_pll_locked_export" (rect 0 0 156 12)(font "Arial" (font_size 8)))
+		(text "modular_adc_0_adc_pll_locked_export" (rect 4 421 214 432)(font "Arial" (font_size 8)))
+		(line (pt 0 432)(pt 208 432)(line_width 1))
+	)
+	(port
+		(pt 0 512)
+		(input)
+		(text "reset_reset_n" (rect 0 0 56 12)(font "Arial" (font_size 8)))
+		(text "reset_reset_n" (rect 4 501 82 512)(font "Arial" (font_size 8)))
+		(line (pt 0 512)(pt 208 512)(line_width 1))
+	)
+	(port
+		(pt 0 72)
+		(output)
+		(text "adc_fifo_0_status_level[31..0]" (rect 0 0 120 12)(font "Arial" (font_size 8)))
+		(text "adc_fifo_0_status_level[31..0]" (rect 4 61 184 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 208 72)(line_width 3))
+	)
+	(port
+		(pt 0 88)
+		(output)
+		(text "adc_fifo_0_status_empty" (rect 0 0 105 12)(font "Arial" (font_size 8)))
+		(text "adc_fifo_0_status_empty" (rect 4 77 142 88)(font "Arial" (font_size 8)))
+		(line (pt 0 88)(pt 208 88)(line_width 1))
+	)
+	(port
+		(pt 0 104)
+		(output)
+		(text "adc_fifo_0_status_full" (rect 0 0 89 12)(font "Arial" (font_size 8)))
+		(text "adc_fifo_0_status_full" (rect 4 93 136 104)(font "Arial" (font_size 8)))
+		(line (pt 0 104)(pt 208 104)(line_width 1))
+	)
+	(port
+		(pt 0 120)
+		(output)
+		(text "adc_fifo_0_status_almost_full" (rect 0 0 121 12)(font "Arial" (font_size 8)))
+		(text "adc_fifo_0_status_almost_full" (rect 4 109 178 120)(font "Arial" (font_size 8)))
+		(line (pt 0 120)(pt 208 120)(line_width 1))
+	)
+	(port
+		(pt 0 136)
+		(output)
+		(text "adc_fifo_0_status_almost_empty" (rect 0 0 136 12)(font "Arial" (font_size 8)))
+		(text "adc_fifo_0_status_almost_empty" (rect 4 125 184 136)(font "Arial" (font_size 8)))
+		(line (pt 0 136)(pt 208 136)(line_width 1))
+	)
+	(port
+		(pt 0 192)
+		(output)
+		(text "adc_reader_0_control_busy" (rect 0 0 114 12)(font "Arial" (font_size 8)))
+		(text "adc_reader_0_control_busy" (rect 4 181 154 192)(font "Arial" (font_size 8)))
+		(line (pt 0 192)(pt 208 192)(line_width 1))
+	)
+	(port
+		(pt 0 232)
+		(output)
+		(text "altpll_0_locked_conduit_export" (rect 0 0 120 12)(font "Arial" (font_size 8)))
+		(text "altpll_0_locked_conduit_export" (rect 4 221 184 232)(font "Arial" (font_size 8)))
+		(line (pt 0 232)(pt 208 232)(line_width 1))
+	)
+	(port
+		(pt 0 392)
+		(output)
+		(text "ledr_export[9..0]" (rect 0 0 64 12)(font "Arial" (font_size 8)))
+		(text "ledr_export[9..0]" (rect 4 381 106 392)(font "Arial" (font_size 8)))
+		(line (pt 0 392)(pt 208 392)(line_width 3))
+	)
+	(port
+		(pt 0 472)
+		(output)
+		(text "pwm_conduit" (rect 0 0 51 12)(font "Arial" (font_size 8)))
+		(text "pwm_conduit" (rect 4 461 70 472)(font "Arial" (font_size 8)))
+		(line (pt 0 472)(pt 208 472)(line_width 1))
+	)
+	(drawing
+		(text "adc_fifo_0_status" (rect 102 43 306 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "level" (rect 213 67 456 144)(font "Arial" (color 0 0 0)))
+		(text "empty" (rect 213 83 456 176)(font "Arial" (color 0 0 0)))
+		(text "full" (rect 213 99 450 208)(font "Arial" (color 0 0 0)))
+		(text "almost_full" (rect 213 115 492 240)(font "Arial" (color 0 0 0)))
+		(text "almost_empty" (rect 213 131 498 272)(font "Arial" (color 0 0 0)))
+		(text "adc_reader_0_control" (rect 81 147 282 307)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "enable" (rect 213 171 462 352)(font "Arial" (color 0 0 0)))
+		(text "busy" (rect 213 187 450 384)(font "Arial" (color 0 0 0)))
+		(text "altpll_0_locked_conduit" (rect 73 203 284 419)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 227 462 464)(font "Arial" (color 0 0 0)))
+		(text "button" (rect 173 243 382 499)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 267 462 544)(font "Arial" (color 0 0 0)))
+		(text "cap" (rect 189 283 396 579)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "conduit" (rect 213 307 468 624)(font "Arial" (color 0 0 0)))
+		(text "clk" (rect 193 323 404 659)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "clk" (rect 213 347 444 704)(font "Arial" (color 0 0 0)))
+		(text "ledr" (rect 187 363 398 739)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 387 462 784)(font "Arial" (color 0 0 0)))
+		(text "modular_adc_0_adc_pll_locked" (rect 25 403 218 819)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 427 462 864)(font "Arial" (color 0 0 0)))
+		(text "pwm" (rect 181 443 380 899)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "conduit" (rect 213 467 468 944)(font "Arial" (color 0 0 0)))
+		(text "reset" (rect 179 483 388 979)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "reset_n" (rect 213 507 468 1024)(font "Arial" (color 0 0 0)))
+		(text " system " (rect 461 528 970 1066)(font "Arial" ))
+		(line (pt 208 32)(pt 288 32)(line_width 1))
+		(line (pt 288 32)(pt 288 528)(line_width 1))
+		(line (pt 208 528)(pt 288 528)(line_width 1))
+		(line (pt 208 32)(pt 208 528)(line_width 1))
+		(line (pt 209 52)(pt 209 140)(line_width 1))
+		(line (pt 210 52)(pt 210 140)(line_width 1))
+		(line (pt 209 156)(pt 209 196)(line_width 1))
+		(line (pt 210 156)(pt 210 196)(line_width 1))
+		(line (pt 209 212)(pt 209 236)(line_width 1))
+		(line (pt 210 212)(pt 210 236)(line_width 1))
+		(line (pt 209 252)(pt 209 276)(line_width 1))
+		(line (pt 210 252)(pt 210 276)(line_width 1))
+		(line (pt 209 292)(pt 209 316)(line_width 1))
+		(line (pt 210 292)(pt 210 316)(line_width 1))
+		(line (pt 209 332)(pt 209 356)(line_width 1))
+		(line (pt 210 332)(pt 210 356)(line_width 1))
+		(line (pt 209 372)(pt 209 396)(line_width 1))
+		(line (pt 210 372)(pt 210 396)(line_width 1))
+		(line (pt 209 412)(pt 209 436)(line_width 1))
+		(line (pt 210 412)(pt 210 436)(line_width 1))
+		(line (pt 209 452)(pt 209 476)(line_width 1))
+		(line (pt 210 452)(pt 210 476)(line_width 1))
+		(line (pt 209 492)(pt 209 516)(line_width 1))
+		(line (pt 210 492)(pt 210 516)(line_width 1))
+		(line (pt 0 0)(pt 496 0)(line_width 1))
+		(line (pt 496 0)(pt 496 544)(line_width 1))
+		(line (pt 0 544)(pt 496 544)(line_width 1))
+		(line (pt 0 0)(pt 0 544)(line_width 1))
+	)
+)

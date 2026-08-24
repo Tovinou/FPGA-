@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Write address increments by 1 on each write ack
+simulation stopped @425ns with status 0

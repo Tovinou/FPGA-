@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Gap between reg[0] and reg[1] write must be >= 1ms
+simulation stopped @12698039083500fs with status 0

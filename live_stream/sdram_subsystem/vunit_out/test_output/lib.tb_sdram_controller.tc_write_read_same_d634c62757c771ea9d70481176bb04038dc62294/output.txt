@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Write then read same address returns correct data
+simulation stopped @201388298500fs with status 0

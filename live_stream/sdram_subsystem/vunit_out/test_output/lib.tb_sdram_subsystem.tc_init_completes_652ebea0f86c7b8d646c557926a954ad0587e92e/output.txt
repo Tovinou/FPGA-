@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - SDRAM init completes: PRECHARGE -> 2xREFRESH -> MRS
+simulation stopped @150215ns with status 0

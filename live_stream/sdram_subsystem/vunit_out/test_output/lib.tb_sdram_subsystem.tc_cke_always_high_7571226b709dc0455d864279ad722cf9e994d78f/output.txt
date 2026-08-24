@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - CKE must be '1' after reset releases
+simulation stopped @1035ns with status 0

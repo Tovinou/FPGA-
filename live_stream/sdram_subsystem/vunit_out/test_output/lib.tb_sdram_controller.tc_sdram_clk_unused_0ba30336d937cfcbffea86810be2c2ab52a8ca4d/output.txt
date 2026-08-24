@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - sdram_clk output must be '0' (not driven by logic)
+simulation stopped @179995500fs with status 0

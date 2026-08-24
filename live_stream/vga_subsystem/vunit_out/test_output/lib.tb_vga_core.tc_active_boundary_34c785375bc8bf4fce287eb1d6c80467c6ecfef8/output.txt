@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Active deasserts at first blanking pixel (hc=640)
+simulation stopped @25780ns with status 0

@@ -1,0 +1,81 @@
+# Project-local notes / machine-local config
+hardware.md
+niosv.cfg
+gdbopxdriscv.ini
+
+# IDE / editor state
+.vscode/
+.qsys_edit/
+
+# Platform Designer / BSP metadata
+*.sopcinfo
+ip/components.ipx
+
+# Generated Platform Designer systems
+adc_c/
+ip/modular_adc_0/modular_adc_0/
+ip/modular_adc_0/synthesis/
+
+# Quartus databases and reports
+db/
+incremental_db/
+output_files/
+simulation/questa/
+
+*.bak
+*.tmp
+*.log
+*.rpt
+*.summary
+*.smsg
+*.qmsg
+*.qws
+*.jdi.tmp
+*.map.*
+*.fit.*
+*.sta.*
+*.asm.*
+
+*.qdb
+*.rdb
+*.cdb
+*.hdb
+*.ddb
+*.ammdb
+*.tdb
+
+# Programming / generated FPGA outputs
+*.sof
+*.pof
+*.jdi
+*.jbc
+*.jam
+*.svf
+*.pin
+*.sld
+*.rbf
+
+# Generated Quartus include/project files
+*.qip
+
+# CMake / software build outputs
+build/
+software/app/build*/
+software/app/build-*/
+software/app/build-gcc/
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+Makefile
+
+*.elf
+*.objdump
+*.map
+*.hex
+*.bin
+*.a
+*.o
+*.obj
+*.d

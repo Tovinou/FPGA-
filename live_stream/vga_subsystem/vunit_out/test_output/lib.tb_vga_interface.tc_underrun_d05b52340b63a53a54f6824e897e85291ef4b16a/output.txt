@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - FIFO underrun: black output, rd_en=0
+simulation stopped @260ns with status 0

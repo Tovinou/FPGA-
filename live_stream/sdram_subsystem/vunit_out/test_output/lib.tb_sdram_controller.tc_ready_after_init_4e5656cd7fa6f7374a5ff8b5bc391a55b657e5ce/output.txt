@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Controller accepts requests after init completes
+simulation stopped @200414989500fs with status 0

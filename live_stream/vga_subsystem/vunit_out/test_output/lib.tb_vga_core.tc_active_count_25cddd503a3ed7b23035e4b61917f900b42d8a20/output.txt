@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Active pixel count = 640*480 = 307200 per frame
+simulation stopped @16800140ns with status 0

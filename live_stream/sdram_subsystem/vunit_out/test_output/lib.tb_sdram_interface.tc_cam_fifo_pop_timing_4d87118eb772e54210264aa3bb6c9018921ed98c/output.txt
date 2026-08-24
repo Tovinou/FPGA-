@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - cam_rd_en fires before sdram_wr_req (FIX 3)
+simulation stopped @135ns with status 0

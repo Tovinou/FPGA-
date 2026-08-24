@@ -1,0 +1,6 @@
+               0 fs - default              -    INFO - Two consecutive frames captured without missed pixels
+     89313214500 fs - check                -   ERROR - Frame 1: expected 4 pixels written - Got 15. Expected 4.
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@89313214500fs:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_camera_interface/main
+ghdl:error: simulation failed

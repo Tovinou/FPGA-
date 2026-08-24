@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Read address increments by 1 on each rd_valid
+simulation stopped @485ns with status 0

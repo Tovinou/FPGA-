@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Blanking: DAC=0000 regardless of pixel data
+simulation stopped @260ns with status 0

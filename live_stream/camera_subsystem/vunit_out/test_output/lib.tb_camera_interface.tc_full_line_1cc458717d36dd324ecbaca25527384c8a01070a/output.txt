@@ -1,0 +1,6 @@
+               0 fs - default              -    INFO - Decimation: 640 pixels per line produces 320 wr_en pulses
+     60646318500 fs - check                -   ERROR - 640 pixels per line - Got 639. Expected 320.
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@60646318500fs:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_camera_interface/main
+ghdl:error: simulation failed

@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Pure red: R5=11111 G6=000000 B5=00000
+simulation stopped @260ns with status 0

@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - DAC gated by active_d (registered), not raw active
+simulation stopped @300ns with status 0

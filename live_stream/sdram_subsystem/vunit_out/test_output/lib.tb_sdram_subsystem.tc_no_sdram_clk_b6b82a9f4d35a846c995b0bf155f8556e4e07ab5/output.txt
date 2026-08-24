@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - sdram_clk output unused (tied '0', PLL drives DRAM_CLK)
+simulation stopped @135ns with status 0

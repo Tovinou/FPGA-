@@ -1,0 +1,133 @@
+# TCL File for Platform Designer component packaging
+
+catch {package require -exact qsys 25.1}
+
+set_module_property DESCRIPTION "Timer-triggered MAX 10 Modular ADC sampling controller with circular sample buffer"
+set_module_property NAME adc_sampling_controller_hw_ip
+set_module_property VERSION 1.0
+set_module_property INTERNAL false
+set_module_property OPAQUE_ADDRESS_MAP true
+set_module_property GROUP own_ip
+set_module_property AUTHOR "Jensen"
+set_module_property DISPLAY_NAME adc_sampling_controller_hw_ip
+set_module_property INSTANTIATE_IN_SYSTEM_MODULE true
+set_module_property EDITABLE true
+set_module_property REPORT_TO_TALKBACK false
+set_module_property ALLOW_GREYBOX_GENERATION false
+set_module_property REPORT_HIERARCHY false
+
+add_fileset QUARTUS_SYNTH QUARTUS_SYNTH "" ""
+set_fileset_property QUARTUS_SYNTH TOP_LEVEL ADC_SAMPLING_CONTROLLER_HW_IP
+set_fileset_property QUARTUS_SYNTH ENABLE_RELATIVE_INCLUDE_PATHS false
+set_fileset_property QUARTUS_SYNTH ENABLE_FILE_OVERWRITE_MODE false
+add_fileset_file ADC_SAMPLING_CONTROLLER_HW_IP.vhd VHDL PATH HDL/ADC_SAMPLING_CONTROLLER_HW_IP.vhd TOP_LEVEL_FILE
+add_fileset_file adc_trigger_engine.vhd VHDL PATH HDL/adc_trigger_engine.vhd
+add_fileset_file sample_buffer.vhd VHDL PATH HDL/sample_buffer.vhd
+add_fileset_file timer.vhd VHDL PATH HDL/timer.vhd
+add_fileset_file timer_prescaler.vhd VHDL PATH HDL/timer_prescaler.vhd
+add_fileset_file timer_counter.vhd VHDL PATH HDL/timer_counter.vhd
+add_fileset_file timer_comparator.vhd VHDL PATH HDL/timer_comparator.vhd
+add_fileset_file timer_capture.vhd VHDL PATH HDL/timer_capture.vhd
+add_fileset_file timer_pwm.vhd VHDL PATH HDL/timer_pwm.vhd
+
+add_parameter ADC_DATA_WIDTH INTEGER 12
+set_parameter_property ADC_DATA_WIDTH DEFAULT_VALUE 12
+set_parameter_property ADC_DATA_WIDTH DISPLAY_NAME "ADC data width"
+set_parameter_property ADC_DATA_WIDTH HDL_PARAMETER true
+
+add_parameter ADC_CHAN_WIDTH INTEGER 5
+set_parameter_property ADC_CHAN_WIDTH DEFAULT_VALUE 5
+set_parameter_property ADC_CHAN_WIDTH DISPLAY_NAME "ADC channel width"
+set_parameter_property ADC_CHAN_WIDTH HDL_PARAMETER true
+
+add_parameter BUFFER_DEPTH INTEGER 1024
+set_parameter_property BUFFER_DEPTH DEFAULT_VALUE 1024
+set_parameter_property BUFFER_DEPTH DISPLAY_NAME "Sample buffer depth"
+set_parameter_property BUFFER_DEPTH HDL_PARAMETER true
+
+add_parameter BUFFER_ADDR_W INTEGER 10
+set_parameter_property BUFFER_ADDR_W DEFAULT_VALUE 10
+set_parameter_property BUFFER_ADDR_W DISPLAY_NAME "Sample buffer address width"
+set_parameter_property BUFFER_ADDR_W HDL_PARAMETER true
+
+add_interface clock clock end
+set_interface_property clock clockRate 0
+set_interface_property clock ENABLED true
+add_interface_port clock clk clk Input 1
+
+add_interface reset reset end
+set_interface_property reset associatedClock clock
+set_interface_property reset synchronousEdges DEASSERT
+set_interface_property reset ENABLED true
+add_interface_port reset reset_n reset_n Input 1
+
+add_interface avalon_slave_0 avalon end
+set_interface_property avalon_slave_0 addressUnits WORDS
+set_interface_property avalon_slave_0 associatedClock clock
+set_interface_property avalon_slave_0 associatedReset reset
+set_interface_property avalon_slave_0 bitsPerSymbol 8
+set_interface_property avalon_slave_0 burstOnBurstBoundariesOnly false
+set_interface_property avalon_slave_0 burstcountUnits WORDS
+set_interface_property avalon_slave_0 explicitAddressSpan 0
+set_interface_property avalon_slave_0 holdTime 0
+set_interface_property avalon_slave_0 linewrapBursts false
+set_interface_property avalon_slave_0 maximumPendingReadTransactions 0
+set_interface_property avalon_slave_0 maximumPendingWriteTransactions 0
+set_interface_property avalon_slave_0 readLatency 0
+set_interface_property avalon_slave_0 readWaitTime 1
+set_interface_property avalon_slave_0 setupTime 0
+set_interface_property avalon_slave_0 timingUnits Cycles
+set_interface_property avalon_slave_0 writeWaitTime 0
+set_interface_property avalon_slave_0 ENABLED true
+add_interface_port avalon_slave_0 cs_n chipselect_n Input 1
+add_interface_port avalon_slave_0 addr address Input 4
+add_interface_port avalon_slave_0 write_n write_n Input 1
+add_interface_port avalon_slave_0 read_n read_n Input 1
+add_interface_port avalon_slave_0 din writedata Input 32
+add_interface_port avalon_slave_0 dout readdata Output 32
+set_interface_assignment avalon_slave_0 embeddedsw.configuration.isFlash 0
+set_interface_assignment avalon_slave_0 embeddedsw.configuration.isMemoryDevice 0
+set_interface_assignment avalon_slave_0 embeddedsw.configuration.isNonVolatileStorage 0
+set_interface_assignment avalon_slave_0 embeddedsw.configuration.isPrintableDevice 0
+
+add_interface capture_done interrupt end
+set_interface_property capture_done associatedClock clock
+set_interface_property capture_done associatedReset reset
+set_interface_property capture_done ENABLED true
+add_interface_port capture_done capture_done_int irq Output 1
+
+add_interface sample_marker conduit end
+set_interface_property sample_marker associatedClock clock
+set_interface_property sample_marker associatedReset reset
+set_interface_property sample_marker ENABLED true
+add_interface_port sample_marker adc_sample_clk_marker conduit Output 1
+
+add_interface adc_command avalon_streaming start
+set_interface_property adc_command associatedClock clock
+set_interface_property adc_command associatedReset reset
+set_interface_property adc_command dataBitsPerSymbol 8
+set_interface_property adc_command errorDescriptor ""
+set_interface_property adc_command firstSymbolInHighOrderBits true
+set_interface_property adc_command maxChannel 31
+set_interface_property adc_command readyLatency 0
+set_interface_property adc_command ENABLED true
+add_interface_port adc_command adc_command_valid valid Output 1
+add_interface_port adc_command adc_command_ready ready Input 1
+add_interface_port adc_command adc_command_channel channel Output ADC_CHAN_WIDTH
+add_interface_port adc_command adc_command_startofpacket startofpacket Output 1
+add_interface_port adc_command adc_command_endofpacket endofpacket Output 1
+
+add_interface adc_response avalon_streaming end
+set_interface_property adc_response associatedClock clock
+set_interface_property adc_response associatedReset reset
+set_interface_property adc_response dataBitsPerSymbol 12
+set_interface_property adc_response errorDescriptor ""
+set_interface_property adc_response firstSymbolInHighOrderBits true
+set_interface_property adc_response maxChannel 31
+set_interface_property adc_response readyLatency 0
+set_interface_property adc_response ENABLED true
+add_interface_port adc_response adc_response_valid valid Input 1
+add_interface_port adc_response adc_response_channel channel Input ADC_CHAN_WIDTH
+add_interface_port adc_response adc_response_data data Input ADC_DATA_WIDTH
+add_interface_port adc_response adc_response_startofpacket startofpacket Input 1
+add_interface_port adc_response adc_response_endofpacket endofpacket Input 1

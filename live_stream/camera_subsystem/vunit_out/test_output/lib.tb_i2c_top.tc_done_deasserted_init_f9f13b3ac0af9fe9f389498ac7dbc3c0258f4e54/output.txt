@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - done='0' at startup before any register written
+simulation stopped @562504500fs with status 0

@@ -1,0 +1,2 @@
+test_start:tc_fifo_fills_after_i2c
+test_suite_done

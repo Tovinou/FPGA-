@@ -1,0 +1,7 @@
+v 4
+file / "C:\Jensen\projects\fpga\live_stream\sys_ctrl\tb\tb_debounce_explicit\tb_debounce_explicit.vhd" "4eaa18738923871494dc4d30ff3b92b360cb913a" "20260325084925.230":
+  entity tb_debounce_explicit at 1( 0) + 0 on 13;
+  architecture tb of tb_debounce_explicit at 12( 211) + 0 on 14;
+file / "C:\Jensen\projects\fpga\live_stream\sys_ctrl\debounce_explicit.vhd" "c5e7f6839614fae6097087bb79015493df7cc38f" "20260325084925.160":
+  entity debounce_explicit at 6( 301) + 0 on 11;
+  architecture rtl of debounce_explicit at 24( 878) + 0 on 12;

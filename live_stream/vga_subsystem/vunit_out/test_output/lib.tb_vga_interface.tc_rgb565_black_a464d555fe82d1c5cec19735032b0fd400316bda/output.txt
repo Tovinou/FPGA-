@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Black: all channels zero
+simulation stopped @260ns with status 0

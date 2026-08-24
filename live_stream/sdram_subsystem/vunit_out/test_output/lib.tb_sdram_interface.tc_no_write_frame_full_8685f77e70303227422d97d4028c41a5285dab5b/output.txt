@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Writes stop when wr_ptr would exceed FRAME_WORDS
+simulation stopped @175ns with status 0

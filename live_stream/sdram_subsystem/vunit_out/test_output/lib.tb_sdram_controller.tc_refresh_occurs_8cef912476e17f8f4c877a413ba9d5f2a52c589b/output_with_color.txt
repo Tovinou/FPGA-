@@ -1,0 +1,2 @@
+               [22;96;49m0 fs[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - AUTO-REFRESH issued within 7.8us (780 cycles @ 100MHz)
+simulation stopped @200201661500fs with status 0

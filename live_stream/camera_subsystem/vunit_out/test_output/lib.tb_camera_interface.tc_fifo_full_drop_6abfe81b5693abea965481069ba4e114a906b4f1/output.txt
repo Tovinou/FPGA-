@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - wr_en=0 when FIFO full, byte_sel still advances
+simulation stopped @1437511500fs with status 0

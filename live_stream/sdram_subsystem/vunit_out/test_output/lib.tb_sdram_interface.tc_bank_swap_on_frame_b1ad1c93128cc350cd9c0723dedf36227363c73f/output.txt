@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Write and read bank selectors toggle on frame_done
+simulation stopped @305ns with status 0

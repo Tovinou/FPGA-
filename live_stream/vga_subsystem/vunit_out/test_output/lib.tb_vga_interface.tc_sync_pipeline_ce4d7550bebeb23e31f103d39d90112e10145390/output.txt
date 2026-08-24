@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - hsync/vsync registered: output lags input by 1 clock
+simulation stopped @380ns with status 0

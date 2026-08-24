@@ -1,0 +1,6 @@
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:116:9:warning: instance "u_fifo" of component "dcfifo" is not bound [-Wbinding]
+        u_fifo : dcfifo
+        ^
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:33:14:warning: (in default configuration of asyn_fifo(rtl))
+               0 fs - default              -    INFO - Pixels appear in FIFO after i2c completes + frame driven
+simulation stopped @41556635ns with status 0

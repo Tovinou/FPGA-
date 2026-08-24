@@ -1,0 +1,21 @@
+hal_bsp/CMakeFiles/hal2_bsp.dir/HAL/src/intel_fpga_platform_api_niosv.c.obj: \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/src/intel_fpga_platform_api_niosv.c \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_fpga_platform_api.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_platform_api_niosv.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/system.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/linker.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/lib/gcc/riscv32-unknown-elf/13.2.0/include/stdarg.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/lib/gcc/riscv32-unknown-elf/13.2.0/include/stdbool.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_api_cmn_msg.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/lib/gcc/riscv32-unknown-elf/13.2.0/include/stdint.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/stdint.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/machine/_default_types.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/sys/features.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/_newlib_version.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/sys/_intsup.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/sys/_stdint.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_fpga_platform.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_platform_niosv.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/lib/gcc/riscv32-unknown-elf/13.2.0/include/stddef.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_api_cmn_dfl.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/intel_fpga_api_cmn_inf.h

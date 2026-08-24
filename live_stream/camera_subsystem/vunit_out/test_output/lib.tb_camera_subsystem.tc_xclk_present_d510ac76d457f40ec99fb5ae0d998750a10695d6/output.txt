@@ -1,0 +1,6 @@
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:116:9:warning: instance "u_fifo" of component "dcfifo" is not bound [-Wbinding]
+        u_fifo : dcfifo
+        ^
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:33:14:warning: (in default configuration of asyn_fifo(rtl))
+               0 fs - default              -    INFO - cam_xclk must toggle at 24MHz
+simulation stopped @375003ps with status 0

@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - FSM switches to read path when camera FIFO empties
+simulation stopped @215ns with status 0

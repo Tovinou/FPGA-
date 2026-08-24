@@ -1,0 +1,191 @@
+ HARDWARE SCHEMATIC (TEXT) — live_stream (DE10-Lite MAX10) + OV7670 + VGA
+===============================================================================
+
+1) Systemöversikt (blockdiagram)
+--------------------------------
+
+                    +------------------------------+
+                    |          DE10-Lite           |
+                    |   MAX10 10M50 (stream_top)   |
+                    |                              |
+OV7670 (kamera) --->|  Camera subsystem  (PCLK-dom)|
+ PCLK/HREF/VSYNC/D  |        |                     |
+ SIOD/SIOC (I2C) <--|        v                     |
+ XCLK/RESET/PWDN <--|   Async FIFO (CDC)           |
+                    |        |                     |
+                    |        v                     |
+                    |  SDRAM subsystem 165 MHz     |<---> Onboard SDRAM
+                    |        |                     |      (IS42S16320F)
+                    |        v                     |
+                    |   VGA subsystem 25 MHz       |----> VGA-kontakt (på kortet)
+                    +------------------------------+
+
+Klockor (från pll_main):
+  - clk_165m (PLL c0) = 165 MHz, intern SDRAM-logik
+  - clk_dram (PLL c1) = 165 MHz med fasförskjutning, går till DRAM_CLK-pinnen
+  - clk_25m  (PLL c2) = 25 MHz, VGA + OV7670_XCLK + I2C-logik
+
+
+2) Externa anslutningar som du faktiskt behöver koppla
+------------------------------------------------------
+
+  A) VGA
+     - Ingen extern kabeldragning i FPGA-designen; anslut bara VGA-skärm till
+       DE10-Lite VGA-porten.
+
+  B) SDRAM
+     - Onboard på DE10-Lite; ingen extern kabeldragning.
+
+  C) OV7670 kamera
+     - Detta är den enda externa "wiring" du normalt gör: OV7670 ↔ DE10-Lite GPIO.
+
+
+3) Rekommenderad OV7670 ↔ DE10-Lite GPIO-koppling (praktisk kabeltabell)
+-------------------------------------------------------------------------
+
+OBS:
+  - stream_top.vhd har top-level portar: OV7670_PCLK/HREF/VSYNC/D[7:0]/XCLK/SIOC/SIOD/RESET_N/PWDN.
+  - live_stream.qsf har redan fysiska pinnamn för GPIO[0..35] (JP1/JP2 header).
+  - Eftersom QSF just nu inte mappar OV7670_* direkt till paketpinnar i live_stream.qsf,
+    är det mest robust att du kopplar OV7670 till GPIO-headern enligt tabellen nedan
+    och därefter mappar OV7670_* -> GPIO[*] i Pin Planner/QSF (om du vill ha samma namn).
+
+Föreslagen signal-mappning (OV7670 -> GPIO index):
+  OV7670_D[0]   -> GPIO[0]
+  OV7670_D[1]   -> GPIO[1]
+  OV7670_D[2]   -> GPIO[2]
+  OV7670_D[3]   -> GPIO[3]
+  OV7670_D[4]   -> GPIO[4]
+  OV7670_D[5]   -> GPIO[5]
+  OV7670_D[6]   -> GPIO[6]
+  OV7670_D[7]   -> GPIO[7]
+  OV7670_PCLK   -> GPIO[8]
+  OV7670_HREF   -> GPIO[9]
+  OV7670_VSYNC  -> GPIO[10]
+  OV7670_XCLK   -> GPIO[11]
+  OV7670_SIOC   -> GPIO[12]
+  OV7670_SIOD   -> GPIO[13]
+  OV7670_RESET_N-> GPIO[14]
+  OV7670_PWDN   -> GPIO[15]
+
+GPIO[0..15] → FPGA package pin (från live_stream.qsf):
+  GPIO[0]  = PIN_V10
+  GPIO[1]  = PIN_W10
+  GPIO[2]  = PIN_V9
+  GPIO[3]  = PIN_W9
+  GPIO[4]  = PIN_V8
+  GPIO[5]  = PIN_W8
+  GPIO[6]  = PIN_V7
+  GPIO[7]  = PIN_W7
+  GPIO[8]  = PIN_W6
+  GPIO[9]  = PIN_V5
+  GPIO[10] = PIN_W5
+  GPIO[11] = PIN_AA15
+  GPIO[12] = PIN_AA14
+  GPIO[13] = PIN_W13
+  GPIO[14] = PIN_W12
+  GPIO[15] = PIN_AB13
+
+Så här blir den fysiska kopplingen i praktiken:
+  OV7670 D0..D7, PCLK, HREF, VSYNC, XCLK, SIOC, SIOD, RESET_N, PWDN
+  kopplas med dupontkablar till DE10-Lite GPIO-headern (JP1/JP2) på motsvarande GPIO[*]-signal.
+
+
+4) Elektriskt: nivåer, pullups och level shifting (viktigt)
+-----------------------------------------------------------
+
+4.1 Spänningsnivåer
+  - DE10-Lite GPIO är 3.3V LVTTL (3.3V logik).
+  - Många OV7670-breakoutkort kan köras på 3.3V och har 3.3V I/O.
+  - Vissa moduler tar 5V in (via regulator) men har ändå 2.8–3.0V på I/O.
+    Kontrollera din modul (datablad/schemat på breakout).
+
+4.2 I2C (SIOC/SIOD) måste ha pull-up
+  OV7670_SIOC och OV7670_SIOD är I2C-linjer och ska vara open-drain (ingen hård '1').
+  Lägg pull-up mot rätt spänning för kamerans I/O:
+
+    DE10-Lite 3.3V ----[4.7k]----+----> OV7670_SIOC
+                                 |
+                                 +----> OV7670_SIOD
+
+  - Om kamerans I/O är 2.8V: använd pull-ups till 2.8V (inte 3.3V) och level-shifta.
+
+4.3 Level shifting (om OV7670 I/O inte är 3.3V-tolerant)
+  Om din OV7670 kör I/O på 2.8V eller inte tål 3.3V:
+
+  A) I2C (SIOC/SIOD):
+     - Använd en bidirektionell MOSFET-level shifter (BSS138-modul) mellan 3.3V och 2.8V.
+
+  B) OV7670 -> FPGA (D[7:0], PCLK, HREF, VSYNC):
+     - 2.8V -> 3.3V brukar fungera direkt som '1' (men det beror på Vih-krav).
+     - Om du får problem: använd en nivåomvandlare (t.ex. 74LVC245 / 74LVC8T245).
+
+  C) FPGA -> OV7670 (XCLK, RESET_N, PWDN):
+     - Om OV7670 inte tål 3.3V på dessa pinnar: nivåomvandla ned till 2.8V.
+
+
+5) Text-schematic (ASCII) för OV7670-kopplingen
+------------------------------------------------
+
+  DE10-Lite GPIO header (3.3V)                         OV7670 module
+  ---------------------------                         ------------
+  3.3V  ---------------------------------------------> VCC (om modulen stödjer 3.3V)
+  GND   ---------------------------------------------> GND
+
+  GPIO[0]  (PIN_V10)  -------------------------------> D0
+  GPIO[1]  (PIN_W10)  -------------------------------> D1
+  GPIO[2]  (PIN_V9)   -------------------------------> D2
+  GPIO[3]  (PIN_W9)   -------------------------------> D3
+  GPIO[4]  (PIN_V8)   -------------------------------> D4
+  GPIO[5]  (PIN_W8)   -------------------------------> D5
+  GPIO[6]  (PIN_V7)   -------------------------------> D6
+  GPIO[7]  (PIN_W7)   -------------------------------> D7
+  GPIO[11]  (PIN_W6)   -------------------------------> PCLK
+  GPIO[9]  (PIN_V5)   -------------------------------> HREF
+  GPIO[10] (PIN_W5)   -------------------------------> VSYNC
+
+  GPIO[8] (PIN_AA15) -------------------------------> XCLK  (FPGA driver ~25 MHz)
+  GPIO[14] (PIN_W12)  -------------------------------> RESET_N
+  GPIO[15] (PIN_AB13) -------------------------------> PWDN
+
+  GPIO[12] (PIN_AA14) ----+--------------------------> SIOC (SCL)
+                           |
+  3.3V ----[4.7k]----------+
+
+  GPIO[13] (PIN_W13)  ----+--------------------------> SIOD (SDA)
+                           |
+  3.3V ----[4.7k]----------+
+
+
+6) VGA-signaler (för referens)
+------------------------------
+
+VGA är redan kopplad på DE10-Lite-kortet. Dessa är top-level signalnamn:
+  VGA_R[3:0], VGA_G[3:0], VGA_B[3:0], VGA_HS, VGA_VS
+
+Paketpinnar (från live_stream.qsf):
+  VGA_HS = PIN_N3
+  VGA_VS = PIN_N1
+  VGA_R0 = PIN_AA1
+  VGA_R1 = PIN_V1
+  VGA_R2 = PIN_Y2
+  VGA_R3 = PIN_Y1
+  VGA_G0 = PIN_W1
+  VGA_G1 = PIN_T2
+  VGA_G2 = PIN_R2
+  VGA_G3 = PIN_R1
+  VGA_B0 = PIN_P1
+  VGA_B1 = PIN_T1
+  VGA_B2 = PIN_P4
+  VGA_B3 = PIN_N2
+
+
+7) SDRAM (för referens)
+-----------------------
+
+Onboard SDRAM (IS42S16320F) är kopplad internt på kortet. Dessa top-level signaler:
+  DRAM_CLK, DRAM_CKE, DRAM_CS_N, DRAM_RAS_N, DRAM_CAS_N, DRAM_WE_N
+  DRAM_BA[1:0], DRAM_ADDR[12:0], DRAM_UDQM, DRAM_LDQM, DRAM_DQ[15:0]
+
+DRAM_CLK genereras av PLL c1 (fasförskjuten 165 MHz) och går direkt till pinnen.
+

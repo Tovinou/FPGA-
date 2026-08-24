@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - vga_fifo_wr_en asserts when sdram_rd_valid fires
+simulation stopped @225ns with status 0

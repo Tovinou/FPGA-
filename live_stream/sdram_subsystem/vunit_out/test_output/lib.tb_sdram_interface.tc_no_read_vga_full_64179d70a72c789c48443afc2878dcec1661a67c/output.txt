@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Reads stop when VGA FIFO is full
+simulation stopped @225ns with status 0

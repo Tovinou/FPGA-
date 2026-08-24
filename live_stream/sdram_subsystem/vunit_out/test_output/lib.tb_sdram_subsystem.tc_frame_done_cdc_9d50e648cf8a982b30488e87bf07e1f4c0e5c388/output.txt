@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - frame_done_async (2-FF sync) registers in 100MHz domain
+simulation stopped @150385ns with status 0

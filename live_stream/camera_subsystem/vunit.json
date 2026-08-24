@@ -1,0 +1,10 @@
+{
+  "name": "camera_subsystem",
+  "tests": [
+    {
+      "name": "camera_subsystem",
+      "file": "tb/camera_test.py",
+      "libraries": ["top", "camera_subsystem"]
+    }
+  ]
+}

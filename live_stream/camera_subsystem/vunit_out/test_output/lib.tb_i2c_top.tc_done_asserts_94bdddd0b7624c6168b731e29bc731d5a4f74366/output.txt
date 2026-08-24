@@ -1,0 +1,6 @@
+               0 fs - default              -    INFO - done must assert after all registers written (sentinel 0xFF)
+  40000145834500 fs - check                -   ERROR - done must assert after all register writes complete - Got 0. Expected 1.
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@40000145834500fs:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_i2c_top/main
+ghdl:error: simulation failed

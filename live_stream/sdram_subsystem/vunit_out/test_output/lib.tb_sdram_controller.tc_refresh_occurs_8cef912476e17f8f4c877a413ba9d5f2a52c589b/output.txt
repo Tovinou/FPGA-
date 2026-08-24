@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - AUTO-REFRESH issued within 7.8us (780 cycles @ 100MHz)
+simulation stopped @200201661500fs with status 0

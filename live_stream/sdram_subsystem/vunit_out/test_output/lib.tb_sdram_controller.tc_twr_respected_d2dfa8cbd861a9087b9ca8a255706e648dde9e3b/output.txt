@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - PRECHARGE not issued within tWR=2 cycles of WRITE
+simulation stopped @200508320500fs with status 0

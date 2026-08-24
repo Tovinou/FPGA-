@@ -1,0 +1,6 @@
+               0 fs - default              -    INFO - frame_done asserts when VSYNC rises during S_CAPTURE
+     10979174500 fs - check                -   ERROR - frame_done must assert on VSYNC rising in S_CAPTURE - Got 0. Expected 1.
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@10979174500fs:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_camera_interface/main
+ghdl:error: simulation failed

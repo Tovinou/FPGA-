@@ -1,0 +1,4 @@
+source camera_debug.tcl
+connect_live_stream
+sample_once
+catch {end_insystem_source_probe}

@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Init sequence: INHIBIT -> NOP -> PRE -> 2xREF -> MRS
+simulation stopped @200281659500fs with status 0

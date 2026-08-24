@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "hal_bsp",
+		"source" : "C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp"
+	}
+}

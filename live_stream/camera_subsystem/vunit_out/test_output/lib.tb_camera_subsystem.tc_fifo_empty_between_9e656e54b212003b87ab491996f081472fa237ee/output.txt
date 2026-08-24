@@ -1,0 +1,6 @@
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:116:9:warning: instance "u_fifo" of component "dcfifo" is not bound [-Wbinding]
+        u_fifo : dcfifo
+        ^
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:33:14:warning: (in default configuration of asyn_fifo(rtl))
+               0 fs - default              -    INFO - FIFO drains to empty between frames at 100MHz read rate
+simulation stopped @41561915ns with status 0

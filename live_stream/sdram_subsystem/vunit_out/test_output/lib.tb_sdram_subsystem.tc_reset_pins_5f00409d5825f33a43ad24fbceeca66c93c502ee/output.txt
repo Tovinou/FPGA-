@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - SDRAM pins safe during reset
+simulation stopped @35ns with status 0

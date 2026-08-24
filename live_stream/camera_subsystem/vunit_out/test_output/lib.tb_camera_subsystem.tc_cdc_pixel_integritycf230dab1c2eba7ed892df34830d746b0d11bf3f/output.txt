@@ -1,0 +1,10 @@
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:116:9:warning: instance "u_fifo" of component "dcfifo" is not bound [-Wbinding]
+        u_fifo : dcfifo
+        ^
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:33:14:warning: (in default configuration of asyn_fifo(rtl))
+               0 fs - default              -    INFO - Pixel written at PCLK readable correctly at 100MHz
+  41642705000000 fs - check                -   ERROR - CDC pixel integrity: 0xF8,0x1F -> 0xF81F at 100MHz - Got 0000_0000_0000_0000 (0). Expected 1111_1000_0001_1111 (63519).
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@41642705ns:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_camera_subsystem/main
+ghdl:error: simulation failed

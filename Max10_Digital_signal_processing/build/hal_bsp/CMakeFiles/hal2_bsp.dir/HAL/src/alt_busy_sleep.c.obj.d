@@ -1,0 +1,20 @@
+hal_bsp/CMakeFiles/hal2_bsp.dir/HAL/src/alt_busy_sleep.c.obj: \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/src/alt_busy_sleep.c \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/lib/gcc/riscv32-unknown-elf/13.2.0/include/limits.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/lib/gcc/riscv32-unknown-elf/13.2.0/include/syslimits.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/limits.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/newlib.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/_newlib_version.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/sys/cdefs.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/machine/_default_types.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/sys/features.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/lib/gcc/riscv32-unknown-elf/13.2.0/include/stddef.h \
+ C:/altera_lite/25.1std/riscfree/toolchain/riscv32-unknown-elf/riscv32-unknown-elf/include/sys/syslimits.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/system.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/linker.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/alt_types.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/sys/alt_timestamp.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/intel_niosv.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/alt_types.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/io.h \
+ C:/Jensen/projects/Max10_Digital_signal_processing/software/hal_bsp/HAL/inc/priv/alt_busy_sleep.h

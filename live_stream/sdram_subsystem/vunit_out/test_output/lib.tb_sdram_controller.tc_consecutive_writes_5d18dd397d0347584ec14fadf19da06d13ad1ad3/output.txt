@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Back-to-back writes complete without deadlock
+simulation stopped @201561627500fs with status 0

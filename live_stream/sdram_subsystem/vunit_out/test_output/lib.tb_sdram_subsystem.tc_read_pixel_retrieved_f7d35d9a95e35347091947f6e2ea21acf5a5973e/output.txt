@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Pixel stored in SDRAM model appears in VGA FIFO
+simulation stopped @150505ns with status 0

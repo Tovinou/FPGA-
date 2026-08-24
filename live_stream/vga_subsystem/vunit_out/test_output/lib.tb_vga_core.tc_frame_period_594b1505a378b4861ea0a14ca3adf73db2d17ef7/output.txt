@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Full frame = 800*525 = 420000 pixel clocks
+simulation stopped @32480180ns with status 0

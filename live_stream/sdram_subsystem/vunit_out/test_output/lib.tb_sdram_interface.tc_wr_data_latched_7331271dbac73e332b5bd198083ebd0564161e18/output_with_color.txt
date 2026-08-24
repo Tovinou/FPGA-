@@ -1,0 +1,2 @@
+               [22;96;49m0 fs[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - sdram_wr_data matches cam_fifo_rd_data (latched correctly)
+simulation stopped @145ns with status 0

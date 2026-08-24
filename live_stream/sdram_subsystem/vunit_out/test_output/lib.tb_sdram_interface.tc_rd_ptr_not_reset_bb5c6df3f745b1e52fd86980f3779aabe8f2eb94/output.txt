@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - rd_ptr resets to 0 on VGA frame start (vsync)
+simulation stopped @11695ns with status 0

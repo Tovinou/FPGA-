@@ -1,0 +1,6 @@
+C:\Jensen\projects\fpga\live_stream\vga_subsystem\asyn_fifo.vhd:124:9:warning: instance "u_fifo" of component "dcfifo" is not bound [-Wbinding]
+        u_fifo : dcfifo
+        ^
+C:\Jensen\projects\fpga\live_stream\vga_subsystem\asyn_fifo.vhd:39:14:warning: (in default configuration of asyn_fifo(rtl))
+               0 fs - default              -    INFO - Pixel written at 100MHz appears on VGA DAC output
+simulation stopped @136660ns with status 0

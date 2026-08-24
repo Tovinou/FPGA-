@@ -1,0 +1,114 @@
+#ifndef ADC_SAMPLING_CONTROLLER_HW_IP_H
+#define ADC_SAMPLING_CONTROLLER_HW_IP_H
+
+#include <stdint.h>
+#include "io.h"
+
+#define ADC_SAMPLING_CONTROL_OFFSET          0x00
+#define ADC_SAMPLING_PRESCALER_SEL_OFFSET   0x04
+#define ADC_SAMPLING_CHANNEL_SEL_OFFSET     0x08
+#define ADC_SAMPLING_SAMPLE_PERIOD_OFFSET   0x0C
+#define ADC_SAMPLING_STATUS_OFFSET          0x10
+#define ADC_SAMPLING_SAMPLE_COUNT_OFFSET    0x14
+#define ADC_SAMPLING_TRIGGER_INDEX_OFFSET   0x18
+#define ADC_SAMPLING_READ_ADDR_OFFSET       0x1C
+#define ADC_SAMPLING_READ_DATA_OFFSET       0x20
+#define ADC_SAMPLING_TRIGGER_CFG_OFFSET     0x24
+#define ADC_SAMPLING_TRIGGER_LEVEL_OFFSET   0x28
+#define ADC_SAMPLING_TRIGGER_CHANNEL_OFFSET 0x2C
+#define ADC_SAMPLING_PRE_TRIGGER_COUNT_OFFSET  0x30
+#define ADC_SAMPLING_POST_TRIGGER_COUNT_OFFSET 0x34
+#define ADC_SAMPLING_SCAN_CTRL_OFFSET       0x38
+#define ADC_SAMPLING_SCAN_TABLE_OFFSET      0x3C
+
+#define ADC_SAMPLING_CONTROL_RUN_ENABLE  0x00000001u
+#define ADC_SAMPLING_CONTROL_SINGLE_SHOT 0x00000002u
+#define ADC_SAMPLING_CONTROL_SOFT_RESET  0x00000004u
+
+#define ADC_SAMPLING_STATUS_BUSY             0x00000001u
+#define ADC_SAMPLING_STATUS_OVERFLOW         0x00000002u
+#define ADC_SAMPLING_STATUS_DONE             0x00000004u
+#define ADC_SAMPLING_STATUS_TRIGGERED        0x00000008u
+
+#define ADC_SAMPLING_TRIGGER_CFG_ENABLE        0x00000001u
+#define ADC_SAMPLING_TRIGGER_CFG_EDGE_FALLING  0x00000002u
+
+#define ADC_SAMPLING_SCAN_CTRL_LEN_MASK        0x00000007u
+#define ADC_SAMPLING_SCAN_CTRL_ENABLE          0x00000008u
+
+#define ADC_SAMPLING_READ_CONTROL(base) \
+   IORD_32DIRECT((base), ADC_SAMPLING_CONTROL_OFFSET)
+#define ADC_SAMPLING_WRITE_CONTROL(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_CONTROL_OFFSET, (value))
+
+#define ADC_SAMPLING_WRITE_PRESCALER(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_PRESCALER_SEL_OFFSET, ((value) & 0x7u))
+#define ADC_SAMPLING_WRITE_CHANNEL(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_CHANNEL_SEL_OFFSET, ((value) & 0x1Fu))
+#define ADC_SAMPLING_WRITE_SAMPLE_PERIOD(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_SAMPLE_PERIOD_OFFSET, (value))
+
+#define ADC_SAMPLING_READ_STATUS(base) \
+   IORD_32DIRECT((base), ADC_SAMPLING_STATUS_OFFSET)
+#define ADC_SAMPLING_READ_SAMPLE_COUNT(base) \
+   IORD_32DIRECT((base), ADC_SAMPLING_SAMPLE_COUNT_OFFSET)
+#define ADC_SAMPLING_READ_TRIGGER_INDEX(base) \
+   IORD_32DIRECT((base), ADC_SAMPLING_TRIGGER_INDEX_OFFSET)
+
+#define ADC_SAMPLING_SET_READ_ADDR(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_READ_ADDR_OFFSET, (value))
+#define ADC_SAMPLING_READ_DATA(base) \
+   IORD_32DIRECT((base), ADC_SAMPLING_READ_DATA_OFFSET)
+
+#define ADC_SAMPLING_WRITE_TRIGGER_CFG(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_TRIGGER_CFG_OFFSET, (value))
+#define ADC_SAMPLING_WRITE_TRIGGER_LEVEL(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_TRIGGER_LEVEL_OFFSET, (value))
+#define ADC_SAMPLING_WRITE_TRIGGER_CHANNEL(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_TRIGGER_CHANNEL_OFFSET, (value))
+#define ADC_SAMPLING_WRITE_PRE_TRIGGER_COUNT(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_PRE_TRIGGER_COUNT_OFFSET, (value))
+#define ADC_SAMPLING_WRITE_POST_TRIGGER_COUNT(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_POST_TRIGGER_COUNT_OFFSET, (value))
+
+#define ADC_SAMPLING_WRITE_SCAN_CTRL(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_SCAN_CTRL_OFFSET, (value))
+#define ADC_SAMPLING_WRITE_SCAN_TABLE(base, value) \
+   IOWR_32DIRECT((base), ADC_SAMPLING_SCAN_TABLE_OFFSET, (value))
+
+static inline void adc_sampling_configure(uint32_t base,
+                                          uint32_t sample_period,
+                                          uint32_t channel,
+                                          uint32_t prescaler)
+{
+   ADC_SAMPLING_WRITE_SAMPLE_PERIOD(base, sample_period);
+   ADC_SAMPLING_WRITE_CHANNEL(base, channel);
+   ADC_SAMPLING_WRITE_PRESCALER(base, prescaler);
+}
+
+static inline void adc_sampling_start(uint32_t base, uint32_t single_shot)
+{
+   uint32_t control = ADC_SAMPLING_CONTROL_RUN_ENABLE;
+   if (single_shot != 0u) {
+      control |= ADC_SAMPLING_CONTROL_SINGLE_SHOT;
+   }
+   ADC_SAMPLING_WRITE_CONTROL(base, control);
+}
+
+static inline void adc_sampling_stop(uint32_t base)
+{
+   ADC_SAMPLING_WRITE_CONTROL(base, 0u);
+}
+
+static inline void adc_sampling_soft_reset(uint32_t base)
+{
+   ADC_SAMPLING_WRITE_CONTROL(base, ADC_SAMPLING_CONTROL_SOFT_RESET);
+}
+
+static inline uint32_t adc_sampling_read_sample(uint32_t base, uint32_t addr)
+{
+   ADC_SAMPLING_SET_READ_ADDR(base, addr);
+   return ADC_SAMPLING_READ_DATA(base);
+}
+
+#endif

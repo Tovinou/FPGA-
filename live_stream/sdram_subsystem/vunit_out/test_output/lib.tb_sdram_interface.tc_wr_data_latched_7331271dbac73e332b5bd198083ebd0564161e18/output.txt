@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - sdram_wr_data matches cam_fifo_rd_data (latched correctly)
+simulation stopped @145ns with status 0

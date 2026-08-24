@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - DQM must be 00 at all times (both byte lanes enabled)
+simulation stopped @5045ns with status 0

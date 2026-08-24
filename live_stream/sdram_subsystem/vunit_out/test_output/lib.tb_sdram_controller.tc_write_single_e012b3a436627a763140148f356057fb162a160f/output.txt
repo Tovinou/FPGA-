@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Single write: ACTIVE+addr, WRITE+data on SDRAM bus
+simulation stopped @200454988500fs with status 0

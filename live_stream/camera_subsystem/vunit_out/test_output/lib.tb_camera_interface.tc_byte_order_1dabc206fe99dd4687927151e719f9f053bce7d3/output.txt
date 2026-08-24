@@ -1,0 +1,6 @@
+               0 fs - default              -    INFO - Byte 0 = high byte [15:8], Byte 1 = low byte [7:0]
+       979174500 fs - check                -   ERROR - High byte = first byte - Got UUUU_UUUU (NaN). Expected 1010_1011 (171).
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@979174500fs:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_camera_interface/main
+ghdl:error: simulation failed

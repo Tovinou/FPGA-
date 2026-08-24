@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Write and read banks are in different SDRAM halves
+simulation stopped @11285ns with status 0

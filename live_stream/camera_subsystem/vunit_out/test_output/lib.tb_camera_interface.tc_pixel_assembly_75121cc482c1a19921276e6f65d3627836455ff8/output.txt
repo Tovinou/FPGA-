@@ -1,0 +1,6 @@
+               0 fs - default              -    INFO - Two bytes assembled into correct RGB565 word
+       979174500 fs - check                -   ERROR - RGB565 assembly: 0xF8,0x1F -> 0xF81F - Got UUUU_UUUU_UUUU_UUUU (NaN). Expected 1111_1000_0001_1111 (63519).
+C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@979174500fs:(report failure): Stop simulation on log level error
+ghdl:error: report failed
+  instance: /tb_camera_interface/main
+ghdl:error: simulation failed

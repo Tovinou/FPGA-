@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Pure green: R5=00000 G6=111111 B5=00000
+simulation stopped @260ns with status 0

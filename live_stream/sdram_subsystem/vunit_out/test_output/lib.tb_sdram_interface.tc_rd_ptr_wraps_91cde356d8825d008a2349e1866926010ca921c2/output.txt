@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - rd_ptr wraps to 0 after reaching FRAME_WORDS boundary
+simulation stopped @485ns with status 0

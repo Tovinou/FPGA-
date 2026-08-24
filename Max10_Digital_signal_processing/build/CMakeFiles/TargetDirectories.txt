@@ -1,0 +1,9 @@
+C:/Jensen/projects/Max10_Digital_signal_processing/build/CMakeFiles/app.elf.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/CMakeFiles/create-objdump.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/CMakeFiles/niosv-stack-report.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/CMakeFiles/create-hex.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/CMakeFiles/edit_cache.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/CMakeFiles/rebuild_cache.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/hal_bsp/CMakeFiles/hal2_bsp.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/hal_bsp/CMakeFiles/edit_cache.dir
+C:/Jensen/projects/Max10_Digital_signal_processing/build/hal_bsp/CMakeFiles/rebuild_cache.dir

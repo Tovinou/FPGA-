@@ -1,0 +1,184 @@
+m255
+K4
+z2
+!s11e vcom 2025.2 2025.05, May 31 2025
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Jensen/projects/fpga/live_stream/sys_ctrl
+Edebounce_explicit
+Z1 w1774427822
+Z2 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 0
+R0
+Z5 8C:\Jensen\projects\fpga\live_stream\sys_ctrl\debounce_explicit.vhd
+Z6 FC:\Jensen\projects\fpga\live_stream\sys_ctrl\debounce_explicit.vhd
+l0
+L10 1
+V7lUf?fNUi];`5A]ZN_4Bi0
+!s100 GAgz5mWOJ3l=`QEc;VUUM0
+Z7 OL;C;2025.2;82
+33
+Z8 !s110 1774428270
+!i10b 1
+Z9 !s108 1774428270.000000
+Z10 !s90 -quiet|-modelsimini|C:\Jensen\projects\fpga\live_stream\sys_ctrl\vunit_out\modelsim\modelsim.ini|-2008|-work|lib|C:\Jensen\projects\fpga\live_stream\sys_ctrl\debounce_explicit.vhd|
+Z11 !s107 C:\\Jensen\\projects\\fpga\\live_stream\\sys_ctrl\\debounce_explicit.vhd|
+!i113 0
+Z12 o-quiet -2008 -work lib
+Z13 tExplicit 1 CvgOpt 0 defaultOptions 1083072464
+Artl
+R2
+R3
+R4
+Z14 DEx4 work 17 debounce_explicit 0 22 7lUf?fNUi];`5A]ZN_4Bi0
+!i122 0
+l35
+L24 59
+VQ:@m?1P?^8Tj[NFUP@ace1
+!s100 1O8A@g`RK98kWL>1oPGZG2
+R7
+33
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 0
+R12
+R13
+Etb_debounce_explicit
+Z15 w1774428316
+Z16 D^#x9 vunit_lib 13 vunit_context 0 22 HNAJGo?Re@i?[9Be@4f512
+Z17 DPx9 vunit_lib 9 event_pkg 0 22 1f9D:13FmYl:>N35>aenS3
+Z18 DPx9 vunit_lib 18 run_deprecated_pkg 0 22 IUUkGfNLmMI1?:=Q:8UaS3
+Z19 DPx9 vunit_lib 10 runner_pkg 0 22 bnWEH<?L=<4_hlFe^Gm^I2
+Z20 DPx9 vunit_lib 7 run_pkg 0 22 nl0laj`UdkG?Z[J?Y:Dz82
+Z21 DPx9 vunit_lib 17 event_private_pkg 0 22 bGC2><zKbjc5;gJWjW>`f2
+Z22 DPx9 vunit_lib 13 run_types_pkg 0 22 JiCY`4O50BOh>cUQKJ7aE1
+Z23 DPx9 vunit_lib 20 check_deprecated_pkg 0 22 E]<MTLC>Q^SHn=_Z9FMTE1
+Z24 DPx9 vunit_lib 16 event_common_pkg 0 22 ]j5F7^H]hk3N_PJ`ZDO8<0
+Z25 DPx9 vunit_lib 9 check_pkg 0 22 ?;flQG:Rf;o[FJZCbo?Gh3
+Z26 DPx9 vunit_lib 12 location_pkg 0 22 z`mEo=DOTo>?IPdL3d5WT0
+Z27 DPx9 vunit_lib 11 checker_pkg 0 22 ^SG0e`h16:@B]bEd_ZcN`3
+Z28 DPx9 vunit_lib 18 log_deprecated_pkg 0 22 F8lE0;l8Q[mjaa]SQk_gm3
+Z29 DPx9 vunit_lib 9 print_pkg 0 22 h]Pflk1b]D4:Ne_hT_d:I1
+Z30 DPx9 vunit_lib 4 path 0 22 ]>kzNCf=6K3JB8GSg@m3E3
+Z31 DPx9 vunit_lib 8 stop_pkg 0 22 WDjk?7@e?9@R3kT>I_X]N3
+Z32 DPx9 vunit_lib 8 core_pkg 0 22 mU8Lb]B3l@__EgSMliF9K0
+Z33 DPx9 vunit_lib 6 id_pkg 0 22 mRf9;SSk?WQU@Zamk9gmf3
+Z34 DPx9 vunit_lib 15 log_handler_pkg 0 22 bN;K4@19;H?hMQOXDeg0H0
+Z35 DPx9 vunit_lib 8 ansi_pkg 0 22 =dLoFZT8QZ>e6C1L8DcWh1
+Z36 DPx9 vunit_lib 14 log_levels_pkg 0 22 9>MQ;lcQCM[FCJ6AA5:i21
+Z37 DPx9 vunit_lib 10 logger_pkg 0 22 ]A8o20N>n;HF6?T5PkFB[3
+Z38 DPx9 vunit_lib 10 dictionary 0 22 R3beX@[D^DomNEB@kj^zI0
+Z39 D^#x9 vunit_lib 18 data_types_context 0 22 c0Kah99P84?H:ebAJQR<72
+Z40 DPx9 vunit_lib 8 dict_pkg 0 22 kLLSD>ZHMeLWPfafMgNjV2
+Z41 DPx9 vunit_lib 19 byte_vector_ptr_pkg 0 22 z[QLTQBzadFX;cI4EEdF;2
+Z42 DPx9 vunit_lib 19 string_ptr_pool_pkg 0 22 :OGWLJ^0QKekidN@:845@0
+Z43 DPx9 vunit_lib 14 queue_pool_pkg 0 22 ;>]V;AkaHoYO2LRVGV^U=3
+Z44 DPx9 vunit_lib 10 string_ops 0 22 gd8h3lWXX`=0>CjZQ`a7Z2
+Z45 DPx9 vunit_lib 22 data_types_private_pkg 0 22 fDn2SB^mIXM4=XJDL6g[k0
+Z46 DPx9 vunit_lib 17 integer_array_pkg 0 22 7k3W`8YnCEDB=[N>dK:`>2
+Z47 DPx9 vunit_lib 19 external_string_pkg 0 22 Nk=dhliohYg`P4IVB1TTe0
+Z48 DPx9 vunit_lib 14 string_ptr_pkg 0 22 J92YZJoYiTmDT4ooUiNme0
+Z49 DPx9 vunit_lib 9 queue_pkg 0 22 5^VfGSLACz8V^gNFHF9N33
+Z50 DPx9 vunit_lib 27 integer_vector_ptr_pool_pkg 0 22 S9f]lVom]h?4QR3HPeV@01
+Z51 DPx9 vunit_lib 17 codec_builder_pkg 0 22 :G]jdJa<aSB<__FS`MoPN2
+R2
+Z52 DPx4 ieee 11 numeric_bit 0 22 G2;d`f^X6V]cQEn8_38:i1
+Z53 DPx4 ieee 9 math_real 0 22 gNk<PdFJ<XNPcfef`f?Z81
+Z54 DPx4 ieee 12 math_complex 0 22 lndMRF4<kJnT_9]@:30S@3
+Z55 DPx9 vunit_lib 9 codec_pkg 0 22 ODMSk4Y?^E8F9CaI3I06X1
+Z56 DPx9 vunit_lib 27 external_integer_vector_pkg 0 22 824TeAQUgFz@FbFXif2=J1
+Z57 DPx9 vunit_lib 22 integer_vector_ptr_pkg 0 22 6<CKEelb;WU^8M<14HSl]2
+Z58 DPx9 vunit_lib 9 types_pkg 0 22 NAIDHJJF5]CD5<jMm]k^K3
+R3
+R4
+!i122 2
+R0
+Z59 8C:\Jensen\projects\fpga\live_stream\sys_ctrl\tb\tb_debounce_explicit\tb_debounce_explicit.vhd
+Z60 FC:\Jensen\projects\fpga\live_stream\sys_ctrl\tb\tb_debounce_explicit\tb_debounce_explicit.vhd
+l0
+L6 1
+V?Tn_=8aSkgC>=a8GSPeo92
+!s100 lU?Q6>i=>^88hBXXQ0fIR0
+R7
+33
+Z61 !s110 1774428330
+!i10b 1
+Z62 !s108 1774428330.000000
+Z63 !s90 -quiet|-modelsimini|C:\Jensen\projects\fpga\live_stream\sys_ctrl\vunit_out\modelsim\modelsim.ini|-2008|-work|lib|C:\Jensen\projects\fpga\live_stream\sys_ctrl\tb\tb_debounce_explicit\tb_debounce_explicit.vhd|
+!s107 C:\\Jensen\\projects\\fpga\\live_stream\\sys_ctrl\\tb\\tb_debounce_explicit\\tb_debounce_explicit.vhd|
+!i113 0
+R12
+R13
+Atb
+R14
+R16
+R17
+R18
+R19
+R20
+R21
+R22
+R23
+R24
+R25
+R26
+R27
+R28
+R29
+R30
+R31
+R32
+R33
+R34
+R35
+R36
+R37
+R38
+R39
+R40
+R41
+R42
+R43
+R44
+R45
+R46
+R47
+R48
+R49
+R50
+R51
+R2
+R52
+R53
+R54
+R55
+R56
+R57
+R58
+R3
+R4
+DEx4 work 20 tb_debounce_explicit 0 22 ?Tn_=8aSkgC>=a8GSPeo92
+!i122 2
+l32
+L12 120
+VTX8XETMFTK65jBQ_k=CKS3
+!s100 af5G;MjMoAd;4U]EL1=^W1
+R7
+33
+R61
+!i10b 1
+R62
+R63
+Z64 !s107 C:\\Jensen\\projects\\fpga\\live_stream\\sys_ctrl\\tb\\tb_debounce_explicit\\tb_debounce_explicit.vhd|
+!i113 0
+R12
+R13

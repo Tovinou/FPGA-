@@ -1,0 +1,2 @@
+               0 fs - default              -    INFO - Read path continuous: rd_ptr not reset by frame_done
+simulation stopped @151135ns with status 0
