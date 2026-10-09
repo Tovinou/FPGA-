@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - No capture before i2c_done asserts
-simulation stopped @1395844500fs with status 0

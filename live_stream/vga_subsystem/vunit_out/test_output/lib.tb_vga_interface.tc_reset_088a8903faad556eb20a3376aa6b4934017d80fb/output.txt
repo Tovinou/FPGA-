@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - Reset: safe idle outputs
-simulation stopped @220ns with status 0

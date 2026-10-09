@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - No outputs asserted immediately after reset
-simulation stopped @35ns with status 0

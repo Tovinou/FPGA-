@@ -1,4 +1,0 @@
-               0 fs - default              -    INFO - Capture only starts after VSYNC high->low transition
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:284:29:@1270843500fs:(report note): first camera byte 12 at 1270843500 fs
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:290:33:@1312510500fs:(report note): second camera byte 34 at 1312510500 fs
-simulation stopped @1479178500fs with status 0

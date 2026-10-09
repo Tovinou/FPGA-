@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - HSYNC pulse width = 96 clocks
-simulation stopped @32140ns with status 0

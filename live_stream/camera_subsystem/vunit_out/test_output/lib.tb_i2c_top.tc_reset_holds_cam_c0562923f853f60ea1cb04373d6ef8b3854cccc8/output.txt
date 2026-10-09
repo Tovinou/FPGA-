@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - cam_rst_n must be low while rst_n=0 and during hold period
-simulation stopped @135ns with status 0

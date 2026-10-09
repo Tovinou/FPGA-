@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - Valid I2C STOP: SDA rises while SCL high
-simulation stopped @10590005ns with status 0

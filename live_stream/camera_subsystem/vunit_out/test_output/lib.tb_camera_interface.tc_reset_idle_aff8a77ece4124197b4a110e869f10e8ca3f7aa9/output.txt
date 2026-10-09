@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - No output during reset
-simulation stopped @812506500fs with status 0

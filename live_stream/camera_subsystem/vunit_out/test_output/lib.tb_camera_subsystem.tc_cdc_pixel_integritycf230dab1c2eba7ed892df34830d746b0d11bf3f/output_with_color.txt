@@ -1,8 +1,0 @@
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:116:9:warning: instance "u_fifo" of component "dcfifo" is not bound [-Wbinding]
-        u_fifo : dcfifo
-        ^
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\asyn_fifo.vhd:33:14:warning: (in default configuration of asyn_fifo(rtl))
-               [22;96;49m0 fs[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - Pixel written at PCLK readable correctly at 100MHz
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:284:29:@44680544941500fs:(report note): first camera byte F8 at 44680544941500 fs
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:290:33:@44680586608500fs:(report note): second camera byte 1F at 44680586608500 fs
-simulation stopped @44780775ns with status 0

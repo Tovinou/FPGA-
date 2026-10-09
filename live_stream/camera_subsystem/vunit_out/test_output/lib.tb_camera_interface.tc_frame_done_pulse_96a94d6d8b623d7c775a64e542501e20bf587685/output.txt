@@ -1,4 +1,0 @@
-               0 fs - default              -    INFO - frame_done asserts when VSYNC rises during S_CAPTURE
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:284:29:@854173500fs:(report note): first camera byte AA at 854173500 fs
-C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:290:33:@895840500fs:(report note): second camera byte BB at 895840500 fs
-simulation stopped @1145842500fs with status 0

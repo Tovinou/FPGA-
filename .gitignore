@@ -14,7 +14,7 @@ $RECYCLE.BIN/
 # ================================
 # Editors / IDEs
 # ================================
-.vscode/
+.vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
 .idea/
@@ -22,6 +22,9 @@ $RECYCLE.BIN/
 *.swo
 *~
 .history/
+.trae/
+.aider*
+.cursor/
 
 # ================================
 # Python
@@ -31,7 +34,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
 dist/
 *.egg-info/
 .eggs/
@@ -45,19 +47,19 @@ env/
 htmlcov/
 
 # ================================
-# Quartus Generated Files
+# Quartus / Qsys generated files
 # ================================
 db/
 incremental_db/
 greybox_tmp/
-simulation/
 output_files/
-
+simulation/          # remove if you keep hand-written sim sources here
 .qsys_edit/
 .qsys_parameters/
 
 *.rpt
 *.summary
+*.sta.rpt
 *.jdi
 
 *.sof
@@ -74,8 +76,17 @@ output_files/
 *.sopcinfo
 *.qip
 
+*.regmap
+*.debuginfo
+*.smsg
+*.pin
+*.done
+*.sld
+*_assignment_defaults.qdf
+*_hw.tcl~
+
 # ================================
-# Vivado Generated Files
+# Vivado generated files
 # ================================
 *.jou
 *.str
@@ -110,21 +121,41 @@ xsim.dir/
 # DO NOT ignore .srcs/
 
 # ================================
-# Simulation / Waveforms
+# Simulation / VUnit / Modelsim
 # ================================
+vunit_out/
 sim_build/
+
 work/
 work-*
 transcript
 vsim.wlf
+
 *.ghw
 *.vcd
 *.fst
 *.wlf
 
+*.qdb
+*.qtl
+*.qpg
+_info
+_vmake
+modelsim.ini
+
 # ================================
-# Generic temporary files
+# CMake
 # ================================
+**/build/
+**/cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+compile_commands.json
+
+# ================================
+# Qt / QSys / misc
+# ================================
+*.qsys.bak
 *.bak
 *.tmp
 *.orig

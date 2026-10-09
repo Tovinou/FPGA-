@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - First command must not appear before 200us
-simulation stopped @200081664500fs with status 0

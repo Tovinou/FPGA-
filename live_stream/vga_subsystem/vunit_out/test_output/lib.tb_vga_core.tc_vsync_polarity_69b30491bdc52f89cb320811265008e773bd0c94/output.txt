@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - VSYNC idle high, pulse active low
-simulation stopped @15744140ns with status 0

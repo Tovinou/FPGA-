@@ -1,2 +1,0 @@
-               [22;96;49m0 fs[0m - [1;37;49mdefault[0m              -    [1;37;49mINFO[0m - First register write must be COM7=0x80 (soft reset)
-simulation stopped @10590005ns with status 0

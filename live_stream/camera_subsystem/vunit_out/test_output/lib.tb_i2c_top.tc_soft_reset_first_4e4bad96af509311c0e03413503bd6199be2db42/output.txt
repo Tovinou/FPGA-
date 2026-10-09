@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - First register write must be COM7=0x80 (soft reset)
-simulation stopped @10590005ns with status 0

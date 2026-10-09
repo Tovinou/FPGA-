@@ -1,2 +1,0 @@
-               0 fs - default              -    INFO - SIOC toggles at ~50kHz after reset + release
-simulation stopped @10050005ns with status 0
