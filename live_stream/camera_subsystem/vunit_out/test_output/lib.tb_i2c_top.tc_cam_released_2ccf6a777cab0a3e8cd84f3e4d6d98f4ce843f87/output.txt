@@ -1,2 +1,2 @@
                0 fs - default              -    INFO - cam_rst_n goes high after reset hold period
-simulation stopped @5208562501500fs with status 0
+simulation stopped @5000045ns with status 0

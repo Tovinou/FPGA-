@@ -1,2 +1,2 @@
                0 fs - default              -    INFO - Single read: rd_valid asserts, rd_data captured from DQ
-simulation stopped @200881644500fs with status 0
+simulation stopped @200725ns with status 0

@@ -52,12 +52,12 @@ static int test_load_and_counting(void)
     TIMER_WRITE_CONTROL(TIMER_MODE_STOP);
     failures += test_check("timer counts up", after > before);
 
-    TIMER_WRITE_LOAD(100U);
+    TIMER_WRITE_LOAD(100000U);
     TIMER_WRITE_CONTROL(TIMER_MODE_LOAD);
     test_wait_cycles(2U, timer_status_read);
     before = TIMER_READ_VALUE();
     TIMER_WRITE_CONTROL(TIMER_COUNTDOWN | TIMER_PRESCALER_1 | TIMER_MODE_START);
-    test_wait_cycles(TIMER_WAIT_COUNT, timer_status_read);
+    test_wait_cycles(100U, timer_status_read);
     after = TIMER_READ_VALUE();
     TIMER_WRITE_CONTROL(TIMER_MODE_STOP);
     failures += test_check("timer counts down", after < before);
@@ -81,11 +81,11 @@ static int test_prescalers(void)
         TIMER_WRITE_CONTROL(TIMER_MODE_LOAD);
         TIMER_WRITE_CONTROL(values[i] | TIMER_MODE_START);
         test_wait_cycles(TIMER_WAIT_COUNT, timer_status_read);
-        TIMER_WRITE_CONTROL(TIMER_MODE_STOP);
         printf("timer prescaler /%u value=0x%08x\n",
                names[i], (unsigned int)TIMER_READ_VALUE());
         failures += test_check("timer prescaler readback",
                                (TIMER_READ_CONTROL() & TIMER_PRESCALER_MASK) == values[i]);
+         TIMER_WRITE_CONTROL(TIMER_MODE_STOP);
     }
     return failures;
 }

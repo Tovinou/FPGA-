@@ -4,7 +4,7 @@
  * Machine generated for CPU 'max_niosv' in SOPC Builder design 'Max10_embedded_sys'
  * SOPC Builder design path: C:/Jensen/projects/Max10_Digital_signal_processing/Max10_embedded_sys.sopcinfo
  *
- * Generated: Thu Aug 20 22:52:49 CEST 2026
+ * Generated: Thu Sep 03 18:59:41 CEST 2026
  */
 
 /*
@@ -60,7 +60,6 @@
 
 #include "intel_niosv_m_irq.h"
 #include "altera_avalon_jtag_uart.h"
-#include "altera_avalon_timer.h"
 #include "altera_modular_adc.h"
 #include "intel_niosv_m.h"
 
@@ -70,8 +69,7 @@
 
 INTEL_NIOSV_M_IRQ_INSTANCE ( MAX_NIOSV, max_niosv);
 ALTERA_AVALON_JTAG_UART_INSTANCE ( DEBUG, debug);
-ALTERA_AVALON_TIMER_INSTANCE ( INTERVAL_TIMER, Interval_timer);
-ALTERA_MODULAR_ADC_SEQUENCER_CSR_SAMPLE_STORE_CSR_INSTANCE ( MODULAR_ADC_0, MODULAR_ADC_0_SEQUENCER_CSR, MODULAR_ADC_0_SAMPLE_STORE_CSR, modular_adc_0);
+ALTERA_MODULAR_ADC_SEQUENCER_CSR_INSTANCE ( MODULAR_ADC_0, MODULAR_ADC_0_SEQUENCER_CSR, modular_adc_0);
 INTEL_NIOSV_M_INSTANCE ( MAX_NIOSV, max_niosv);
 
 /*
@@ -95,7 +93,6 @@ void alt_irq_init ( const void* base )
 
 void alt_sys_init( void )
 {
-    ALTERA_AVALON_TIMER_INIT ( INTERVAL_TIMER, Interval_timer);
     ALTERA_AVALON_JTAG_UART_INIT ( DEBUG, debug);
     ALTERA_MODULAR_ADC_INIT ( MODULAR_ADC_0, modular_adc_0);
     INTEL_NIOSV_M_INIT ( MAX_NIOSV, max_niosv);

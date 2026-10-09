@@ -2,12 +2,12 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal2</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Aug 20, 2026 10:52:47 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1787259167512</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Sep 3, 2026 6:59:40 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1788454780906</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>.\</BspGeneratedLocation>
         <BspSettingsFile>C:\Jensen\projects\Max10_Digital_signal_processing\software\hal_bsp\settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\Max10_embedded_sys.sopcinfo</SopcDesignFile>
-        <SystemFileHash>506be860fdebd64a3a5a90bb3e702944aa821b7f9d6a3c41549cc9d83ca16</SystemFileHash>
+        <SystemFileHash>3323e2f3b3c9c4f1655d312d26ab7ef78df601acffcfeee4c8ddbf8992bb82</SystemFileHash>
         <JdiFile>default</JdiFile>
         <Cpu>max_niosv</Cpu>
         <SchemaVersion>1.9</SchemaVersion>
@@ -171,7 +171,7 @@
                 <SettingName>hal.linker.exception_stack_memory_region_name</SettingName>
                 <Identifier>none</Identifier>
                 <Type>UnquotedString</Type>
-                <Value>sram</Value>
+                <Value>mycustom_sdram_0</Value>
                 <DefaultValue>none</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Name of the existing memory region that will be divided up to create the 'exception_stack' memory region. The selected region name will be adjusted automatically when the BSP is generated to create the 'exception_stack' memory region.</Description>
@@ -600,104 +600,104 @@
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
         <MemoryMap>
+                <slaveDescriptor>mycustom_sdram_0</slaveDescriptor>
+                <addressRange>0x00000000 - 0x03FFFFFF</addressRange>
+                <addressSpan>67108864</addressSpan>
+                <attributes>memory</attributes>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>max_niosv_dm_agent</slaveDescriptor>
-                <addressRange>0x00000000 - 0x0000FFFF</addressRange>
+                <addressRange>0x04000000 - 0x0400FFFF</addressRange>
                 <addressSpan>65536</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>sram</slaveDescriptor>
-                <addressRange>0x00010000 - 0x00019FFF</addressRange>
+                <addressRange>0x04010000 - 0x04019FFF</addressRange>
                 <addressSpan>40960</addressSpan>
                 <attributes>memory</attributes>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>modular_adc_0_sample_store_csr</slaveDescriptor>
-                <addressRange>0x00020000 - 0x000201FF</addressRange>
-                <addressSpan>512</addressSpan>
-                <attributes/>
-        </MemoryMap>
-        <MemoryMap>
                 <slaveDescriptor>max_niosv_timer_sw_agent</slaveDescriptor>
-                <addressRange>0x00020200 - 0x0002023F</addressRange>
+                <addressRange>0x04020000 - 0x0402003F</addressRange>
                 <addressSpan>64</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>timer_ip</slaveDescriptor>
-                <addressRange>0x00020240 - 0x0002027F</addressRange>
+                <addressRange>0x04020040 - 0x0402007F</addressRange>
                 <addressSpan>64</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>Interval_timer</slaveDescriptor>
-                <addressRange>0x00020280 - 0x0002029F</addressRange>
+                <slaveDescriptor>adc_fifo_0</slaveDescriptor>
+                <addressRange>0x04020080 - 0x0402009F</addressRange>
                 <addressSpan>32</addressSpan>
-                <attributes>timer</attributes>
-        </MemoryMap>
-        <MemoryMap>
-                <slaveDescriptor>altpll_0</slaveDescriptor>
-                <addressRange>0x000202A0 - 0x000202AF</addressRange>
-                <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>keys</slaveDescriptor>
-                <addressRange>0x000202B0 - 0x000202BF</addressRange>
+                <addressRange>0x040200A0 - 0x040200AF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>pio_0</slaveDescriptor>
-                <addressRange>0x000202C0 - 0x000202CF</addressRange>
+                <addressRange>0x040200B0 - 0x040200BF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>modular_adc_0_sequencer_csr</slaveDescriptor>
-                <addressRange>0x000202D0 - 0x000202D7</addressRange>
+                <slaveDescriptor>altpll_0</slaveDescriptor>
+                <addressRange>0x040200C0 - 0x040200CF</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>modular_adc_0</slaveDescriptor>
+                <addressRange>0x040200D0 - 0x040200D7</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>debug</slaveDescriptor>
-                <addressRange>0x000202D8 - 0x000202DF</addressRange>
+                <addressRange>0x040200D8 - 0x040200DF</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
         </MemoryMap>
         <LinkerSection>
                 <sectionName>.text</sectionName>
-                <regionName>sram</regionName>
+                <regionName>mycustom_sdram_0</regionName>
                 <noLoad>false</noLoad>
         </LinkerSection>
         <LinkerSection>
                 <sectionName>.exceptions</sectionName>
-                <regionName>sram</regionName>
+                <regionName>mycustom_sdram_0</regionName>
                 <noLoad>false</noLoad>
         </LinkerSection>
         <LinkerSection>
                 <sectionName>.rodata</sectionName>
-                <regionName>sram</regionName>
+                <regionName>mycustom_sdram_0</regionName>
                 <noLoad>false</noLoad>
         </LinkerSection>
         <LinkerSection>
                 <sectionName>.rwdata</sectionName>
-                <regionName>sram</regionName>
+                <regionName>mycustom_sdram_0</regionName>
                 <noLoad>false</noLoad>
         </LinkerSection>
         <LinkerSection>
                 <sectionName>.bss</sectionName>
-                <regionName>sram</regionName>
+                <regionName>mycustom_sdram_0</regionName>
                 <noLoad>false</noLoad>
         </LinkerSection>
         <LinkerSection>
                 <sectionName>.heap</sectionName>
-                <regionName>sram</regionName>
+                <regionName>mycustom_sdram_0</regionName>
                 <noLoad>false</noLoad>
         </LinkerSection>
         <LinkerSection>
                 <sectionName>.stack</sectionName>
-                <regionName>sram</regionName>
+                <regionName>mycustom_sdram_0</regionName>
                 <noLoad>false</noLoad>
         </LinkerSection>
 </sch:Settings>

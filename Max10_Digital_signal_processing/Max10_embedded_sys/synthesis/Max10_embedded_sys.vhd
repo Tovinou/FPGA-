@@ -8,21 +8,31 @@ use IEEE.numeric_std.all;
 
 entity Max10_embedded_sys is
 	port (
-		adc_fifo_0_status_level             : out std_logic_vector(31 downto 0);                    --            adc_fifo_0_status.level
-		adc_fifo_0_status_empty             : out std_logic;                                        --                             .empty
-		adc_fifo_0_status_full              : out std_logic;                                        --                             .full
-		adc_fifo_0_status_almost_full       : out std_logic;                                        --                             .almost_full
-		adc_fifo_0_status_almost_empty      : out std_logic;                                        --                             .almost_empty
-		adc_reader_0_control_enable         : in  std_logic                     := '0';             --         adc_reader_0_control.enable
-		adc_reader_0_control_busy           : out std_logic;                                        --                             .busy
-		altpll_0_locked_conduit_export      : out std_logic;                                        --      altpll_0_locked_conduit.export
-		button_export                       : in  std_logic_vector(1 downto 0)  := (others => '0'); --                       button.export
-		cap_conduit                         : in  std_logic                     := '0';             --                          cap.conduit
-		clk_clk                             : in  std_logic                     := '0';             --                          clk.clk
-		ledr_export                         : out std_logic_vector(9 downto 0);                     --                         ledr.export
-		modular_adc_0_adc_pll_locked_export : in  std_logic                     := '0';             -- modular_adc_0_adc_pll_locked.export
-		pwm_conduit                         : out std_logic;                                        --                          pwm.conduit
-		reset_reset_n                       : in  std_logic                     := '0'              --                        reset.reset_n
+		adc_fifo_0_status_level             : out   std_logic_vector(31 downto 0);                    --            adc_fifo_0_status.level
+		adc_fifo_0_status_empty             : out   std_logic;                                        --                             .empty
+		adc_fifo_0_status_full              : out   std_logic;                                        --                             .full
+		adc_fifo_0_status_almost_full       : out   std_logic;                                        --                             .almost_full
+		adc_fifo_0_status_almost_empty      : out   std_logic;                                        --                             .almost_empty
+		adc_reader_0_control_enable         : in    std_logic                     := '0';             --         adc_reader_0_control.enable
+		adc_reader_0_control_busy           : out   std_logic;                                        --                             .busy
+		altpll_0_c2_clk                     : out   std_logic;                                        --                  altpll_0_c2.clk
+		altpll_0_locked_conduit_export      : out   std_logic;                                        --      altpll_0_locked_conduit.export
+		button_export                       : in    std_logic_vector(1 downto 0)  := (others => '0'); --                       button.export
+		cap_conduit                         : in    std_logic                     := '0';             --                          cap.conduit
+		clk_clk                             : in    std_logic                     := '0';             --                          clk.clk
+		ledr_export                         : out   std_logic_vector(9 downto 0);                     --                         ledr.export
+		modular_adc_0_adc_pll_locked_export : in    std_logic                     := '0';             -- modular_adc_0_adc_pll_locked.export
+		pwm_conduit                         : out   std_logic;                                        --                          pwm.conduit
+		reset_reset_n                       : in    std_logic                     := '0';             --                        reset.reset_n
+		sdram_wire_addr                     : out   std_logic_vector(12 downto 0);                    --                   sdram_wire.addr
+		sdram_wire_ba                       : out   std_logic_vector(1 downto 0);                     --                             .ba
+		sdram_wire_cas_n                    : out   std_logic;                                        --                             .cas_n
+		sdram_wire_cke                      : out   std_logic;                                        --                             .cke
+		sdram_wire_cs_n                     : out   std_logic;                                        --                             .cs_n
+		sdram_wire_dq                       : inout std_logic_vector(15 downto 0) := (others => '0'); --                             .dq
+		sdram_wire_dqm                      : out   std_logic_vector(1 downto 0);                     --                             .dqm
+		sdram_wire_ras_n                    : out   std_logic;                                        --                             .ras_n
+		sdram_wire_we_n                     : out   std_logic                                         --                             .we_n
 	);
 end entity Max10_embedded_sys;
 
@@ -86,11 +96,11 @@ architecture rtl of Max10_embedded_sys is
 			readdata           : out std_logic_vector(31 downto 0);                    -- readdata
 			writedata          : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
 			c0                 : out std_logic;                                        -- clk
+			c1                 : out std_logic;                                        -- clk
+			c2                 : out std_logic;                                        -- clk
 			locked             : out std_logic;                                        -- export
 			scandone           : out std_logic;                                        -- export
 			scandataout        : out std_logic;                                        -- export
-			c1                 : out std_logic;                                        -- clk
-			c2                 : out std_logic;                                        -- clk
 			c3                 : out std_logic;                                        -- clk
 			c4                 : out std_logic;                                        -- clk
 			areset             : in  std_logic                     := 'X';             -- export
@@ -250,6 +260,31 @@ architecture rtl of Max10_embedded_sys is
 		);
 	end component moving_average;
 
+	component mycustom_sdram is
+		port (
+			clk            : in    std_logic                     := 'X';             -- clk
+			reset_n        : in    std_logic                     := 'X';             -- reset_n
+			az_addr        : in    std_logic_vector(24 downto 0) := (others => 'X'); -- address
+			az_be_n        : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- byteenable_n
+			az_cs          : in    std_logic                     := 'X';             -- chipselect
+			az_data        : in    std_logic_vector(15 downto 0) := (others => 'X'); -- writedata
+			az_rd_n        : in    std_logic                     := 'X';             -- read_n
+			az_wr_n        : in    std_logic                     := 'X';             -- write_n
+			za_data        : out   std_logic_vector(15 downto 0);                    -- readdata
+			za_valid       : out   std_logic;                                        -- readdatavalid
+			za_waitrequest : out   std_logic;                                        -- waitrequest
+			zs_addr        : out   std_logic_vector(12 downto 0);                    -- addr
+			zs_ba          : out   std_logic_vector(1 downto 0);                     -- ba
+			zs_cas_n       : out   std_logic;                                        -- cas_n
+			zs_cke         : out   std_logic;                                        -- cke
+			zs_cs_n        : out   std_logic;                                        -- cs_n
+			zs_dq          : inout std_logic_vector(15 downto 0) := (others => 'X'); -- dq
+			zs_dqm         : out   std_logic_vector(1 downto 0);                     -- dqm
+			zs_ras_n       : out   std_logic;                                        -- ras_n
+			zs_we_n        : out   std_logic                                         -- we_n
+		);
+	end component mycustom_sdram;
+
 	component Max10_embedded_sys_pio_0 is
 		port (
 			clk        : in  std_logic                     := 'X';             -- clk
@@ -355,9 +390,11 @@ architecture rtl of Max10_embedded_sys is
 			max_niosv_instruction_manager_rvalid                       : out std_logic;                                        -- rvalid
 			max_niosv_instruction_manager_rready                       : in  std_logic                     := 'X';             -- rready
 			altpll_0_c0_clk                                            : in  std_logic                     := 'X';             -- clk
+			altpll_0_c1_clk                                            : in  std_logic                     := 'X';             -- clk
 			clk_0_clk_clk                                              : in  std_logic                     := 'X';             -- clk
 			altpll_0_inclk_interface_reset_reset_bridge_in_reset_reset : in  std_logic                     := 'X';             -- reset
 			max_niosv_reset_reset_bridge_in_reset_reset                : in  std_logic                     := 'X';             -- reset
+			mycustom_sdram_0_reset_reset_bridge_in_reset_reset         : in  std_logic                     := 'X';             -- reset
 			adc_fifo_0_avs_address                                     : out std_logic_vector(2 downto 0);                     -- address
 			adc_fifo_0_avs_write                                       : out std_logic;                                        -- write
 			adc_fifo_0_avs_read                                        : out std_logic;                                        -- read
@@ -398,6 +435,15 @@ architecture rtl of Max10_embedded_sys is
 			modular_adc_0_sequencer_csr_read                           : out std_logic;                                        -- read
 			modular_adc_0_sequencer_csr_readdata                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			modular_adc_0_sequencer_csr_writedata                      : out std_logic_vector(31 downto 0);                    -- writedata
+			mycustom_sdram_0_s1_address                                : out std_logic_vector(24 downto 0);                    -- address
+			mycustom_sdram_0_s1_write                                  : out std_logic;                                        -- write
+			mycustom_sdram_0_s1_read                                   : out std_logic;                                        -- read
+			mycustom_sdram_0_s1_readdata                               : in  std_logic_vector(15 downto 0) := (others => 'X'); -- readdata
+			mycustom_sdram_0_s1_writedata                              : out std_logic_vector(15 downto 0);                    -- writedata
+			mycustom_sdram_0_s1_byteenable                             : out std_logic_vector(1 downto 0);                     -- byteenable
+			mycustom_sdram_0_s1_readdatavalid                          : in  std_logic                     := 'X';             -- readdatavalid
+			mycustom_sdram_0_s1_waitrequest                            : in  std_logic                     := 'X';             -- waitrequest
+			mycustom_sdram_0_s1_chipselect                             : out std_logic;                                        -- chipselect
 			pio_0_s1_address                                           : out std_logic_vector(1 downto 0);                     -- address
 			pio_0_s1_write                                             : out std_logic;                                        -- write
 			pio_0_s1_readdata                                          : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
@@ -571,6 +617,7 @@ architecture rtl of Max10_embedded_sys is
 	signal moving_average_0_sample_source_data                              : std_logic_vector(15 downto 0); -- moving_average_0:data_out -> adc_fifo_0:in_data
 	signal moving_average_0_sample_source_ready                             : std_logic;                     -- adc_fifo_0:in_ready -> moving_average_0:ready_out
 	signal altpll_0_c0_clk                                                  : std_logic;                     -- altpll_0:c0 -> [adc_fifo_0:clk, adc_reader_0:clk, debug:clk, irq_mapper:clk, keys:clk, max_niosv:clk, mm_interconnect_0:altpll_0_c0_clk, mm_interconnect_1:altpll_0_c0_clk, modular_adc_0:adc_pll_clock_clk, modular_adc_0:clock_clk, moving_average_0:clk, pio_0:clk, rst_controller:clk, sram:clk, timer_ip:clk]
+	signal altpll_0_c1_clk                                                  : std_logic;                     -- altpll_0:c1 -> [mm_interconnect_1:altpll_0_c1_clk, mycustom_sdram_0:clk, rst_controller_002:clk]
 	signal adc_reader_0_adc_master_readdata                                 : std_logic_vector(31 downto 0); -- mm_interconnect_0:adc_reader_0_adc_master_readdata -> adc_reader_0:adc_readdata
 	signal adc_reader_0_adc_master_waitrequest                              : std_logic;                     -- mm_interconnect_0:adc_reader_0_adc_master_waitrequest -> adc_reader_0:adc_waitrequest
 	signal adc_reader_0_adc_master_address                                  : std_logic_vector(6 downto 0);  -- adc_reader_0:adc_address -> mm_interconnect_0:adc_reader_0_adc_master_address
@@ -665,6 +712,15 @@ architecture rtl of Max10_embedded_sys is
 	signal mm_interconnect_1_sram_s1_write                                  : std_logic;                     -- mm_interconnect_1:sram_s1_write -> sram:write
 	signal mm_interconnect_1_sram_s1_writedata                              : std_logic_vector(31 downto 0); -- mm_interconnect_1:sram_s1_writedata -> sram:writedata
 	signal mm_interconnect_1_sram_s1_clken                                  : std_logic;                     -- mm_interconnect_1:sram_s1_clken -> sram:clken
+	signal mm_interconnect_1_mycustom_sdram_0_s1_chipselect                 : std_logic;                     -- mm_interconnect_1:mycustom_sdram_0_s1_chipselect -> mycustom_sdram_0:az_cs
+	signal mm_interconnect_1_mycustom_sdram_0_s1_readdata                   : std_logic_vector(15 downto 0); -- mycustom_sdram_0:za_data -> mm_interconnect_1:mycustom_sdram_0_s1_readdata
+	signal mm_interconnect_1_mycustom_sdram_0_s1_waitrequest                : std_logic;                     -- mycustom_sdram_0:za_waitrequest -> mm_interconnect_1:mycustom_sdram_0_s1_waitrequest
+	signal mm_interconnect_1_mycustom_sdram_0_s1_address                    : std_logic_vector(24 downto 0); -- mm_interconnect_1:mycustom_sdram_0_s1_address -> mycustom_sdram_0:az_addr
+	signal mm_interconnect_1_mycustom_sdram_0_s1_read                       : std_logic;                     -- mm_interconnect_1:mycustom_sdram_0_s1_read -> mm_interconnect_1_mycustom_sdram_0_s1_read:in
+	signal mm_interconnect_1_mycustom_sdram_0_s1_byteenable                 : std_logic_vector(1 downto 0);  -- mm_interconnect_1:mycustom_sdram_0_s1_byteenable -> mm_interconnect_1_mycustom_sdram_0_s1_byteenable:in
+	signal mm_interconnect_1_mycustom_sdram_0_s1_readdatavalid              : std_logic;                     -- mycustom_sdram_0:za_valid -> mm_interconnect_1:mycustom_sdram_0_s1_readdatavalid
+	signal mm_interconnect_1_mycustom_sdram_0_s1_write                      : std_logic;                     -- mm_interconnect_1:mycustom_sdram_0_s1_write -> mm_interconnect_1_mycustom_sdram_0_s1_write:in
+	signal mm_interconnect_1_mycustom_sdram_0_s1_writedata                  : std_logic_vector(15 downto 0); -- mm_interconnect_1:mycustom_sdram_0_s1_writedata -> mycustom_sdram_0:az_data
 	signal mm_interconnect_1_modular_adc_0_sequencer_csr_readdata           : std_logic_vector(31 downto 0); -- modular_adc_0:sequencer_csr_readdata -> mm_interconnect_1:modular_adc_0_sequencer_csr_readdata
 	signal mm_interconnect_1_modular_adc_0_sequencer_csr_address            : std_logic_vector(0 downto 0);  -- mm_interconnect_1:modular_adc_0_sequencer_csr_address -> modular_adc_0:sequencer_csr_address
 	signal mm_interconnect_1_modular_adc_0_sequencer_csr_read               : std_logic;                     -- mm_interconnect_1:modular_adc_0_sequencer_csr_read -> modular_adc_0:sequencer_csr_read
@@ -687,14 +743,19 @@ architecture rtl of Max10_embedded_sys is
 	signal rst_controller_reset_out_reset                                   : std_logic;                     -- rst_controller:reset_out -> [irq_mapper:reset, max_niosv:reset_reset, mm_interconnect_0:adc_reader_0_reset_reset_bridge_in_reset_reset, mm_interconnect_1:max_niosv_reset_reset_bridge_in_reset_reset, rst_controller_reset_out_reset:in, rst_translator:in_reset, sram:reset]
 	signal rst_controller_reset_out_reset_req                               : std_logic;                     -- rst_controller:reset_req -> [rst_translator:reset_req_in, sram:reset_req]
 	signal rst_controller_001_reset_out_reset                               : std_logic;                     -- rst_controller_001:reset_out -> [altpll_0:reset, mm_interconnect_1:altpll_0_inclk_interface_reset_reset_bridge_in_reset_reset]
-	signal reset_reset_n_ports_inv                                          : std_logic;                     -- reset_reset_n:inv -> [rst_controller:reset_in0, rst_controller_001:reset_in0]
+	signal rst_controller_002_reset_out_reset                               : std_logic;                     -- rst_controller_002:reset_out -> [mm_interconnect_1:mycustom_sdram_0_reset_reset_bridge_in_reset_reset, rst_controller_002_reset_out_reset:in]
+	signal reset_reset_n_ports_inv                                          : std_logic;                     -- reset_reset_n:inv -> [rst_controller:reset_in0, rst_controller_001:reset_in0, rst_controller_002:reset_in0]
 	signal mm_interconnect_1_debug_avalon_jtag_slave_read_ports_inv         : std_logic;                     -- mm_interconnect_1_debug_avalon_jtag_slave_read:inv -> debug:av_read_n
 	signal mm_interconnect_1_debug_avalon_jtag_slave_write_ports_inv        : std_logic;                     -- mm_interconnect_1_debug_avalon_jtag_slave_write:inv -> debug:av_write_n
 	signal mm_interconnect_1_timer_ip_avalon_slave_0_1_chipselect_ports_inv : std_logic;                     -- mm_interconnect_1_timer_ip_avalon_slave_0_1_chipselect:inv -> timer_ip:cs_n
 	signal mm_interconnect_1_timer_ip_avalon_slave_0_1_read_ports_inv       : std_logic;                     -- mm_interconnect_1_timer_ip_avalon_slave_0_1_read:inv -> timer_ip:read_n
 	signal mm_interconnect_1_timer_ip_avalon_slave_0_1_write_ports_inv      : std_logic;                     -- mm_interconnect_1_timer_ip_avalon_slave_0_1_write:inv -> timer_ip:write_n
 	signal mm_interconnect_1_pio_0_s1_write_ports_inv                       : std_logic;                     -- mm_interconnect_1_pio_0_s1_write:inv -> pio_0:write_n
+	signal mm_interconnect_1_mycustom_sdram_0_s1_read_ports_inv             : std_logic;                     -- mm_interconnect_1_mycustom_sdram_0_s1_read:inv -> mycustom_sdram_0:az_rd_n
+	signal mm_interconnect_1_mycustom_sdram_0_s1_byteenable_ports_inv       : std_logic_vector(1 downto 0);  -- mm_interconnect_1_mycustom_sdram_0_s1_byteenable:inv -> mycustom_sdram_0:az_be_n
+	signal mm_interconnect_1_mycustom_sdram_0_s1_write_ports_inv            : std_logic;                     -- mm_interconnect_1_mycustom_sdram_0_s1_write:inv -> mycustom_sdram_0:az_wr_n
 	signal rst_controller_reset_out_reset_ports_inv                         : std_logic;                     -- rst_controller_reset_out_reset:inv -> [adc_fifo_0:reset_n, adc_reader_0:reset_n, debug:rst_n, keys:reset_n, modular_adc_0:reset_sink_reset_n, moving_average_0:rst_n, pio_0:reset_n, timer_ip:reset_n]
+	signal rst_controller_002_reset_out_reset_ports_inv                     : std_logic;                     -- rst_controller_002_reset_out_reset:inv -> mycustom_sdram_0:reset_n
 
 begin
 
@@ -755,11 +816,11 @@ begin
 			readdata           => mm_interconnect_1_altpll_0_pll_slave_readdata,  --                      .readdata
 			writedata          => mm_interconnect_1_altpll_0_pll_slave_writedata, --                      .writedata
 			c0                 => altpll_0_c0_clk,                                --                    c0.clk
+			c1                 => altpll_0_c1_clk,                                --                    c1.clk
+			c2                 => altpll_0_c2_clk,                                --                    c2.clk
 			locked             => altpll_0_locked_conduit_export,                 --        locked_conduit.export
 			scandone           => open,                                           --           (terminated)
 			scandataout        => open,                                           --           (terminated)
-			c1                 => open,                                           --           (terminated)
-			c2                 => open,                                           --           (terminated)
 			c3                 => open,                                           --           (terminated)
 			c4                 => open,                                           --           (terminated)
 			areset             => '0',                                            --           (terminated)
@@ -913,6 +974,30 @@ begin
 			ready_out => moving_average_0_sample_source_ready      --              .ready
 		);
 
+	mycustom_sdram_0 : component mycustom_sdram
+		port map (
+			clk            => altpll_0_c1_clk,                                            --   clk.clk
+			reset_n        => rst_controller_002_reset_out_reset_ports_inv,               -- reset.reset_n
+			az_addr        => mm_interconnect_1_mycustom_sdram_0_s1_address,              --    s1.address
+			az_be_n        => mm_interconnect_1_mycustom_sdram_0_s1_byteenable_ports_inv, --      .byteenable_n
+			az_cs          => mm_interconnect_1_mycustom_sdram_0_s1_chipselect,           --      .chipselect
+			az_data        => mm_interconnect_1_mycustom_sdram_0_s1_writedata,            --      .writedata
+			az_rd_n        => mm_interconnect_1_mycustom_sdram_0_s1_read_ports_inv,       --      .read_n
+			az_wr_n        => mm_interconnect_1_mycustom_sdram_0_s1_write_ports_inv,      --      .write_n
+			za_data        => mm_interconnect_1_mycustom_sdram_0_s1_readdata,             --      .readdata
+			za_valid       => mm_interconnect_1_mycustom_sdram_0_s1_readdatavalid,        --      .readdatavalid
+			za_waitrequest => mm_interconnect_1_mycustom_sdram_0_s1_waitrequest,          --      .waitrequest
+			zs_addr        => sdram_wire_addr,                                            --  wire.addr
+			zs_ba          => sdram_wire_ba,                                              --      .ba
+			zs_cas_n       => sdram_wire_cas_n,                                           --      .cas_n
+			zs_cke         => sdram_wire_cke,                                             --      .cke
+			zs_cs_n        => sdram_wire_cs_n,                                            --      .cs_n
+			zs_dq          => sdram_wire_dq,                                              --      .dq
+			zs_dqm         => sdram_wire_dqm,                                             --      .dqm
+			zs_ras_n       => sdram_wire_ras_n,                                           --      .ras_n
+			zs_we_n        => sdram_wire_we_n                                             --      .we_n
+		);
+
 	pio_0 : component Max10_embedded_sys_pio_0
 		port map (
 			clk        => altpll_0_c0_clk,                            --                 clk.clk
@@ -1014,9 +1099,11 @@ begin
 			max_niosv_instruction_manager_rvalid                       => max_niosv_instruction_manager_rvalid,                     --                                                     .rvalid
 			max_niosv_instruction_manager_rready                       => max_niosv_instruction_manager_rready,                     --                                                     .rready
 			altpll_0_c0_clk                                            => altpll_0_c0_clk,                                          --                                          altpll_0_c0.clk
+			altpll_0_c1_clk                                            => altpll_0_c1_clk,                                          --                                          altpll_0_c1.clk
 			clk_0_clk_clk                                              => clk_clk,                                                  --                                            clk_0_clk.clk
 			altpll_0_inclk_interface_reset_reset_bridge_in_reset_reset => rst_controller_001_reset_out_reset,                       -- altpll_0_inclk_interface_reset_reset_bridge_in_reset.reset
 			max_niosv_reset_reset_bridge_in_reset_reset                => rst_controller_reset_out_reset,                           --                max_niosv_reset_reset_bridge_in_reset.reset
+			mycustom_sdram_0_reset_reset_bridge_in_reset_reset         => rst_controller_002_reset_out_reset,                       --         mycustom_sdram_0_reset_reset_bridge_in_reset.reset
 			adc_fifo_0_avs_address                                     => mm_interconnect_1_adc_fifo_0_avs_address,                 --                                       adc_fifo_0_avs.address
 			adc_fifo_0_avs_write                                       => mm_interconnect_1_adc_fifo_0_avs_write,                   --                                                     .write
 			adc_fifo_0_avs_read                                        => mm_interconnect_1_adc_fifo_0_avs_read,                    --                                                     .read
@@ -1057,6 +1144,15 @@ begin
 			modular_adc_0_sequencer_csr_read                           => mm_interconnect_1_modular_adc_0_sequencer_csr_read,       --                                                     .read
 			modular_adc_0_sequencer_csr_readdata                       => mm_interconnect_1_modular_adc_0_sequencer_csr_readdata,   --                                                     .readdata
 			modular_adc_0_sequencer_csr_writedata                      => mm_interconnect_1_modular_adc_0_sequencer_csr_writedata,  --                                                     .writedata
+			mycustom_sdram_0_s1_address                                => mm_interconnect_1_mycustom_sdram_0_s1_address,            --                                  mycustom_sdram_0_s1.address
+			mycustom_sdram_0_s1_write                                  => mm_interconnect_1_mycustom_sdram_0_s1_write,              --                                                     .write
+			mycustom_sdram_0_s1_read                                   => mm_interconnect_1_mycustom_sdram_0_s1_read,               --                                                     .read
+			mycustom_sdram_0_s1_readdata                               => mm_interconnect_1_mycustom_sdram_0_s1_readdata,           --                                                     .readdata
+			mycustom_sdram_0_s1_writedata                              => mm_interconnect_1_mycustom_sdram_0_s1_writedata,          --                                                     .writedata
+			mycustom_sdram_0_s1_byteenable                             => mm_interconnect_1_mycustom_sdram_0_s1_byteenable,         --                                                     .byteenable
+			mycustom_sdram_0_s1_readdatavalid                          => mm_interconnect_1_mycustom_sdram_0_s1_readdatavalid,      --                                                     .readdatavalid
+			mycustom_sdram_0_s1_waitrequest                            => mm_interconnect_1_mycustom_sdram_0_s1_waitrequest,        --                                                     .waitrequest
+			mycustom_sdram_0_s1_chipselect                             => mm_interconnect_1_mycustom_sdram_0_s1_chipselect,         --                                                     .chipselect
 			pio_0_s1_address                                           => mm_interconnect_1_pio_0_s1_address,                       --                                             pio_0_s1.address
 			pio_0_s1_write                                             => mm_interconnect_1_pio_0_s1_write,                         --                                                     .write
 			pio_0_s1_readdata                                          => mm_interconnect_1_pio_0_s1_readdata,                      --                                                     .readdata
@@ -1219,6 +1315,71 @@ begin
 			reset_req_in15 => '0'                                 -- (terminated)
 		);
 
+	rst_controller_002 : component max10_embedded_sys_rst_controller_001
+		generic map (
+			NUM_RESET_INPUTS          => 1,
+			OUTPUT_RESET_SYNC_EDGES   => "deassert",
+			SYNC_DEPTH                => 2,
+			RESET_REQUEST_PRESENT     => 0,
+			RESET_REQ_WAIT_TIME       => 1,
+			MIN_RST_ASSERTION_TIME    => 3,
+			RESET_REQ_EARLY_DSRT_TIME => 1,
+			USE_RESET_REQUEST_IN0     => 0,
+			USE_RESET_REQUEST_IN1     => 0,
+			USE_RESET_REQUEST_IN2     => 0,
+			USE_RESET_REQUEST_IN3     => 0,
+			USE_RESET_REQUEST_IN4     => 0,
+			USE_RESET_REQUEST_IN5     => 0,
+			USE_RESET_REQUEST_IN6     => 0,
+			USE_RESET_REQUEST_IN7     => 0,
+			USE_RESET_REQUEST_IN8     => 0,
+			USE_RESET_REQUEST_IN9     => 0,
+			USE_RESET_REQUEST_IN10    => 0,
+			USE_RESET_REQUEST_IN11    => 0,
+			USE_RESET_REQUEST_IN12    => 0,
+			USE_RESET_REQUEST_IN13    => 0,
+			USE_RESET_REQUEST_IN14    => 0,
+			USE_RESET_REQUEST_IN15    => 0,
+			ADAPT_RESET_REQUEST       => 0
+		)
+		port map (
+			reset_in0      => reset_reset_n_ports_inv,            -- reset_in0.reset
+			clk            => altpll_0_c1_clk,                    --       clk.clk
+			reset_out      => rst_controller_002_reset_out_reset, -- reset_out.reset
+			reset_req      => open,                               -- (terminated)
+			reset_req_in0  => '0',                                -- (terminated)
+			reset_in1      => '0',                                -- (terminated)
+			reset_req_in1  => '0',                                -- (terminated)
+			reset_in2      => '0',                                -- (terminated)
+			reset_req_in2  => '0',                                -- (terminated)
+			reset_in3      => '0',                                -- (terminated)
+			reset_req_in3  => '0',                                -- (terminated)
+			reset_in4      => '0',                                -- (terminated)
+			reset_req_in4  => '0',                                -- (terminated)
+			reset_in5      => '0',                                -- (terminated)
+			reset_req_in5  => '0',                                -- (terminated)
+			reset_in6      => '0',                                -- (terminated)
+			reset_req_in6  => '0',                                -- (terminated)
+			reset_in7      => '0',                                -- (terminated)
+			reset_req_in7  => '0',                                -- (terminated)
+			reset_in8      => '0',                                -- (terminated)
+			reset_req_in8  => '0',                                -- (terminated)
+			reset_in9      => '0',                                -- (terminated)
+			reset_req_in9  => '0',                                -- (terminated)
+			reset_in10     => '0',                                -- (terminated)
+			reset_req_in10 => '0',                                -- (terminated)
+			reset_in11     => '0',                                -- (terminated)
+			reset_req_in11 => '0',                                -- (terminated)
+			reset_in12     => '0',                                -- (terminated)
+			reset_req_in12 => '0',                                -- (terminated)
+			reset_in13     => '0',                                -- (terminated)
+			reset_req_in13 => '0',                                -- (terminated)
+			reset_in14     => '0',                                -- (terminated)
+			reset_req_in14 => '0',                                -- (terminated)
+			reset_in15     => '0',                                -- (terminated)
+			reset_req_in15 => '0'                                 -- (terminated)
+		);
+
 	reset_reset_n_ports_inv <= not reset_reset_n;
 
 	mm_interconnect_1_debug_avalon_jtag_slave_read_ports_inv <= not mm_interconnect_1_debug_avalon_jtag_slave_read;
@@ -1233,6 +1394,14 @@ begin
 
 	mm_interconnect_1_pio_0_s1_write_ports_inv <= not mm_interconnect_1_pio_0_s1_write;
 
+	mm_interconnect_1_mycustom_sdram_0_s1_read_ports_inv <= not mm_interconnect_1_mycustom_sdram_0_s1_read;
+
+	mm_interconnect_1_mycustom_sdram_0_s1_byteenable_ports_inv <= not mm_interconnect_1_mycustom_sdram_0_s1_byteenable;
+
+	mm_interconnect_1_mycustom_sdram_0_s1_write_ports_inv <= not mm_interconnect_1_mycustom_sdram_0_s1_write;
+
 	rst_controller_reset_out_reset_ports_inv <= not rst_controller_reset_out_reset;
+
+	rst_controller_002_reset_out_reset_ports_inv <= not rst_controller_002_reset_out_reset;
 
 end architecture rtl; -- of Max10_embedded_sys

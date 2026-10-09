@@ -48,15 +48,13 @@ architecture rtl of vga_interface is
 
     type line_buf_t is array (0 to 319) of std_logic_vector(15 downto 0);
     signal line_buf : line_buf_t;
-
     signal pixel    : std_logic_vector(15 downto 0) := (others => '0');
+    signal fetch_pixel_q : std_logic_vector(15 downto 0) := (others => '0');
     signal src_x    : unsigned(8 downto 0);
-
     signal rd_en_int    : std_logic := '0';
     signal rd_en_q      : std_logic := '0';
     signal read_x_q     : unsigned(8 downto 0) := (others => '0');
     signal read_y_q     : unsigned(8 downto 0) := (others => '0');
-
     signal out_pixels01_int  : std_logic_vector(31 downto 0) := (others => '0');
     signal out_pixels23_int  : std_logic_vector(31 downto 0) := (others => '0');
     signal out_pixels45_int  : std_logic_vector(31 downto 0) := (others => '0');
@@ -85,12 +83,11 @@ architecture rtl of vga_interface is
     signal out_line60_out    : std_logic_vector(31 downto 0) := (others => '0');
     signal out_line120_out   : std_logic_vector(31 downto 0) := (others => '0');
     signal out_line180_out   : std_logic_vector(31 downto 0) := (others => '0');
-	signal active_d : std_logic := '0';
+	 signal active_d : std_logic := '0';
 
 begin
 	
     src_x <= unsigned(h_count(9 downto 1));
-
     out_pixels01_dbg  <= out_pixels01_int;
     out_pixels23_dbg  <= out_pixels23_int;
     out_pixels45_dbg  <= out_pixels45_int;
@@ -130,6 +127,7 @@ begin
     begin
         if rst_n = '0' then
             pixel     <= (others => '0');
+            fetch_pixel_q <= (others => '0');
             rd_en_q   <= '0';
             read_x_q  <= (others => '0');
             read_y_q  <= (others => '0');
@@ -210,15 +208,19 @@ begin
                 underflow_count <= underflow_count + 1;
             end if;
 
+            if rd_en_q = '1' then
+                fetch_pixel_q <= fifo_rd_data;
+            end if;
+
             if active = '1' then
                 if test_mode(0) = '1' then
                     pixel_next := (others => '0');
-                elsif v_count(0) = '1' then
-                    if h_count(0) = '1' then
+                else
+                    if v_count(0) = '1' then
                         pixel_next := line_buf(disp_idx);
+                    else
+                        pixel_next := fetch_pixel_q;
                     end if;
-                elsif rd_en_q = '1' then
-                    pixel_next := fifo_rd_data;
                 end if;
             else
                 pixel_next := (others => '0');
@@ -317,13 +319,13 @@ begin
 
     -- RGB565: pixel[15:11]=R(5b), pixel[10:5]=G(6b), pixel[4:0]=B(5b)
     -- Displaying top 4 bits of each channel (12-bit VGA DAC)
-    vga_r <= (h_count(5 downto 2)) when (test_mode(0) = '1' and active = '1') else
-             pixel(15 downto 12)   when active = '1' else "0000";
+    vga_r <= (h_count(5 downto 2)) when (test_mode(0) = '1' and active_d = '1') else
+             pixel(15 downto 12)   when active_d = '1' else "0000";
 
-    vga_g <= (v_count(5 downto 2)) when (test_mode(0) = '1' and active = '1') else
-             pixel(10 downto 7)    when active = '1' else "0000";
+    vga_g <= (v_count(5 downto 2)) when (test_mode(0) = '1' and active_d = '1') else
+             pixel(10 downto 7)    when active_d = '1' else "0000";
 
-    vga_b <= (h_count(7 downto 4)) when (test_mode(0) = '1' and active = '1') else
-             pixel(4  downto 1)    when active = '1' else "0000";
+    vga_b <= (h_count(7 downto 4)) when (test_mode(0) = '1' and active_d = '1') else
+             pixel(4  downto 1)    when active_d = '1' else "0000";
 
 end architecture rtl;

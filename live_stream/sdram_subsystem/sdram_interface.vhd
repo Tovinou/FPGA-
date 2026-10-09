@@ -24,7 +24,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity sdram_interface is
     port (
-        clk              : in    std_logic;   -- 100 MHz
+        clk              : in    std_logic;   -- 100 MHz internal FSM clock (PLL c0)
         rst_n            : in    std_logic;
 
         -- Camera FIFO (showahead, 100 MHz domain)

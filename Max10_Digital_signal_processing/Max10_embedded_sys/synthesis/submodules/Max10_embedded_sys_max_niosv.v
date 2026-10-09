@@ -73,8 +73,8 @@ module Max10_embedded_sys_max_niosv (
 	wire    hart_sw_irq_rx_irq;           // irq_mapper_002:sender_irq -> hart:irq_sw
 
 	Max10_embedded_sys_max_niosv_hart #(
-		.RESET_VECTOR    (32'b00000000000000010000000000000000),
-		.DBG_EXPN_VECTOR (32'b00000000000000000000000000000000),
+		.RESET_VECTOR    (32'b00000100000000010000000000000000),
+		.DBG_EXPN_VECTOR (32'b00000100000000000000000000000000),
 		.HARTID          (32'b00000000000000000000000000000000),
 		.CORE_EXTN       (256),
 		.DEBUG_ENABLED   (1),

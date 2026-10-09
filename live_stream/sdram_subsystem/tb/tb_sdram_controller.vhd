@@ -37,7 +37,7 @@ end entity;
 
 architecture sim of tb_sdram_controller is
 
-    constant T_CLK : time := 13.333 ns;  -- 75 MHz
+    constant T_CLK : time := 10 ns;  -- 100 MHz
 
     -- =========================================================================
     -- DUT signals
@@ -47,7 +47,7 @@ architecture sim of tb_sdram_controller is
 
     signal wr_req     : std_logic := '0';
     signal wr_addr    : std_logic_vector(24 downto 0) := (others => '0');
-    signal wr_data    : std_logic_vector(15 downto 0) := (others => '0');
+    signal wr_data    : std_logic_vector(127 downto 0) := (others => '0');
     signal wr_ack     : std_logic;
 
     signal rd_req     : std_logic := '0';
@@ -138,10 +138,10 @@ architecture sim of tb_sdram_controller is
     procedure do_write(
         signal wr_req_s  : out std_logic;
         signal wr_addr_s : out std_logic_vector(24 downto 0);
-        signal wr_data_s : out std_logic_vector(15 downto 0);
+        signal wr_data_s : out std_logic_vector(127 downto 0);
         signal wr_ack_s  : in  std_logic;
         addr             : std_logic_vector(24 downto 0);
-        data             : std_logic_vector(15 downto 0)
+        data             : std_logic_vector(127 downto 0)
     ) is
     begin
         wait until rising_edge(clk);
@@ -351,7 +351,7 @@ begin
                 -- Issue a write immediately — should be accepted quickly
                 wr_req  <= '1';
                 wr_addr <= "0000000000000000000000001";
-                wr_data <= x"1234";
+                wr_data <= x"1234" & x"1234" & x"1234" & x"1234" & x"1234" & x"1234" & x"1234" & x"1234";
                 wait until rising_edge(clk) and wr_ack = '1' for 100 us;
                 wr_req  <= '0';
                 check_equal(wr_ack, '1',
@@ -365,7 +365,7 @@ begin
 
                 wr_req  <= '1';
                 wr_addr <= std_logic_vector(to_unsigned(16#0100#, 25));
-                wr_data <= x"ABCD";
+                wr_data <= x"ABCD" & x"ABCD" & x"ABCD" & x"ABCD" & x"ABCD" & x"ABCD" & x"ABCD" & x"ABCD";
                 wait until rising_edge(clk) and wr_ack = '1';
                 wr_req  <= '0';
 
@@ -388,7 +388,7 @@ begin
                 wait_init;
 
                 -- First write a known value
-                do_write(wr_req, wr_addr, wr_data, wr_ack, std_logic_vector(to_unsigned(5, 25)), x"BEEF");
+                do_write(wr_req, wr_addr, wr_data, wr_ack, std_logic_vector(to_unsigned(5, 25)), x"BEEF" & x"BEEF" & x"BEEF" & x"BEEF" & x"BEEF" & x"BEEF" & x"BEEF" & x"BEEF");
                 -- Now read it back
                 do_read(rd_req, rd_addr, rd_ack, rd_data, rd_valid, std_logic_vector(to_unsigned(5, 25)), data_out);
                 check_equal(data_out, std_logic_vector'(x"BEEF"),
@@ -400,8 +400,8 @@ begin
                 rst_n <= '0'; clk_wait(4); rst_n <= '1';
                 wait_init;
 
-                do_write(wr_req, wr_addr, wr_data, wr_ack, std_logic_vector(to_unsigned(20, 25)), x"1234");
-                do_write(wr_req, wr_addr, wr_data, wr_ack, std_logic_vector(to_unsigned(22, 25)), x"5678");
+                do_write(wr_req, wr_addr, wr_data, wr_ack, std_logic_vector(to_unsigned(20, 25)), x"1234" & x"1234" & x"1234" & x"1234" & x"1234" & x"1234" & x"1234" & x"1234");
+                do_write(wr_req, wr_addr, wr_data, wr_ack, std_logic_vector(to_unsigned(22, 25)), x"5678" & x"5678" & x"5678" & x"5678" & x"5678" & x"5678" & x"5678" & x"5678");
                 do_read(rd_req, rd_addr, rd_ack, rd_data, rd_valid, std_logic_vector(to_unsigned(20, 25)), data_out);
                 check_equal(data_out, std_logic_vector'(x"1234"), "addr 10 = 0x1234");
                 do_read(rd_req, rd_addr, rd_ack, rd_data, rd_valid, std_logic_vector(to_unsigned(22, 25)), data_out);
@@ -433,7 +433,7 @@ begin
                 -- Hold write request continuously and wait for refresh
                 wr_req  <= '1';
                 wr_addr <= (others => '0');
-                wr_data <= x"FFFF";
+                wr_data <= x"FFFF" & x"FFFF" & x"FFFF" & x"FFFF" & x"FFFF" & x"FFFF" & x"FFFF" & x"FFFF";
 
                 found_ref := false;
                 for i in 0 to 1000 loop
@@ -456,7 +456,7 @@ begin
 
                 wr_req  <= '1';
                 wr_addr <= (others => '0');
-                wr_data <= x"AAAA";
+                wr_data <= x"AAAA" & x"AAAA" & x"AAAA" & x"AAAA" & x"AAAA" & x"AAAA" & x"AAAA" & x"AAAA";
                 wait until rising_edge(clk) and wr_ack = '1';
                 -- Next cycle wr_ack must be low
                 wait until rising_edge(clk);
@@ -484,7 +484,7 @@ begin
 
                 wr_req  <= '1';
                 wr_addr <= (others => '0');
-                wr_data <= x"CCCC";
+                wr_data <= x"CCCC" & x"CCCC" & x"CCCC" & x"CCCC" & x"CCCC" & x"CCCC" & x"CCCC" & x"CCCC";
                 wait until rising_edge(clk) and wr_ack = '1';
                 wr_req <= '0';
 
@@ -526,7 +526,7 @@ begin
                 for i in 0 to 3 loop
                     wr_req  <= '1';
                     wr_addr <= std_logic_vector(to_unsigned(i, 25));
-                    wr_data <= std_logic_vector(to_unsigned(16#A000# + i, 16));
+                    wr_data <= std_logic_vector(to_unsigned(16#A000# + i, 16)) & std_logic_vector(to_unsigned(16#A000# + i, 16)) & std_logic_vector(to_unsigned(16#A000# + i, 16)) & std_logic_vector(to_unsigned(16#A000# + i, 16)) & std_logic_vector(to_unsigned(16#A000# + i, 16)) & std_logic_vector(to_unsigned(16#A000# + i, 16)) & std_logic_vector(to_unsigned(16#A000# + i, 16)) & std_logic_vector(to_unsigned(16#A000# + i, 16));
                     wait until rising_edge(clk) and wr_ack = '1';
                     wr_ack_cnt := wr_ack_cnt + 1;
                     wr_req <= '0';
@@ -548,8 +548,7 @@ begin
                         wr_data,
                         wr_ack,
                         std_logic_vector(to_unsigned(i * 2, 25)),
-                        std_logic_vector(to_unsigned(16#B000# + i, 16))
-                    );
+                        std_logic_vector(to_unsigned(16#B000# + i, 16)) & std_logic_vector(to_unsigned(16#B000# + i, 16)) & std_logic_vector(to_unsigned(16#B000# + i, 16)) & std_logic_vector(to_unsigned(16#B000# + i, 16)) & std_logic_vector(to_unsigned(16#B000# + i, 16)) & std_logic_vector(to_unsigned(16#B000# + i, 16)) & std_logic_vector(to_unsigned(16#B000# + i, 16)) & std_logic_vector(to_unsigned(16#B000# + i, 16)));
                 end loop;
                 -- Read them back
                 for i in 0 to 3 loop

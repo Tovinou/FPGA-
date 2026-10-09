@@ -1,101 +1,89 @@
-"""VUnit test for camera subsystem top-level entity."""
+"""
+run.py — VUnit runner for camera subsystem testbenches
+=======================================================
 
-from vunit import VUnit, clock_period
+One TB per module:
+    tb_i2c_top.vhd           — SCCB master / OV7670 register writer
+    tb_camera_interface.vhd  — pixel capture FSM
+    tb_camera_subsystem.vhd  — full integration (i2c + capture + CDC FIFO)
 
+Usage:
+    python run.py                              # all tests
+    python run.py -v                           # verbose
+    python run.py *tb_i2c_top*                 # SCCB tests only
+    python run.py *tb_camera_interface*        # capture FSM tests only
+    python run.py *tb_camera_subsystem*        # integration tests only
+    python run.py *tc_pixel_assembly*          # single test by name
+    python run.py --gui *tc_cdc_pixel*         # waveform viewer
 
-def test_bench(**kwargs):
-    """Test that the camera subsystem initializes correctly (Tier 1).
+Requirements:
+    pip install vunit-hdl
+    apt install ghdl   (or download from https://github.com/ghdl/ghdl/releases)
 
-    This is a foundational test: we instantiate the top-level entity and
-    check its initial state after reset deassertion. Later tests will
-    exercise I2C transactions, frame grabber data flow, and SDRAM read/write cycles.
-    """
-    t = VUnit.from_testcase(TestCameraSubsystem.test_bench, "test_bench")
+File layout (all in same folder):
+    asyn_fifo.vhd             (corrected version — no nested rising_edge)
+    i2c_top.vhd               (corrected — HALF_PERIOD=120, soft-reset delay)
+    camera_interface.vhd      (corrected — i2c_done port, S_WAIT_CONFIG state)
+    camera_subsystem.vhd      (corrected — i2c_done wired to camera_interface)
+    tb_i2c_top.vhd
+    tb_camera_interface.vhd
+    tb_camera_subsystem.vhd
+    run.py
+"""
 
-    # Clock period of 10 ns (100 MHz) – matches the design's clocking.
-    clk_period = clock_period(10e-9)
+import os
 
-    top = t.top_entity("camera_subsystem")
-    top.add_clock_domain(clk_period, name="clk_cam")
+os.environ.setdefault("VUNIT_SIMULATOR", "ghdl")
 
-    # Instantiate with default parameters (no external connections for now).
-    top_inst = top.instance(name="top", generics={"RESET_WIDTH": 1})
-
-    top.check_signal("clk_cam", "clock")
-    top.check_signal("reset", "std_logic")
-
-    # Verify clock toggling (Tier 2: clocking verification).
-    t.check_clock_domain("clk_cam")
-
-    # Assert that all pixel data lines are initially zero.
-    for i in range(10):
-        top_inst.check_signal(f"pixel_data_{i}", "std_logic_vector", 8)
-    assert top_inst.get_signal("pixel_data_0").value_is((0,))
-
-    # Frame grabber enable should be low before any data arrives.
-    top_inst.check_signal("frame_grabber_enable", "std_logic")
-    t.compile_simulate()
-
-
-class TestCameraSubsystem:
-    """Test suite for the camera subsystem."""
-
-    @staticmethod
-    def test_bench():
-        """Entry point for the test bench – asserts reset deassertion works.
-
-        We drive reset low for one clock period, then release it high.
-        After deassertion, the design should remain in normal operation.
-        """
-        # Drive reset low for one clock period, then release it high.
-        t.set_value("reset", "low")
-        t.wait(clk_period)
-        t.set_value("reset", "high")
-
-        # After deassertion, the design should remain in normal operation.
-        # Wait a bit longer to ensure stability before asserting final state.
-        t.wait(clk_period * 5)
-        assert top.get_signal("reset").value_is(1)
+from vunit import VUnit
+from vunit.sim_if.ghdl import GHDLInterface
 
 
-def test_reset_deassertion(**kwargs):
-    """Test that reset deassertion works correctly (Tier 2).
-
-    This is a nuanced variation: we now drive the reset signal low and
-    verify it stays low after release. Earlier tests only checked the
-    initial high state; this adds dynamic stimulus to the reset port.
-    """
-    t = VUnit.from_testcase(TestCameraSubsystem.test_reset_deassertion, "test_reset_deassertion")
-
-    clk_period = clock_period(10e-9)
-    top = t.top_entity("camera_subsystem")
-    top.add_clock_domain(clk_period, name="clk_cam")
-    top_inst = top.instance(name="top", generics={"RESET_WIDTH": 1})
-
-    top.check_signal("clk_cam", "clock")
-    top.check_signal("reset", "std_logic")
-
-    t.compile_simulate()
+_orig_determine_backend = GHDLInterface.determine_backend
 
 
-class TestCameraSubsystem:
-    """Test suite for the camera subsystem."""
-
-    @staticmethod
-    def test_reset_deassertion():
-        """Verify that deasserting reset works (Tier 2)."""
-        # Drive reset low for one clock period, then release it high.
-        t.set_value("reset", "low")
-        t.wait(clk_period)
-        t.set_value("reset", "high")
-
-        # After deassertion, the design should remain in normal operation.
-        # Wait a bit longer to ensure stability before asserting final state.
-        t.wait(clk_period * 5)
-        assert top.get_signal("reset").value_is(1)
+def _determine_backend_compat(prefix):
+    try:
+        return _orig_determine_backend(prefix)
+    except AssertionError:
+        output = GHDLInterface._get_version_output(prefix)
+        if "mcode JIT code generator" in output:
+            return "mcode"
+        raise
 
 
-if __name__ == "__main__":
-    import sys
+GHDLInterface.determine_backend = classmethod(lambda cls, prefix: _determine_backend_compat(prefix))
 
-    sys.exit(test_bench())
+vu = VUnit.from_argv(compile_builtins=False)
+vu.add_vhdl_builtins()
+
+lib = vu.add_library("lib")
+
+# ── Design files (leaf first) ──────────────────────────────────────────────
+lib.add_source_files("asyn_fifo.vhd")
+lib.add_source_files("i2c_top.vhd")
+lib.add_source_files("camera_interface.vhd")
+lib.add_source_files("camera_subsystem.vhd")
+
+# ── Testbench files ────────────────────────────────────────────────────────
+lib.add_source_files("tb/tb_i2c_top.vhd")
+lib.add_source_files("tb/tb_camera_interface.vhd")
+lib.add_source_files("tb/tb_camera_subsystem.vhd")
+
+# ── Per-test simulator options ─────────────────────────────────────────────
+# Tests that wait for i2c_done need up to 45ms simulation time
+# Increase GHDL stop time for slow tests
+i2c_slow_tests = [
+    ("tb_i2c_top",          "tc_done_asserts"),
+    ("tb_i2c_top",          "tc_soft_reset_delay"),
+    ("tb_camera_subsystem", "tc_fifo_fills_after_i2c"),
+    ("tb_camera_subsystem", "tc_cdc_pixel_integrity"),
+    ("tb_camera_subsystem", "tc_frame_done_sync"),
+    ("tb_camera_subsystem", "tc_fifo_empty_between"),
+]
+for tb_name, tc_name in i2c_slow_tests:
+    lib.test_bench(tb_name).test(tc_name).set_sim_option(
+        "ghdl.sim_flags", ["--stop-time=100ms"]
+    )
+
+vu.main()

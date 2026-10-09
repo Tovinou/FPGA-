@@ -16,7 +16,7 @@
 --   tc_frame_done_pulse    : frame_done asserts on VSYNC rising in S_CAPTURE
 --   tc_frame_done_width    : frame_done held >= 2 PCLK cycles
 --   tc_multi_frame         : consecutive frames captured without gaps
---   tc_full_line           : decimation: 640 pixels per line -> 320 wr_en pulses
+--   tc_full_line           : 320 QVGA pixels per line -> 320 wr_en pulses
 -- =============================================================================
 library ieee;
 use ieee.std_logic_1164.all;
@@ -33,9 +33,9 @@ architecture sim of tb_camera_interface is
 
     constant T_PCLK : time := 41667 ps;   -- 24 MHz OV7670 PCLK
 
-    -- OV7670 640x480 timing constants
-    constant H_PIXELS    : integer := 640;
-    constant V_LINES     : integer := 480;
+    -- OV7670 QVGA timing constants
+    constant H_PIXELS    : integer := 320;
+    constant V_LINES     : integer := 240;
     -- Blanking periods (approximate OV7670 timing)
     constant H_BLANK     : integer := 144;   -- clocks between lines
     constant V_BLANK_LN  : integer := 3;     -- VSYNC high lines (approximate)
@@ -128,6 +128,7 @@ architecture sim of tb_camera_interface is
         pclk_wait(V_BLANK_LN * (pixels*2 + H_BLANK));
         -- VSYNC low = active image starts
         vsync <= '0';
+        pclk_wait(2);
         for ln in 0 to lines-1 loop
             drive_line(href, cam_data, pixels, (start_val + ln * pixels) mod 256, H_BLANK);
         end loop;
@@ -146,22 +147,36 @@ begin
 
     u_dut : entity work.camera_interface
         port map (
-            clk          => '0',
-            pclk         => pclk,
-            rst_n        => rst_n,
-            i2c_done     => i2c_done,
-            invert_sync  => '0',
-            reverse_bits => '0',
-            data_map_sel => "00",
-            swap_bytes   => '0',
-            vsync        => vsync,
-            href         => href,
-            cam_data     => cam_data,
-            fifo_wr_en   => fifo_wr_en,
-            fifo_wr_data => fifo_wr_data,
-            fifo_full    => fifo_full,
-            frame_done   => frame_done,
-            pclk_heartbeat => open
+            pclk           => pclk,
+            rst_n          => rst_n,
+            i2c_done       => i2c_done,
+            invert_sync    => '0',
+            sample_falling => '0',
+            reverse_bits   => '0',
+            data_map_sel   => "00",
+            swap_bytes     => '0',
+            vsync          => vsync,
+            href           => href,
+            cam_data       => cam_data,
+            fifo_wr_en     => fifo_wr_en,
+            fifo_wr_data   => fifo_wr_data,
+            fifo_full      => fifo_full,
+            frame_done     => frame_done,
+            pclk_heartbeat => open,
+            last_line_count      => open,
+            last_pixel_count_div => open,
+            frame_valid_dbg      => open,
+            raw_byte_dbg         => open,
+            mapped_byte_dbg      => open,
+            pixel_word_dbg       => open,
+            ref_pixels01_dbg     => open,
+            ref_pixels23_dbg     => open,
+            ref_pixels45_dbg     => open,
+            ref_pixels67_dbg     => open,
+            line0_pair_dbg       => open,
+            line60_pair_dbg      => open,
+            line120_pair_dbg     => open,
+            line180_pair_dbg     => open
         );
 
     -- =========================================================================
@@ -238,6 +253,7 @@ begin
                 vsync <= '1';
                 pclk_wait(6);
                 vsync <= '0';
+                pclk_wait(2);
                 -- Now drive one pixel pair
                 href     <= '1';
                 cam_data <= x"12";
@@ -257,6 +273,7 @@ begin
                 -- Drive VSYNC
                 vsync <= '1'; pclk_wait(6);
                 vsync <= '0';
+                pclk_wait(2);
                 -- Drive one pixel: byte0=0xF8, byte1=0x1F
                 -- Expected pixel = 0xF81F
                 href     <= '1';
@@ -276,6 +293,7 @@ begin
                 do_reset(rst_n, i2c_done, vsync, href);
                 i2c_done <= '1';
                 vsync <= '1'; pclk_wait(6); vsync <= '0';
+                pclk_wait(2);
                 -- Pixel: byte0=0xAB (high), byte1=0xCD (low)
                 href     <= '1';
                 cam_data <= x"AB";
@@ -295,6 +313,7 @@ begin
                 do_reset(rst_n, i2c_done, vsync, href);
                 i2c_done <= '1';
                 vsync <= '1'; pclk_wait(6); vsync <= '0';
+                pclk_wait(2);
                 -- Drive 1.5 pixels (3 bytes — misaligned on purpose)
                 -- Then drop HREF — byte_sel must reset
                 -- Next line starts fresh with byte0
@@ -332,6 +351,7 @@ begin
                 i2c_done  <= '1';
                 fifo_full <= '1';   -- FIFO full!
                 vsync <= '1'; pclk_wait(6); vsync <= '0';
+                pclk_wait(2);
                 -- Drive two pixel pairs
                 href     <= '1';
                 cam_data <= x"DE"; wait until rising_edge(pclk);
@@ -365,6 +385,7 @@ begin
                 i2c_done <= '1';
                 -- First frame start
                 vsync <= '1'; pclk_wait(6); vsync <= '0';
+                pclk_wait(2);
                 -- Drive a few pixels
                 href     <= '1';
                 cam_data <= x"AA"; wait until rising_edge(pclk);
@@ -383,6 +404,7 @@ begin
                 do_reset(rst_n, i2c_done, vsync, href);
                 i2c_done <= '1';
                 vsync <= '1'; pclk_wait(6); vsync <= '0';
+                pclk_wait(2);
                 href     <= '1';
                 cam_data <= x"AA"; wait until rising_edge(pclk);
                 cam_data <= x"BB"; wait until rising_edge(pclk);
@@ -413,22 +435,23 @@ begin
                 vsync <= '0'; pclk_wait(4);
                 drive_frame(vsync, href, cam_data, 4, 4, 128);
                 pix_after := wr_en_count;
-                check_equal(pix_before, 4,
-                    "Frame 1: expected 4 pixels written");
-                check_equal(pix_after - pix_before, 4,
-                    "Frame 2: expected 4 more pixels written");
+                check_equal(pix_before, 16,
+                    "Frame 1: expected 16 pixels written");
+                check_equal(pix_after - pix_before, 16,
+                    "Frame 2: expected 16 more pixels written");
 
             -- -----------------------------------------------------------------
             elsif run("tc_full_line") then
-                info("Decimation: 640 pixels per line produces 320 wr_en pulses");
+                info("QVGA: 320 pixels per line produces 320 wr_en pulses");
                 do_reset(rst_n, i2c_done, vsync, href);
                 i2c_done <= '1';
                 vsync <= '1'; pclk_wait(20); vsync <= '0';
+                pclk_wait(2);
                 pix_before := wr_en_count;
                 drive_line(href, cam_data, H_PIXELS, 0, H_BLANK);
                 pix_after := wr_en_count;
-                check_equal(pix_after - pix_before, H_PIXELS/2,
-                    "640 pixels per line");
+                check_equal(pix_after - pix_before, H_PIXELS,
+                    "320 pixels per line");
 
             end if;
         end loop;

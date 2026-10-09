@@ -1,6 +1,4 @@
                0 fs - default              -    INFO - frame_done held for >= 2 PCLK cycles
-      1145842500 fs - check                -   ERROR - frame_done must be high for >= 2 cycles, got 0
-C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@1145842500fs:(report failure): Stop simulation on log level error
-ghdl:error: report failed
-  instance: /tb_camera_interface/main
-ghdl:error: simulation failed
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:284:29:@854173500fs:(report note): first camera byte AA at 854173500 fs
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:290:33:@895840500fs:(report note): second camera byte BB at 895840500 fs
+simulation stopped @1229176500fs with status 0

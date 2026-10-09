@@ -12,7 +12,7 @@
 --
 -- CDC notes:
 --   frame_done arrives from camera_subsystem (PCLK domain).
---   It is re-synchronised here with a 2-FF synchroniser into clk_130m (100MHz).
+--   It is re-synchronised here with a 2-FF synchroniser into clk_100m (100MHz).
 -- =============================================================================
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -21,7 +21,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity sdram_subsystem is
     port (
         -- Clock & reset
-        clk_130m         : in    std_logic;  -- 75 MHz internal FSM clock (PLL c0)
+        clk_100m         : in    std_logic;  -- 100 MHz internal FSM clock (PLL c0)
         rst_n            : in    std_logic;
         test_mode        : out   std_logic_vector(1 downto 0);
         test_leds        : out   std_logic_vector(9 downto 0);
@@ -213,14 +213,14 @@ begin
     -- =========================================================================
     -- 2-FF synchroniser: frame_done PCLK -> clk_130m (75 MHz)
     -- -------------------------------------------------------------------------
-    p_frame_sync : process(clk_130m, rst_n)
+    p_frame_sync : process(clk_100m, rst_n)
     begin
         if rst_n = '0' then
             frame_done_s1 <= '0';
             frame_done_s2 <= '0';
             vga_vsync_s1  <= '1';
             vga_vsync_s2  <= '1';
-        elsif rising_edge(clk_130m) then
+        elsif rising_edge(clk_100m) then
             frame_done_s1 <= frame_done_async;
             frame_done_s2 <= frame_done_s1;
             vga_vsync_s1  <= vga_vsync_async;
@@ -233,7 +233,7 @@ begin
     -- -------------------------------------------------------------------------
     u_iface : sdram_interface
         port map (
-            clk              => clk_130m,
+            clk              => clk_100m,
             rst_n            => iface_rst_n,
             cam_fifo_rd_en   => cam_fifo_rd_en,
             cam_fifo_rd_data => cam_fifo_rd_data,
@@ -275,7 +275,7 @@ begin
     -- -------------------------------------------------------------------------
     u_ctrl : sdram_controller
         port map (
-            clk         => clk_130m,
+            clk         => clk_100m,
             rst_n       => rst_n,
             wr_req      => ctrl_wr_req,
             wr_addr     => ctrl_wr_addr,
@@ -298,7 +298,7 @@ begin
             sdram_dq    => sdram_dq
         );
 
-    p_bist : process(clk_130m, rst_n)
+    p_bist : process(clk_100m, rst_n)
         constant INIT_WAIT_MAX : unsigned(15 downto 0) := to_unsigned(30000, 16);
         constant PASS_HOLD_MAX : unsigned(25 downto 0) := to_unsigned(50_000_000 - 1, 26);
     begin
@@ -316,7 +316,7 @@ begin
             disp_cnt   <= (others => '0');
             disp_phase <= (others => '0');
             bist_done  <= '1';   -- Release sdram_interface immediately (BIST skipped)
-        elsif rising_edge(clk_130m) then
+        elsif rising_edge(clk_100m) then
             if bist_release_n = '0' then
                 -- KEY(1) is pressed (active low) -> skip BIST and go directly to normal mode
                 bist_state <= ST_WAIT_INIT;

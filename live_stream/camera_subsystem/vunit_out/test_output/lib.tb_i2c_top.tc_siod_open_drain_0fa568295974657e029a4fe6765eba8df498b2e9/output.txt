@@ -1,2 +1,2 @@
                0 fs - default              -    INFO - SIOD must never be driven high (only 0 or Z)
-simulation stopped @13323044083500fs with status 0
+simulation stopped @12790005ns with status 0

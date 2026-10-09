@@ -78,11 +78,7 @@ architecture sim of tb_vga_interface is
     end function;
 
     -- Drive one pixel and check DAC output
-    -- Pipeline latency:
-    --   1) rd_en asserted, FIFO output becomes visible to DUT next cycle
-    --   2) src_pixel updates (registered)
-    --   3) pixel updates from src_pixel (registered)
-    --   4) DAC gated by active_d (registered)
+    -- rd_en advances the FIFO, then the registered pixel consumes its output.
     -- For stable checks, wait 3 clocks after driving stimulus.
     procedure drive_pixel(
         signal fifo_rd_data_out : out std_logic_vector(15 downto 0);
@@ -325,18 +321,18 @@ begin
                 wait for 0 ns;
                 check_equal(vga_r, std_logic_vector'("0000"),
                     "DAC still 0 on first cycle after active rises");
-                -- Second clock: src_pixel captures fifo data, pixel still previous
-                wait until rising_edge(clk);
-                wait for 0 ns;
-                wait for 0 ns;
-                check_equal(vga_r, std_logic_vector'("0000"),
-                    "DAC still 0 while pixel pipeline fills");
-                -- Third clock: pixel shows data, active_d=1
+                -- Second clock: registered pixel consumes FIFO data.
                 wait until rising_edge(clk);
                 wait for 0 ns;
                 wait for 0 ns;
                 check_equal(vga_r, std_logic_vector'("1111"),
-                    "DAC shows pixel once pipeline is filled");
+                    "DAC shows pixel with the registered active window");
+                -- Third clock: the pixel remains visible.
+                wait until rising_edge(clk);
+                wait for 0 ns;
+                wait for 0 ns;
+                check_equal(vga_r, std_logic_vector'("1111"),
+                    "DAC keeps showing pixel while active");
 
                 -- Drop active, DAC must go black next cycle
                 active <= '0';

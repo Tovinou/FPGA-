@@ -3,7 +3,7 @@
 # Machine generated for CPU 'max_niosv' in SOPC Builder design 'Max10_embedded_sys'
 # SOPC Builder design path: C:/Jensen/projects/Max10_Digital_signal_processing/Max10_embedded_sys.sopcinfo
 #
-# Generated: Thu Aug 20 22:52:49 CEST 2026
+# Generated: Thu Sep 03 18:59:41 CEST 2026
 
 # DO NOT MODIFY THIS FILE
 #
@@ -46,5 +46,8 @@
 # The cache attribute is specified which improves GDB performance
 # by allowing GDB to cache memory contents on the host.
 
+# mycustom_sdram_0
+memory 0x0 0x4000000 cache
+
 # sram
-memory 0x10000 0x1a000 cache
+memory 0x4010000 0x401a000 cache

@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 10M50DAF484C7G
 set_global_assignment -name TOP_LEVEL_ENTITY vga_subsystem
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:57:57  MARCH 25, 2026"
-set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "25.1std.0 SP0.02std Lite Edition"
 set_global_assignment -name VHDL_FILE vga_subsystem.vhd
 set_global_assignment -name VHDL_FILE vga_interface.vhd
 set_global_assignment -name VHDL_FILE vga_core.vhd

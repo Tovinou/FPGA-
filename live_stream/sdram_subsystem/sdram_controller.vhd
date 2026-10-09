@@ -1,12 +1,12 @@
 -- =============================================================================
--- sdram_controller.vhd  (CORRECTED for 75 MHz)
+-- sdram_controller.vhd  (CORRECTED for 100 MHz)
 -- SDRAM controller for IS42S16320F (DE10-Lite onboard SDRAM)
 -- 64MB, 16-bit bus, 4 banks, 8192 rows, 512 cols
 -- Clocked at 75 MHz (PLL c0, SDRAM clock domain)
 --
 -- Fixes applied:
---   1. ALL timing constants recalculated for 75 MHz (13.33 ns/cycle)
---      Previously all constants were for 100 MHz (10 ns/cycle) — FATAL
+--   1. ALL timing constants recalculated for 100 MHz 
+--      
 --   2. T_INIT_CYCLES = 15000 (200us @ 75MHz)
 --   3. T_RFC, T_RCD, T_RP, REFRESH_PERIOD scaled correctly
 --   4. sdram_clk port tied to '0' (clock driven directly from PLL c1 in top)
@@ -41,7 +41,7 @@ entity sdram_controller is
 
         -- SDRAM bus (IS42S16320F)
     -- NOTE: sdram_clk is NOT driven here.
-    -- DRAM_CLK must be connected directly to pll_main c1 (+90 deg)
+    -- DRAM_CLK must be connected directly to pll_main c1 100Mhz (-30 deg)
         -- in stream_top.vhd to preserve the phase relationship.
         sdram_clk  : out std_logic;   -- leave unconnected in subsystem
         sdram_cke  : out std_logic;

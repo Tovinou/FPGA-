@@ -4,7 +4,7 @@
  * Machine generated for CPU 'max_niosv' in SOPC Builder design 'Max10_embedded_sys'
  * SOPC Builder design path: C:/Jensen/projects/Max10_Digital_signal_processing/Max10_embedded_sys.sopcinfo
  *
- * Generated: Thu Aug 20 22:52:49 CEST 2026
+ * Generated: Thu Sep 03 18:59:41 CEST 2026
  */
 
 /*
@@ -50,12 +50,14 @@
 
 MEMORY
 {
-    reset : ORIGIN = 0x10000, LENGTH = 32
-    sram : ORIGIN = 0x10020, LENGTH = 40928
+    mycustom_sdram_0 : ORIGIN = 0x0, LENGTH = 67108864
+    reset : ORIGIN = 0x4010000, LENGTH = 64
+    sram : ORIGIN = 0x4010040, LENGTH = 40896
 }
 
 /* Define symbols for each memory base-address */
-__alt_mem_sram = 0x10000;
+__alt_mem_mycustom_sdram_0 = 0x0;
+__alt_mem_sram = 0x4010000;
 
 OUTPUT_FORMAT( "elf32-littleriscv",
                "elf32-littleriscv",
@@ -111,7 +113,7 @@ SECTIONS
         KEEP (*(.exceptions.exit));
         KEEP (*(.exceptions));
         PROVIDE (__ram_exceptions_end = ABSOLUTE(.));
-    } > sram
+    } > mycustom_sdram_0
 
     PROVIDE (__flash_exceptions_start = LOADADDR(.exceptions));
 
@@ -208,7 +210,7 @@ SECTIONS
         PROVIDE (__DTOR_END__ = ABSOLUTE(.));
         KEEP (*(.jcr))
         . = ALIGN(4);
-    } > sram = 0x13000000 /* NOP instruction (always in big-endian byte ordering) */
+    } > mycustom_sdram_0 = 0x13000000 /* NOP instruction (always in big-endian byte ordering) */
 
     .rodata :
     {
@@ -219,7 +221,7 @@ SECTIONS
         *(.srodata .srodata.*)
         . = ALIGN(4);
         PROVIDE (__ram_rodata_end = ABSOLUTE(.));
-    } > sram
+    } > mycustom_sdram_0
 
     PROVIDE (__flash_rodata_start = LOADADDR(.rodata));
 
@@ -271,7 +273,7 @@ SECTIONS
         _edata = ABSOLUTE(.);
         PROVIDE (edata = ABSOLUTE(.));
         PROVIDE (__ram_rwdata_end = ABSOLUTE(.));
-    } > sram
+    } > mycustom_sdram_0
 
     PROVIDE(__tdata_size = (__tdata_end - __tdata_start));
     PROVIDE(__tbss_size = (__tbss_end - __tbss_start));
@@ -306,7 +308,7 @@ SECTIONS
 
         . = ALIGN(4);
         __bss_end = ABSOLUTE(.);
-    } > sram
+    } > mycustom_sdram_0
 
     /*
      *
@@ -331,15 +333,32 @@ SECTIONS
      *
      */
 
-    .sram LOADADDR (.bss) + SIZEOF (.bss) : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    .mycustom_sdram_0 LOADADDR (.bss) + SIZEOF (.bss) : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    {
+        PROVIDE (_alt_partition_mycustom_sdram_0_start = ABSOLUTE(.));
+        *(.mycustom_sdram_0 .mycustom_sdram_0. mycustom_sdram_0.*)
+        . = ALIGN(4);
+        PROVIDE (_alt_partition_mycustom_sdram_0_end = ABSOLUTE(.));
+        _end = ABSOLUTE(.);
+        end = ABSOLUTE(.);
+        __alt_stack_base = ABSOLUTE(.);
+    } > mycustom_sdram_0
+
+    PROVIDE (_alt_partition_mycustom_sdram_0_load_addr = LOADADDR(.mycustom_sdram_0));
+
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .sram : AT ( LOADADDR (.mycustom_sdram_0) + SIZEOF (.mycustom_sdram_0) )
     {
         PROVIDE (_alt_partition_sram_start = ABSOLUTE(.));
         *(.sram .sram. sram.*)
         . = ALIGN(4);
         PROVIDE (_alt_partition_sram_end = ABSOLUTE(.));
-        _end = ABSOLUTE(.);
-        end = ABSOLUTE(.);
-        __alt_stack_base = ABSOLUTE(.);
     } > sram
 
     PROVIDE (_alt_partition_sram_load_addr = LOADADDR(.sram));
@@ -391,7 +410,7 @@ SECTIONS
 /*
  * Don't override this, override the __alt_stack_* symbols instead.
  */
-__alt_data_end = 0x1a000;
+__alt_data_end = 0x4000000;
 
 /*
  * The next two symbols define the location of the default stack.  You can
@@ -407,4 +426,4 @@ PROVIDE( __alt_stack_limit   = __alt_stack_base );
  * Override this symbol to put the heap in a different memory.
  */
 PROVIDE( __alt_heap_start    = end );
-PROVIDE( __alt_heap_limit    = 0x1a000 );
+PROVIDE( __alt_heap_limit    = 0x4000000 );

@@ -15,6 +15,14 @@ proc _close_probe_session {} {
     catch {end_insystem_source_probe}
 }
 
+proc _require_live_stream_connection {} {
+    global hw dev
+
+    if {![info exists hw] || ![info exists dev] || $hw eq "" || $dev eq ""} {
+        error "No connected JTAG device. Run connect_live_stream successfully first."
+    }
+}
+
 proc _bit {value index} {
     expr {($value >> $index) & 1}
 }
@@ -28,18 +36,39 @@ proc connect_live_stream {} {
 
     _close_probe_session
 
-    set hw [lindex [get_hardware_names] 0]
-    if {$hw eq ""} {
-        error "No JTAG hardware found."
-    }
-
-    set dev [lindex [get_device_names -hardware_name $hw] 0]
-    if {$dev eq ""} {
-        error "No JTAG device found on $hw."
-    }
-
-    set instances [get_insystem_source_probe_instance_info -hardware_name $hw -device_name $dev]
+    unset -nocomplain hw dev
     array unset probe_present
+
+    if {[catch {set hardware_names [get_hardware_names]} message]} {
+        error "Could not enumerate JTAG hardware: $message"
+    }
+    if {[llength $hardware_names] == 0} {
+        error "No JTAG hardware found. Check the USB-Blaster connection and driver."
+    }
+
+    set connection_found 0
+    foreach candidate $hardware_names {
+        if {[catch {set devices [get_device_names -hardware_name $candidate]}]} {
+            continue
+        }
+        if {[llength $devices] == 0} {
+            continue
+        }
+
+        set hw $candidate
+        set dev [lindex $devices 0]
+        if {[catch {set instances [get_insystem_source_probe_instance_info -hardware_name $hw -device_name $dev]} message]} {
+            set failed_hw $hw
+            unset -nocomplain hw dev
+            error "Found $failed_hw but could not query its SignalTap probes: $message"
+        }
+        set connection_found 1
+        break
+    }
+    if {!$connection_found} {
+        error "No accessible JTAG device found. Check the cable, power, and whether another Quartus process is using it."
+    }
+
     foreach inst $instances {
         set idx [lindex $inst 0]
         set name [lindex $inst 3]
@@ -377,6 +406,7 @@ proc _print_sample {index stat_hex geom_hex {pix_hex ""} {bar0_hex ""} {bar1_hex
 proc sample_once {} {
     global hw dev
 
+    _require_live_stream_connection
     _close_probe_session
     start_insystem_source_probe -hardware_name $hw -device_name $dev
     set stat_hex [_read_probe_if_present 0]
@@ -438,6 +468,7 @@ proc sample_once {} {
 proc sample_loop {{count 20} {delay_ms 100}} {
     global hw dev
 
+    _require_live_stream_connection
     _close_probe_session
     start_insystem_source_probe -hardware_name $hw -device_name $dev
     for {set i 0} {$i < $count} {incr i} {
@@ -499,11 +530,364 @@ proc sample_loop {{count 20} {delay_ms 100}} {
     _close_probe_session
 }
 
+proc check_switches_ok {} {
+    puts "=== Required switch positions for 'all SW down = correct live camera view'"
+    puts ""
+    puts "  SW#  POS   Meaning (this build)"
+    puts "  ---  ----  ----------------------------------------------------------"
+    puts "   0   DOWN  VGA test bars OFF; live camera stream ON"
+    puts "        UP   8 pure-color vertical bars (vga_interface self-test)"
+    puts "   1   DOWN  VSYNC/HREF polarity: non-invert (correct for most OV7670)"
+    puts "        UP   Invert both VSYNC+HREF (use only if frame always blank)"
+    puts "   2   DOWN  Unused (free for user debug)"
+    puts "   3   DOWN  SDRAM framebuffer path USED (correct for stable frame)"
+    puts "   !!!! UP   BYPASS SDRAM (camera->VGA direct) -- causes TEARING/STREAK"
+    puts "   4   DOWN  Unused (free for user debug)"
+    puts "   5   DOWN  Unused (free for user debug)"
+    puts "   6   DOWN  D[7:0] bit order: normal (no reverse)"
+    puts "        UP   Reverse D[7:0] bit order (debug only, WRONG for capture)"
+    puts "   7   DOWN  Byte-swap ON (correct for OV7670 TSLB=0x0C default)"
+    puts "        UP   Byte-swap OFF (override; reproduce the magenta/yellow pic)"
+    puts "   8   DOWN  }"
+    puts "   9   DOWN  } data_map_sel=00: D[7:0] straight passthrough (RIGHT)"
+    puts "       UP-DN } sel=01: nibble-swap  -> colours WRONG"
+    puts "       DN-UP } sel=10: 2-bit-rotate -> colours WRONG"
+    puts "       UP-UP } sel=11: nibble-swap  -> colours WRONG"
+    puts ""
+    puts "If ANY of SW(9), SW(8), SW(7), SW(6), SW(3), SW(1), SW(0) are wrong,"
+    puts "the output CANNOT look correct even if all RTL is fixed."
+    puts ""
+    puts "Recommended BEFORE running any other TCL command:"
+    puts "  (a) Physically verify all 10 toggles point AWAY from the DE10-Lite"
+    puts "      board label text (that is the '0' / DOWN position)."
+    puts "  (b) Then, and only then, run: sample_once"
+}
+
 proc quick_summary {} {
     puts "Expected healthy frame: lines=240 pix_div256=300 frame_valid=1"
-    puts "Useful commands:"
-    puts "  connect_live_stream"
-    puts "  sample_once"
-    puts "  sample_loop 20 100"
-    puts "Sample output now includes PIX, camera BAR, SCCB CFG, camera-FIFO read CFR, VGA-write VGR, VGA output OGR, VGST status, and VGA read-stream RDR."
+    puts "Useful commands (in order):"
+    puts "  check_switches_ok          -- first: correct physical SW positions"
+    puts "  connect_live_stream        -- then: open JTAG probe session"
+    puts "  sample_once                -- capture geometry summary (lines/pixels)"
+    puts "  check_camera_inputs 200 25 -- confirm PCLK/HREF/VSYNC + all D toggle"
+    puts "  check_camera_sccb          -- prove I2C writes (i2c_done + 16/16 regs)"
+    puts "  print_ref_pixels           -- 8 ref-pixels both byte orders + Y"
+    puts "  sample_loop 20 100         -- monitor frame geometry 20 times"
+    puts ""
+    puts "Sample output now includes PIX, camera BAR, SCCB CFG, camera-FIFO read"
+    puts "  CFR, VGA-write VGR, VGA output OGR, VGST status, and VGA RDR stream."
+    puts "check_camera_sccb : fresh JTAG session; i2c_done + 16 OV reg exact matches"
+    puts "print_ref_pixels  : 8 line-1 pixels, both RGB565 byte orders, plus Y luminance"
+    puts "check_switches_ok : prints correct switch matrix for default live camera"
+    puts ""
+    puts "NOTE: if commands added after 'check_camera_sccb' report invalid name,"
+    puts "      type:  source camera_debug.tcl    to reload the script in this session."
+}
+
+proc check_camera_inputs {{samples 200} {delay_ms 25}} {
+    global hw dev
+
+    _require_live_stream_connection
+    if {$samples < 2} {
+        error "Use at least 2 samples."
+    }
+
+    puts "Checking camera activity over $samples samples (${delay_ms}ms interval)."
+    puts "For direct D\[7:0\] checks, set SW(6)=0 and SW(9:8)=00."
+
+    _close_probe_session
+    start_insystem_source_probe -hardware_name $hw -device_name $dev
+
+    set pclk_seen 0
+    set href_seen 0
+    set vsync_seen 0
+    set zero_seen 0
+    set one_seen 0
+    set toggle_seen 0
+    set previous_bytes ""
+
+    for {set sample 0} {$sample < $samples} {incr sample} {
+        set stat_hex [_read_probe_if_present 0]
+        set pix_hex [_read_probe_if_present 2]
+        _require_hex $stat_hex "STAT"
+        _require_hex $pix_hex "PIX"
+
+        set stat [decode_stat $stat_hex]
+        set pix [decode_pix $pix_hex]
+        if {[dict get $stat pclk_present]} {set pclk_seen 1}
+        if {[dict get $stat href_present]} {set href_seen 1}
+        if {[dict get $stat vsync_present]} {set vsync_seen 1}
+
+        set current_bytes [list [dict get $pix raw_first] [dict get $pix raw_second]]
+        foreach byte $current_bytes {
+            set zero_seen [expr {$zero_seen | ((~$byte) & 255)}]
+            set one_seen [expr {$one_seen | $byte}]
+        }
+        if {$previous_bytes ne ""} {
+            foreach previous $previous_bytes current $current_bytes {
+                set toggle_seen [expr {$toggle_seen | ($previous ^ $current)}]
+            }
+        }
+        set previous_bytes $current_bytes
+        after $delay_ms
+    }
+
+    _close_probe_session
+
+    set failed 0
+    foreach {name observed} [list PCLK $pclk_seen HREF $href_seen VSYNC $vsync_seen] {
+        set result [expr {$observed ? "ACTIVE" : "NO ACTIVITY"}]
+        puts [format "%s: %s" $name $result]
+        if {!$observed} {set failed 1}
+    }
+
+    set unverified_bits {}
+    for {set bit 7} {$bit >= 0} {incr bit -1} {
+        set mask [expr {1 << $bit}]
+        set saw_zero [expr {($zero_seen & $mask) != 0}]
+        set saw_one [expr {($one_seen & $mask) != 0}]
+        set toggled [expr {($toggle_seen & $mask) != 0}]
+        set result [expr {$saw_zero && $saw_one && $toggled ? "TOGGLING" : "NO TOGGLE"}]
+        puts [format "D%d: %s (saw 0=%d, 1=%d)" $bit $result $saw_zero $saw_one]
+        if {!($saw_zero && $saw_one && $toggled)} {
+            lappend unverified_bits $bit
+        }
+    }
+
+    if {[llength $unverified_bits] == 0 && !$failed} {
+        puts "RESULT: all monitored camera signals are active; all D bits toggled."
+    } elseif {[llength $unverified_bits] > 0} {
+        puts "RESULT: inconclusive for D bits $unverified_bits. Aim at a detailed, moving scene and repeat."
+    } else {
+        puts "RESULT: one or more clock/sync signals showed no activity."
+    }
+}
+
+proc check_camera_sccb {} {
+    global hw dev probe_present
+
+    puts "=== check_camera_sccb ==="
+    puts "Requires a fresh JTAG connection. Dropping any existing session..."
+
+    _close_probe_session
+    unset -nocomplain hw dev
+    array unset probe_present
+
+    puts "Re-enumerating JTAG chain..."
+    if {[catch {set hardware_names [get_hardware_names]} message]} {
+        error "Could not enumerate JTAG hardware: $message"
+    }
+    if {[llength $hardware_names] == 0} {
+        error "No JTAG hardware found. Check the USB-Blaster connection and driver."
+    }
+
+    set connection_found 0
+    foreach candidate $hardware_names {
+        if {[catch {set devices [get_device_names -hardware_name $candidate]}]} {
+            continue
+        }
+        if {[llength $devices] == 0} {
+            continue
+        }
+        set hw $candidate
+        set dev [lindex $devices 0]
+        if {[catch {set instances [get_insystem_source_probe_instance_info -hardware_name $hw -device_name $dev]} message]} {
+            set failed_hw $hw
+            unset -nocomplain hw dev
+            error "Found $failed_hw but could not query its SignalTap probes: $message"
+        }
+        set connection_found 1
+        break
+    }
+    if {!$connection_found} {
+        error "No accessible JTAG device found. Check the cable, power, and whether another Quartus process is using it."
+    }
+
+    foreach inst $instances {
+        set idx [lindex $inst 0]
+        set name [lindex $inst 3]
+        set probe_present($idx) 1
+        set probe_present($name) $idx
+    }
+    puts "HW=$hw"
+    puts "DEV=$dev"
+
+    set expected [dict create \
+        COM7         0x14 \
+        COM15        0xD0 \
+        COM17        0x00 \
+        RGB444       0x00 \
+        TSLB         0x0C \
+        COM13        0x83 \
+        COM3         0x04 \
+        COM14        0x19 \
+        XSC          0x3A \
+        YSC          0x35 \
+        DCWCTR       0x11 \
+        PCLK_DIV     0xF1 \
+        PCLK_DELAY   0x02 \
+        CLKRC        0x01 \
+        DBLV         0x0A \
+        COM10        0x02 \
+    ]
+
+    set reg_names [list COM7 COM15 COM17 RGB444 TSLB COM13 COM3 COM14 XSC YSC DCWCTR PCLK_DIV PCLK_DELAY CLKRC DBLV COM10]
+    set reg_addrs [list 0x12 0x40 0x42 0x8C 0x3A 0x3D 0x0C 0x3E 0x70 0x71 0x72 0x73 0xA2 0x11 0x6B 0x15]
+
+    puts ""
+    puts "Opening ISSP probe session..."
+    start_insystem_source_probe -hardware_name $hw -device_name $dev
+
+    set stat_hex [_read_probe_if_present 0]
+    set cfg0_hex [_read_probe_if_present 7]
+    set cfg1_hex [_read_probe_if_present 8]
+    set cfg2_hex [_read_probe_if_present 9]
+    set cfg3_hex [_read_probe_if_present 10]
+
+    _close_probe_session
+
+    _require_hex $stat_hex "STAT"
+    _require_hex $cfg0_hex "CFG0"
+    _require_hex $cfg1_hex "CFG1"
+    _require_hex $cfg2_hex "CFG2"
+    _require_hex $cfg3_hex "CFG3"
+
+    set stat [decode_stat $stat_hex]
+    set i2c_done_val [dict get $stat i2c_done]
+
+    puts ""
+    puts "--- i2c_done status ---"
+    puts [format "i2c_done = %d  %s" $i2c_done_val [expr {$i2c_done_val ? "(configuration complete)" : "(STILL RUNNING / FAILED)"}]]
+
+    set cfg0 [decode_cfg0 $cfg0_hex]
+    set cfg1 [decode_cfg1 $cfg1_hex]
+    set cfg2 [decode_cfg2 $cfg2_hex]
+    set cfg3 [decode_cfg3 $cfg3_hex]
+
+    set actual_values [list \
+        [dict get $cfg0 com7]   [dict get $cfg0 com15]  [dict get $cfg0 com17]  [dict get $cfg0 rgb444] \
+        [dict get $cfg1 tslb]   [dict get $cfg1 com13]  [dict get $cfg1 com3]   [dict get $cfg1 com14] \
+        [dict get $cfg2 xsc]    [dict get $cfg2 ysc]    [dict get $cfg2 dcwctr]  [dict get $cfg2 pclk_div] \
+        [dict get $cfg3 pclk_delay] [dict get $cfg3 clkrc] [dict get $cfg3 dblv]  [dict get $cfg3 com10] \
+    ]
+
+    puts ""
+    puts "--- Register readback verification (16 registers via SCCB read) ---"
+    puts [format "%-12s  %-6s  %-8s  %-8s  %s" "Register" "Addr" "Expected" "Actual" "Status"]
+    puts "------------  ------  --------  --------  ----------"
+
+    set mismatches {}
+    for {set i 0} {$i < 16} {incr i} {
+        set name [lindex $reg_names $i]
+        set addr [lindex $reg_addrs $i]
+        set exp  [dict get $expected $name]
+        set act  [lindex $actual_values $i]
+        if {$exp == $act} {
+            set status "PASS"
+        } else {
+            set status "MISMATCH"
+            lappend mismatches [list $name $addr $exp $act]
+        }
+        puts [format "%-12s  0x%02X    0x%02X      0x%02X      %s" $name $addr $exp $act $status]
+    }
+
+    puts ""
+    puts "--- Result summary ---"
+    set pass_count [expr {16 - [llength $mismatches]}]
+    puts [format "i2c_done : %s" [expr {$i2c_done_val ? "ASSERTED (ok)" : "NOT ASSERTED (FAIL)"}]]
+    puts [format "Registers: %d/16 matched" $pass_count]
+
+    if {[llength $mismatches] > 0} {
+        puts ""
+        puts "Mismatched registers:"
+        foreach m $mismatches {
+            lassign $m name addr exp act
+            puts [format "  %-12s @ 0x%02X : expected 0x%02X, got 0x%02X" $name $addr $exp $act]
+        }
+    }
+
+    puts ""
+    if {$i2c_done_val && [llength $mismatches] == 0} {
+        puts "RESULT: PASS — SCCB two-wire communication verified on SIOC/SIOD pins."
+        puts "        All 16 OV7670 registers match the programmed configuration."
+        puts "        (Analog rise-time margin not covered by this digital check.)"
+        return 1
+    } elseif {!$i2c_done_val} {
+        puts "RESULT: FAIL — i2c_done never asserted. SCCB writes did not complete."
+        puts "        Check SIOC/SIOD pin assignment, external pull-ups, and OV7670 power."
+        return 0
+    } else {
+        puts "RESULT: FAIL — i2c_done asserted but [llength $mismatches] register(s) mismatch."
+        puts "        Partial SCCB success; possible SIOD corruption or wrong device on bus."
+        return 0
+    }
+}
+
+proc print_ref_pixels {} {
+    global hw dev
+
+    puts "=== print_ref_pixels (captured reference pixels from camera_interface line 1"
+    puts "Shows both byte orderings; one should look scene-plausible (luminance trend)."
+
+    if {![info exists hw] || ![info exists dev]} {
+        puts "Not connected; calling connect_live_stream first."
+        connect_live_stream
+    }
+
+    _close_probe_session
+    start_insystem_source_probe -hardware_name $hw -device_name $dev
+
+    set rp01 [_read_probe_if_present 3]
+    set rp23 [_read_probe_if_present 4]
+    set rp45 [_read_probe_if_present 5]
+    set rp67 [_read_probe_if_present 6]
+
+    _close_probe_session
+
+    _require_hex $rp01 "REF01"
+    _require_hex $rp23 "REF23"
+    _require_hex $rp45 "REF45"
+    _require_hex $rp67 "REF67"
+
+    set pairs [list \
+        [list rp@x20  $rp01 31 16] \
+        [list rp@x60  $rp01 15  0] \
+        [list rp@x100 $rp23 31 16] \
+        [list rp@x140 $rp23 15  0] \
+        [list rp@x180 $rp45 31 16] \
+        [list rp@x220 $rp45 15  0] \
+        [list rp@x260 $rp67 31 16] \
+        [list rp@x300 $rp67 15  0] \
+    ]
+
+    puts [format "%-10s  %-6s  %-10s  %-10s  %-14s  %-14s" "Pixel" "X" "Raw(15:0)" "ByteSwap" "R G B Orig(Y)" "R G B Swapped(Y)"]
+    puts "----------  ------  ----------  ----------  --------------  ----------------"
+
+    foreach pair $pairs {
+        lassign $pair label probe_hex msb lsb
+        set probe_val [scan $probe_hex %x]
+        set raw [expr {($probe_val >> $lsb) & 0xFFFF}]
+        set b0 [expr {($raw >> 8) & 0xFF}]
+        set b1 [expr { $raw & 0xFF}]
+        set swapped [expr {($b1 << 8) | $b0}]
+        set r_orig [expr { ($raw >> 11) & 0x1F}]
+        set g_orig [expr { ($raw >>  5) & 0x3F}]
+        set b_orig [expr {  $raw & 0x1F}]
+        set r_sw   [expr {($swapped >> 11) & 0x1F}]
+        set g_sw   [expr {($swapped >>  5) & 0x3F}]
+        set b_sw   [expr { $swapped & 0x1F}]
+        set lum_orig [expr {($r_orig * 30 + $g_orig * 59 + $b_orig * 11) / 100}]
+        set lum_sw   [expr {($r_sw   * 30 + $g_sw   * 59 + $b_sw   * 11) / 100}]
+        set xcoord [string range $label 2 end]
+        puts [format "%-10s  x%-5s  0x%04X      0x%04X      %2d %2d %2d (%3d)   %2d %2d %2d (%3d)" \
+                  $label $xcoord \
+                  $raw $swapped \
+                  $r_orig $g_orig $b_orig $lum_orig \
+                  $r_sw   $g_sw   $b_sw   $lum_sw]
+    }
+
+    puts ""
+    puts "Interpretation: scan across pixels x20 -> x300 (left-to-right)."
+    puts "  Correct byte order shows a smooth luminance trend from left to right across the scene."
+    puts "  Wrong byte order gives wildly fluctuating Y values and incorrect primary colours."
 }

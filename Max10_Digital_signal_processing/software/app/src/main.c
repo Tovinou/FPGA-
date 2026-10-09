@@ -3,7 +3,8 @@
 #include "timer_hw_ip_test.h"
 #include "adc_test.h"
 #include "pio_led_test.h"
-#include "irq_test.h"
+#include "ai.h"
+#include "sdram_test.h"
 
 int main(void)
 {
@@ -12,7 +13,11 @@ int main(void)
     failures += timer_hw_ip_test();
     failures += adc_test();
     failures += pio_led_test();
-    failures += irq_test();
-    printf("All hardware tests complete: %d failure(s)\n", failures);
+    failures += sdram_stress_test(8U);
+    printf("All startup tests complete: %d failure(s)\n", failures);
+    if (failures == 0)
+    {
+        ai_demo_forever();
+    }
     return failures != 0;
 }

@@ -40,12 +40,13 @@ architecture sim of tb_sdram_subsystem is
     -- =========================================================================
     -- DUT ports
     -- =========================================================================
-    signal clk_130m          : std_logic := '0';
+    signal clk_100m          : std_logic := '0';
     signal rst_n             : std_logic := '0';
 
     signal cam_fifo_rd_en    : std_logic;
     signal cam_fifo_rd_data  : std_logic_vector(15 downto 0) := (others => '0');
     signal cam_fifo_empty    : std_logic := '1';
+    signal cam_fifo_rd_usedw : std_logic_vector(8 downto 0) := (others => '0');
 
     signal vga_fifo_wr_en    : std_logic;
     signal vga_fifo_wr_data  : std_logic_vector(15 downto 0);
@@ -99,7 +100,7 @@ architecture sim of tb_sdram_subsystem is
 
     procedure clk_wait(n : natural) is
     begin
-        for i in 1 to n loop wait until rising_edge(clk_130m); end loop;
+        for i in 1 to n loop wait until rising_edge(clk_100m); end loop;
     end procedure;
 
     -- Wait for SDRAM init to complete
@@ -108,7 +109,7 @@ architecture sim of tb_sdram_subsystem is
         variable found_mrs : boolean := false;
     begin
         for i in 0 to 35000 loop
-            wait until rising_edge(clk_130m);
+            wait until rising_edge(clk_100m);
             cmd := decode_cmd(sdram_cs_n,sdram_ras_n,sdram_cas_n,sdram_we_n);
             if cmd = CMD_MRS then found_mrs := true; end if;
             exit when found_mrs;
@@ -120,7 +121,7 @@ architecture sim of tb_sdram_subsystem is
 
 begin
 
-    clk_130m <= not clk_130m after T_CLK / 2;
+    clk_100m <= not clk_100m after T_CLK / 2;
 
     sdram_dq <= model_dq_out when model_dq_oe = '1' else (others => 'Z');
 
@@ -129,7 +130,7 @@ begin
     -- =========================================================================
     u_dut : entity work.sdram_subsystem
         port map (
-            clk_130m         => clk_130m,
+            clk_100m         => clk_100m,
             rst_n            => rst_n,
             test_mode        => open,
             test_leds        => open,
@@ -137,12 +138,25 @@ begin
             cam_fifo_rd_en   => cam_fifo_rd_en,
             cam_fifo_rd_data => cam_fifo_rd_data,
             cam_fifo_empty   => cam_fifo_empty,
-            cam_fifo_rd_usedw=> open,
+            cam_fifo_rd_usedw=> cam_fifo_rd_usedw,
             frame_done_async => frame_done_async,
             vga_vsync_async  => vga_vsync_async,
             vga_fifo_wr_en   => vga_fifo_wr_en,
             vga_fifo_wr_data => vga_fifo_wr_data,
             vga_fifo_full    => vga_fifo_full,
+            debug_cfr01_dbg  => open,
+            debug_cfr23_dbg  => open,
+            debug_cfr45_dbg  => open,
+            debug_cfr67_dbg  => open,
+            debug_vgr01_dbg  => open,
+            debug_vgr23_dbg  => open,
+            debug_vgr45_dbg  => open,
+            debug_vgr67_dbg  => open,
+            debug_vgl0_dbg   => open,
+            debug_vgl60_dbg  => open,
+            debug_vgl120_dbg => open,
+            debug_vgl180_dbg => open,
+            debug_sch_dbg    => open,
             sdram_cke        => sdram_cke,
             sdram_cs_n       => sdram_cs_n,
             sdram_ras_n      => sdram_ras_n,
@@ -167,7 +181,7 @@ begin
         model_rd_drive_cnt <= 0;
 
         loop
-            wait until rising_edge(clk_130m);
+            wait until rising_edge(clk_100m);
             wait for 0 ns;
 
             if seed_we = '1' then
@@ -244,7 +258,7 @@ begin
                 rst_n <= '0'; clk_wait(4); rst_n <= '1';
                 found_mrs := false;
                 for i in 0 to 35000 loop
-                    wait until rising_edge(clk_130m);
+                    wait until rising_edge(clk_100m);
                     cmd := decode_cmd(sdram_cs_n,sdram_ras_n,sdram_cas_n,sdram_we_n);
                     if cmd = CMD_MRS then
                         found_mrs := true;
@@ -283,7 +297,7 @@ begin
 
                 -- Wait for SDRAM WRITE command
                 for i in 0 to 50 loop
-                    wait until rising_edge(clk_130m);
+                    wait until rising_edge(clk_100m);
                     cmd := decode_cmd(sdram_cs_n,sdram_ras_n,sdram_cas_n,sdram_we_n);
                     if cmd = CMD_WRITE then exit; end if;
                 end loop;
@@ -317,10 +331,10 @@ begin
                 -- Wait for vga_fifo_wr_en
                 vga_seen := false;
                 for i in 0 to 200 loop
-                    wait until rising_edge(clk_130m);
+                    wait until rising_edge(clk_100m);
                     if vga_fifo_wr_en = '1' then
                         vga_seen  := true;
-                        wait until rising_edge(clk_130m);
+                        wait until rising_edge(clk_100m);
                         vga_data  := vga_fifo_wr_data;
                         exit;
                     end if;
@@ -339,7 +353,7 @@ begin
                 -- Record initial write address (bank 0)
                 cam_fifo_rd_data <= x"0001";
                 cam_fifo_empty   <= '0';
-                wait until rising_edge(clk_130m) and sdram_ras_n = '0';
+                wait until rising_edge(clk_100m) and sdram_ras_n = '0';
                 wr_addr_b0 := unsigned(sdram_addr(12 downto 0)) &
                               unsigned(sdram_ba) & "0000000000";
                 -- Just capture that a write is going out
@@ -356,7 +370,7 @@ begin
                 -- Peek at next wr_addr when a write happens
                 cam_fifo_rd_data <= x"0002";
                 cam_fifo_empty   <= '0';
-                wait until rising_edge(clk_130m) and sdram_ras_n = '0' for 500 ns;
+                wait until rising_edge(clk_100m) and sdram_ras_n = '0' for 500 ns;
                 cam_fifo_empty   <= '1';
 
                 -- After bank swap, wr_ptr starts at 0 in bank 1
@@ -381,7 +395,7 @@ begin
                 frame_done_async <= '0';
 
                 for i in 0 to 4 loop
-                    wait until rising_edge(clk_130m) and vga_fifo_wr_en = '1'
+                    wait until rising_edge(clk_100m) and vga_fifo_wr_en = '1'
                                for 500 ns;
                 end loop;
 
@@ -393,7 +407,7 @@ begin
 
                 -- The 6th read should continue from rd_ptr=5 (in new bank)
                 -- not restart from 0. Verify by checking vga_wr_en still fires.
-                wait until rising_edge(clk_130m) and vga_fifo_wr_en = '1'
+                wait until rising_edge(clk_100m) and vga_fifo_wr_en = '1'
                            for 500 ns;
                 check_equal(vga_fifo_wr_en, '1',
                     "VGA reads must continue after frame_done (rd_ptr not reset)");
@@ -404,7 +418,7 @@ begin
                 rst_n <= '0'; clk_wait(4); rst_n <= '1';
                 dqm_ok := true;
                 for i in 0 to 500 loop
-                    wait until rising_edge(clk_130m);
+                    wait until rising_edge(clk_100m);
                     if sdram_dqm /= "00" then
                         dqm_ok := false;
                         exit;

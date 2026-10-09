@@ -1,6 +1,4 @@
                0 fs - default              -    INFO - Byte 0 = high byte [15:8], Byte 1 = low byte [7:0]
-       979174500 fs - check                -   ERROR - High byte = first byte - Got UUUU_UUUU (NaN). Expected 1010_1011 (171).
-C:\Users\Lenovo X13\AppData\Roaming\Python\Python312\site-packages\vunit\vhdl\core\src\core_pkg.vhd:84:7:@979174500fs:(report failure): Stop simulation on log level error
-ghdl:error: report failed
-  instance: /tb_camera_interface/main
-ghdl:error: simulation failed
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:284:29:@854173500fs:(report note): first camera byte AB at 854173500 fs
+C:\Jensen\projects\fpga\live_stream\camera_subsystem\camera_interface.vhd:290:33:@895840500fs:(report note): second camera byte CD at 895840500 fs
+simulation stopped @1062508500fs with status 0

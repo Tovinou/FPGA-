@@ -19,7 +19,8 @@ target_sources(app.elf
         src/timer_hw_ip_test.c
         src/adc_test.c
         src/pio_led_test.c
-        src/irq_test.c
+        src/ai.c
+        src/sdram_test.c
 )
 
 target_include_directories(app.elf

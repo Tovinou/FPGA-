@@ -45,6 +45,7 @@ architecture sim of tb_vga_subsystem is
     signal vga_b        : std_logic_vector(3 downto 0);
     signal vga_hs       : std_logic;
     signal vga_vs       : std_logic;
+    signal vga_v_count_dbg : std_logic_vector(9 downto 0);
 
     -- VGA timing constants
     constant H_TOTAL    : integer := 800;
@@ -105,7 +106,7 @@ begin
     u_dut : entity work.vga_subsystem
         port map (
             clk_25m      => clk_25m,
-            clk_130m     => clk_100m,
+            clk_100m     => clk_100m,
             rst_n        => rst_n,
             test_mode    => "00",
             fifo_wr_en   => fifo_wr_en,
@@ -115,7 +116,8 @@ begin
             vga_g        => vga_g,
             vga_b        => vga_b,
             vga_hs       => vga_hs,
-            vga_vs       => vga_vs
+            vga_vs       => vga_vs,
+            v_count_dbg  => vga_v_count_dbg
         );
 
     main : process
@@ -229,11 +231,22 @@ begin
                 info("Pixel written at 100MHz appears on VGA DAC output");
                 do_reset(rst_n);
                 clk130_wait(10);
-                -- Write a full line + some extra of pure blue pixels
+                -- The FIFO is flushed during VSYNC; wait for that reset first.
+                wait until vga_vs = '0' for H_TOTAL * V_TOTAL * T_25M;
+                check_equal(vga_vs, std_logic'('0'), "VSYNC must occur before first readout");
+                wait until vga_vs = '1' for H_TOTAL * V_TOTAL * T_25M;
+                check_equal(vga_vs, std_logic'('1'), "VSYNC must release before active readout");
+                -- The FIFO is now out of reset and vertical blank remains long
+                -- enough to prefill before the next active frame starts.
                 fill_fifo(fifo_wr_data, fifo_wr_en, fifo_full, 800, rgb565(0, 0, 31));
-                -- Wait up to 2 lines for blue to appear on DAC
+                wait until vga_v_count_dbg = std_logic_vector(to_unsigned(0, 10))
+                    for H_TOTAL * V_TOTAL * T_25M;
+                check_equal(unsigned(vga_v_count_dbg), to_unsigned(0, 10),
+                    "VGA must enter the next active frame after prefill");
+
+                -- Check the first visible lines after the read gate opens.
                 r_nonzero := false;
-                for i in 0 to H_TOTAL * 4 loop
+                for i in 0 to H_TOTAL loop
                     wait until rising_edge(clk_25m);
                     -- Blue max = B[4:1] = "1111"
                     if vga_b = "1111" then

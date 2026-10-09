@@ -4,7 +4,7 @@
  * Machine generated for CPU 'max_niosv' in SOPC Builder design 'Max10_embedded_sys'
  * SOPC Builder design path: C:/Jensen/projects/Max10_Digital_signal_processing/Max10_embedded_sys.sopcinfo
  *
- * Generated: Thu Aug 20 22:52:49 CEST 2026
+ * Generated: Thu Sep 03 18:59:41 CEST 2026
  */
 
 /*
@@ -65,9 +65,11 @@
  *
  */
 
-#define RESET_REGION_BASE 0x10000
+#define MYCUSTOM_SDRAM_0_REGION_BASE 0x0
+#define MYCUSTOM_SDRAM_0_REGION_SPAN 67108864
+#define RESET_REGION_BASE 0x4010000
 #define RESET_REGION_SPAN 32
-#define SRAM_REGION_BASE 0x10020
+#define SRAM_REGION_BASE 0x4010020
 #define SRAM_REGION_SPAN 40928
 
 
@@ -76,11 +78,11 @@
  *
  */
 
-#define ALT_EXCEPTIONS_DEVICE SRAM
+#define ALT_EXCEPTIONS_DEVICE MYCUSTOM_SDRAM_0
 #define ALT_RESET_DEVICE SRAM
-#define ALT_RODATA_DEVICE SRAM
-#define ALT_RWDATA_DEVICE SRAM
-#define ALT_TEXT_DEVICE SRAM
+#define ALT_RODATA_DEVICE MYCUSTOM_SDRAM_0
+#define ALT_RWDATA_DEVICE MYCUSTOM_SDRAM_0
+#define ALT_TEXT_DEVICE MYCUSTOM_SDRAM_0
 
 
 /*

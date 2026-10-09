@@ -10,9 +10,12 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+-- Note: no separate system clock port is needed here.
+-- cam_xclk (OV7670 master clock) is driven directly from clk_25 at the
+-- camera_subsystem level and does not pass through camera_interface.
+-- All capture logic runs exclusively in the cam_pclk domain.
 entity camera_interface is
     port (
-        clk            : in  std_logic;
         pclk           : in  std_logic;
         rst_n          : in  std_logic;
         i2c_done       : in  std_logic;
@@ -54,6 +57,9 @@ architecture rtl of camera_interface is
     signal vsync_i  : std_logic;
     signal href_i   : std_logic;
     signal pclk_cap : std_logic;
+    signal capture_rst_sync1 : std_logic := '0';
+    signal capture_rst_sync2 : std_logic := '0';
+    signal capture_rst_n     : std_logic;
 
     signal byte_sel       : std_logic := '0';
     signal d_latch        : std_logic_vector(7 downto 0) := (others => '0');
@@ -77,7 +83,6 @@ architecture rtl of camera_interface is
     signal cam_byte       : std_logic_vector(7 downto 0);
     signal last_pixel_word: std_logic_vector(15 downto 0) := (others => '0');
     signal last_raw_first : std_logic_vector(7 downto 0) := (others => '0');
-    signal last_raw_second: std_logic_vector(7 downto 0) := (others => '0');
     signal sample_armed   : std_logic := '0';
     signal line_pixel_idx : unsigned(8 downto 0) := (others => '0');
     signal ref_pixel0     : std_logic_vector(15 downto 0) := (others => '0');
@@ -107,23 +112,67 @@ architecture rtl of camera_interface is
     constant GOOD_MIN_PIXELS : unsigned(17 downto 0) := to_unsigned(70000, 18);
     constant GOOD_MAX_PIXELS : unsigned(17 downto 0) := to_unsigned(82000, 18);
 
+    function reverse_vec8(x : std_logic_vector(7 downto 0))
+        return std_logic_vector is
+        variable y : std_logic_vector(7 downto 0);
+    begin
+        for i in 0 to 7 loop
+            y(i) := x(7 - i);
+        end loop;
+        return y;
+    end function;
+
+    function remap_cam_byte(x : std_logic_vector(7 downto 0);
+                             rev : std_logic;
+                             sel : std_logic_vector(1 downto 0))
+        return std_logic_vector is
+        variable y : std_logic_vector(7 downto 0);
+    begin
+        y := x;
+        if rev = '1' then
+            y := reverse_vec8(x);
+        end if;
+
+        case sel is
+            when "00" => return y;
+            when "01" => return y(3 downto 0) & y(7 downto 4);
+            when "10" => return y(1 downto 0) & y(7 downto 2);
+            when "11" => return y(7 downto 4) & y(3 downto 0);
+            when others => return y;
+        end case;
+    end function;
+
 begin
 
     vsync_i <= vsync xor invert_sync;
     href_i  <= href xor invert_sync;
     pclk_cap <= pclk when sample_falling = '0' else not pclk;
+    capture_rst_n <= capture_rst_sync2;
+
+    p_capture_reset : process(pclk_cap, rst_n)
+    begin
+        if rst_n = '0' then
+            capture_rst_sync1 <= '0';
+            capture_rst_sync2 <= '0';
+        elsif rising_edge(pclk_cap) then
+            capture_rst_sync1 <= '1';
+            capture_rst_sync2 <= capture_rst_sync1;
+        end if;
+    end process;
+
     -- Use VSYNC/HREF directly in the selected capture-edge domain so line/frame
     -- boundaries stay aligned with the byte sampled on that same PCLK edge.
     vsync_clean <= vsync_i;
     href_clean  <= href_i;
-    cam_byte_pre <= cam_data;
+    cam_byte_pre <= remap_cam_byte(cam_data, reverse_bits, data_map_sel);
     
     cam_byte <= cam_byte_pre;
     last_line_count      <= std_logic_vector(last_line_cnt);
     last_pixel_count_div <= std_logic_vector(last_pixel_div);
     frame_valid_dbg      <= frame_valid_i;
     raw_byte_dbg         <= last_raw_first;
-    mapped_byte_dbg      <= last_raw_second;
+    mapped_byte_dbg      <= last_pixel_word(15 downto 8) when swap_bytes = '1' else
+                            last_pixel_word(7 downto 0);
     pixel_word_dbg       <= last_pixel_word;
     ref_pixels01_dbg     <= ref_pixel0 & ref_pixel1;
     ref_pixels23_dbg     <= ref_pixel2 & ref_pixel3;
@@ -137,10 +186,11 @@ begin
     -- Capture directly in the camera PCLK domain. The frame geometry probe proved
     -- that sync parsing is correct; the remaining fault is likely pixel-value
     -- corruption from oversampling PCLK/data in another clock domain.
-    p_capture : process(pclk_cap, rst_n)
+    p_capture : process(pclk_cap)
         variable assembled_pixel : std_logic_vector(15 downto 0);
     begin
-        if rst_n = '0' then
+        if rising_edge(pclk_cap) then
+          if capture_rst_sync2 = '0' then
             state      <= S_IDLE;
             byte_sel   <= '0';
             fifo_wr_en <= '0';
@@ -157,7 +207,6 @@ begin
             pclk_heartbeat <= '0';
             last_pixel_word <= (others => '0');
             last_raw_first <= (others => '0');
-            last_raw_second <= (others => '0');
             sample_armed <= '0';
             line_pixel_idx <= (others => '0');
             ref_pixel0 <= (others => '0');
@@ -178,7 +227,7 @@ begin
             line180_pair_out  <= (others => '0');
             i2c_done_ff1 <= '0';
             i2c_done_ff2 <= '0';
-        elsif rising_edge(pclk_cap) then
+                    else
             fifo_wr_en <= '0';
             frame_done <= '0';
 
@@ -233,25 +282,16 @@ begin
                     if href_clean = '1' then
                         if byte_sel = '0' then
                             d_latch  <= cam_byte;
-                            if sample_armed = '1' then
-                                last_raw_first <= cam_data;
-                            end if;
+                            last_raw_first <= cam_byte;
                             byte_sel <= '1';
                         else
                             if fifo_full = '0' then
-                                if sample_armed = '1' then
-                                    last_raw_second <= cam_data;
-                                end if;
                                 if swap_bytes = '0' then
                                     assembled_pixel := d_latch & cam_byte;
-                                    if sample_armed = '1' then
-                                        last_pixel_word <= assembled_pixel;
-                                    end if;
+                                    last_pixel_word <= assembled_pixel;
                                 else
                                     assembled_pixel := cam_byte & d_latch;
-                                    if sample_armed = '1' then
-                                        last_pixel_word <= assembled_pixel;
-                                    end if;
+                                    last_pixel_word <= assembled_pixel;
                                 end if;
                                 fifo_wr_data <= assembled_pixel;
                                 if line_cnt = to_unsigned(1, 10) then
@@ -291,7 +331,10 @@ begin
                                 fifo_wr_en   <= '1';
                                 pixel_cnt    <= pixel_cnt + 1;
                                 line_pixel_idx <= line_pixel_idx + 1;
-                                sample_armed <= '0';
+                                -- Keep the frame sample arm high for the full
+                                -- capture interval so every byte-pair advances
+                                -- the stream instead of collapsing after the first
+                                -- sampled pixel.
                             end if;
                             byte_sel <= '0';
                         end if;
@@ -350,7 +393,8 @@ begin
                 when others =>
                     state <= S_IDLE;
             end case;
-        end if;
+                    end if;
+                end if;
     end process;
 
 end architecture rtl;

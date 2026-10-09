@@ -12,11 +12,9 @@ entity vga_core is
     port (
         pclk     : in  std_logic;   -- 25.175 MHz pixel clock
         rst_n    : in  std_logic;
-
         hsync    : out std_logic;   -- Horizontal sync (active low)
         vsync    : out std_logic;   -- Vertical sync   (active low)
         active   : out std_logic;   -- High during visible pixel area
-
         h_count  : out std_logic_vector(9 downto 0);   -- 0..799
         v_count  : out std_logic_vector(9 downto 0)    -- 0..524
     );
@@ -60,7 +58,6 @@ begin
         if rst_n = '0' then
             hc <= (others => '0');
             vc <= (others => '0');
-
         elsif rising_edge(pclk) then
             -- Horizontal counter
             if hc = H_TOTAL - 1 then

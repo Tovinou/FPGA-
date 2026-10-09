@@ -51,22 +51,22 @@ OBS:
     och därefter mappar OV7670_* -> GPIO[*] i Pin Planner/QSF (om du vill ha samma namn).
 
 Föreslagen signal-mappning (OV7670 -> GPIO index):
-  OV7670_D[0]   -> GPIO[0]
-  OV7670_D[1]   -> GPIO[1]
-  OV7670_D[2]   -> GPIO[2]
-  OV7670_D[3]   -> GPIO[3]
-  OV7670_D[4]   -> GPIO[4]
-  OV7670_D[5]   -> GPIO[5]
-  OV7670_D[6]   -> GPIO[6]
-  OV7670_D[7]   -> GPIO[7]
-  OV7670_PCLK   -> GPIO[8]
-  OV7670_HREF   -> GPIO[9]
-  OV7670_VSYNC  -> GPIO[10]
-  OV7670_XCLK   -> GPIO[11]
-  OV7670_SIOC   -> GPIO[12]
-  OV7670_SIOD   -> GPIO[13]
-  OV7670_RESET_N-> GPIO[14]
-  OV7670_PWDN   -> GPIO[15]
+  OV7670_D[0]   -> GPIO[0] = correct to PIN_V10
+  OV7670_D[1]   -> GPIO[1]  PIN_W10
+  OV7670_D[2]   -> GPIO[2] = PIN_V9
+  OV7670_D[3]   -> GPIO[3]   PIN_W9
+  OV7670_D[4]   -> GPIO[4] PIN_V8
+  OV7670_D[5]   -> GPIO[5]  PIN_W8
+  OV7670_D[6]   -> GPIO[6]  PIN_V7
+  OV7670_D[7]   -> GPIO[7]  PIN_W7
+  OV7670_PCLK   -> GPIO[8]  PIN_W6
+  OV7670_HREF   -> GPIO[9]  PIN_V5
+  OV7670_VSYNC  -> GPIO[10]  PIN_W5
+  OV7670_XCLK   -> GPIO[11]  PIN_AA15
+  OV7670_SIOC   -> GPIO[12]  PIN_AA14
+  OV7670_SIOD   -> GPIO[13]  PIN_W13
+  OV7670_RESET_N-> GPIO[14]  PIN_W12
+  OV7670_PWDN   -> GPIO[15]  PIN_AB13
 
 GPIO[0..15] → FPGA package pin (från live_stream.qsf):
   GPIO[0]  = PIN_V10

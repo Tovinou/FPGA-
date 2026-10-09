@@ -1,2 +1,2 @@
                0 fs - default              -    INFO - First byte after START must be OV7670 write address 0x42
-simulation stopped @11031359083500fs with status 0
+simulation stopped @10590005ns with status 0

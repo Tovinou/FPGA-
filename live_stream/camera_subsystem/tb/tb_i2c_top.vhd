@@ -31,10 +31,10 @@ end entity;
 
 architecture sim of tb_i2c_top is
 
-    -- 24 MHz input clock (corrected i2c_top uses clk_24m)
-    constant T_CLK    : time    := 41667 ps;   -- 24 MHz
-    -- SCCB 100kHz: half-period = 120 clocks = 120*41.667ns = 5000ns
-    constant T_SCCB_H : time    := 5100 ns;    -- 100kHz half period + margin
+    -- 100 MHz input clock (matches i2c_top HALF_PERIOD=1000 -> 50 kHz SCCB)
+    constant T_CLK    : time    := 10 ns;      -- 100 MHz
+    -- SCCB 50 kHz: half-period = 1000 clocks * 10ns = 10000 ns
+    constant T_SCCB_H : time    := 10500 ns;   -- 50 kHz half period + margin
 
     signal clk      : std_logic := '0';
     signal rst_n    : std_logic := '0';
@@ -110,7 +110,11 @@ begin
             siod      => siod,
             done      => done,
             cam_rst_n => cam_rst_n,
-            cam_pwdn  => cam_pwdn
+            cam_pwdn  => cam_pwdn,
+            reg_cfg0_dbg => open,
+            reg_cfg1_dbg => open,
+            reg_cfg2_dbg => open,
+            reg_cfg3_dbg => open
         );
 
     -- =========================================================================
@@ -209,7 +213,7 @@ begin
 
             -- -----------------------------------------------------------------
             elsif run("tc_sioc_frequency") then
-                info("SIOC toggles at ~100kHz after reset + release");
+                info("SIOC toggles at ~50kHz after reset + release");
                 rst_n <= '0'; clk_wait(4);
                 rst_n <= '1';
                 -- Wait for cam_rst_n to release (end of reset hold)
@@ -223,10 +227,10 @@ begin
                 wait until sioc_pulled = '0';
                 t_end := now;
                 t_gap := t_end - t_start;
-                -- 100kHz half period = 5000ns, allow +-500ns tolerance
-                check(t_gap >= 4500 ns and t_gap <= 5500 ns,
+                -- 50 kHz half period = 10000 ns, allow tolerance
+                check(t_gap >= 9000 ns and t_gap <= 11000 ns,
                     "SIOC half-period out of range: " &
-                    time'image(t_gap) & " (expected ~5000ns)");
+                    time'image(t_gap) & " (expected ~10000ns)");
 
             -- -----------------------------------------------------------------
             elsif run("tc_start_condition") then

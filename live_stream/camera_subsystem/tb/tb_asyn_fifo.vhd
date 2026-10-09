@@ -141,7 +141,8 @@ begin
             wr_clk => wr_clk, wr_rst_n => wr_rst_n,
             wr_en  => wr_en,  wr_data  => wr_data, wr_full => wr_full,
             rd_clk => rd_clk, rd_rst_n => rd_rst_n,
-            rd_en  => rd_en,  rd_data  => rd_data, rd_empty => rd_empty
+            rd_en  => rd_en,  rd_data  => rd_data, rd_empty => rd_empty,
+            rd_usedw => open
         );
 
     main : process

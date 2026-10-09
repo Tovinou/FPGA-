@@ -15,7 +15,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity i2c_top is
     port (
-        clk       : in    std_logic;   -- 25 MHz (pll_main c2)
+        clk       : in    std_logic;   -- 100 MHz (clk_100m from camera_subsystem)
         rst_n     : in    std_logic;
         -- SCCB bus (open-drain, external pull-ups required)
         sioc      : out   std_logic;
@@ -35,15 +35,15 @@ architecture rtl of i2c_top is
 
     -- -------------------------------------------------------------------------
     -- SCCB timing
-    -- Input clock: 25 MHz  (pll_main c2) -> period = 40 ns
-    -- Target SCCB: 50 kHz -> half-period = 10000 ns = 250 clock cycles
+    -- Input clock: 100 MHz (clk_100m) -> period = 10 ns
+    -- Target SCCB: 50 kHz -> half-period = 10000 ns = 1000 clock cycles
     -- -------------------------------------------------------------------------
-    constant HALF_PERIOD      : integer := 250;
+    constant HALF_PERIOD      : integer := 1000;
 
-    -- 1ms delay at 25MHz = 25000 cycles
-    constant DELAY_1MS        : integer := 25_000;
-    -- 5ms reset hold at 25MHz = 125000 cycles
-    constant RESET_HOLD_CYCLES: integer := 125_000;
+    -- 1ms delay at 100 MHz = 100 000 cycles
+    constant DELAY_1MS        : integer := 100_000;
+    -- 5ms reset hold at 100 MHz = 500 000 cycles
+    constant RESET_HOLD_CYCLES: integer := 500_000;
 
     -- OV7670 SCCB write address
     constant OV7670_WRITE_ADDR : std_logic_vector(7 downto 0) := x"42";
@@ -73,10 +73,10 @@ architecture rtl of i2c_top is
         -- Output format: RGB565
         (x"12", x"14"),  -- COM7: QVGA + RGB mode (Color Bar disabled)
         (x"40", x"D0"),  -- COM15: RGB565, full output range 0x00..0xFF
-        -- Normal operation: disable internal color bar test pattern
+        -- Normal video; disable the OV7670 color-bar test pattern.
         (x"42", x"00"),  -- COM17: normal video
         (x"8C", x"00"),  -- RGB444: disable
-        (x"3A", x"04"),  -- TSLB: swap RGB byte order (bit3=1) for correct RGB565 output
+        (x"3A", x"0C"),  -- TSLB: swap RGB byte order (bit3=1) to fix off-by-one byte alignment in FPGA
         (x"3D", x"83"),  -- COM13: gamma(bit7) + UV saturation auto(bit1) + UV swap(bit0) for correct RGB565
         
         -- Color Matrix: standard YUV->RGB coefficients (from Linux OV7670 kernel driver)
@@ -86,6 +86,7 @@ architecture rtl of i2c_top is
         (x"52", x"22"),  -- MTX4
         (x"53", x"5e"),  -- MTX5
         (x"54", x"80"),  -- MTX6
+        (x"56", x"40"),  -- MTX_CTRL (bit6=enable MTX, bit5=enable AWB/AGC)
         (x"58", x"9e"),  -- MTXS (bit7=auto-adjust, bits5:4=sign MTX5 neg, bits3=sign MTX4 neg)
 
         -- Resolution: 320x240 (QVGA, downsample from VGA)
@@ -108,8 +109,8 @@ architecture rtl of i2c_top is
         (x"0D", x"40"),  -- COM4
         (x"14", x"18"),  -- COM9: restore normal AGC ceiling
 
-        -- COM10: VSYNC active-low during frame (bit2=1), HREF active-high (bit3=0), PCLK inverted (bit4=1)
-        (x"15", x"14"),
+        -- COM10: VSYNC negative (bit1=1), HREF normal, PCLK not inverted
+        (x"15", x"02"),
 
         -- Sentinel (must be last)
         (x"FF", x"FF")

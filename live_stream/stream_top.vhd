@@ -20,8 +20,8 @@
 -- Clock domains:
 --   PCLK    25 MHz   OV7670-generated, fed back into camera_subsystem
 --   
---   clk_100m 75MHz   PLL c0, drives sdram_subsystem + SDRAM clock pin
---   DRAM_CLK 75MHz   PLL c1 (phase-shifted), goes directly to SDRAM pin
+--   clk_100m 100MHz   PLL c0, drives sdram_subsystem + SDRAM clock pin
+--   DRAM_CLK 100MHz   PLL c1 (phase-shifted), goes directly to SDRAM pin
 --   clk_25m 25 MHz   PLL c2, drives vga_subsystem and drives i2c_top + XCLK output
 --   locked
 -- =============================================================================
@@ -41,14 +41,14 @@ entity stream_top is
         OV7670_HREF    : in    std_logic;
         OV7670_VSYNC   : in    std_logic;
         OV7670_D       : in    std_logic_vector(7 downto 0);
-        OV7670_XCLK    : out   std_logic;
+        OV7670_XCLK    : out   std_logic; -- connect to pll 25 Mhz
         OV7670_SIOC    : out   std_logic;
         OV7670_SIOD    : inout std_logic;
         OV7670_RESET_N : out   std_logic;
         OV7670_PWDN    : out   std_logic;
 
         -- SDRAM IS42S16320F
-        DRAM_CLK       : out   std_logic;
+        DRAM_CLK       : out   std_logic; -- connect to c1 100Mhz -30 degre
         DRAM_CKE       : out   std_logic;
         DRAM_CS_N      : out   std_logic;
         DRAM_RAS_N     : out   std_logic;
@@ -77,10 +77,10 @@ architecture rtl of stream_top is
 
     component pll_main
         port (
-            inclk0  : in  std_logic;
-            c0      : out std_logic;
-            c1      : out std_logic;
-            c2      : out std_logic;
+            inclk0  : in  std_logic := '0'; 
+            c0      : out std_logic; -- 100 Mhz clk
+            c1      : out std_logic; -- 100 Mhz clk -30 degre
+            c2      : out std_logic; -- 25 Mhz clk
             locked  : out std_logic
         );
     end component;
@@ -116,8 +116,7 @@ architecture rtl of stream_top is
             USE_VENDOR_FIFO : boolean := false
         );
         port (
-            clk_24m      : in    std_logic;
-            clk_130m     : in    std_logic;
+            clk_100m     : in    std_logic;
             rst_n        : in    std_logic;
             invert_sync  : in    std_logic;
             sample_falling : in  std_logic;
@@ -128,7 +127,6 @@ architecture rtl of stream_top is
             cam_vsync    : in    std_logic;
             cam_href     : in    std_logic;
             cam_d        : in    std_logic_vector(7 downto 0);
-            cam_xclk     : out   std_logic;
             cam_sioc     : out   std_logic;
             cam_siod     : inout std_logic;
             cam_rst_n    : out   std_logic;
@@ -164,7 +162,7 @@ architecture rtl of stream_top is
 
     component sdram_subsystem
         port (
-            clk_130m         : in    std_logic;
+            clk_100m         : in    std_logic;
             rst_n            : in    std_logic;
             test_mode        : out   std_logic_vector(1 downto 0);
             test_leds        : out   std_logic_vector(9 downto 0);
@@ -209,7 +207,7 @@ architecture rtl of stream_top is
         );
         port (
             clk_25m      : in  std_logic;
-            clk_130m     : in  std_logic;
+            clk_100m     : in  std_logic;
             rst_n        : in  std_logic;
             test_mode    : in  std_logic_vector(1 downto 0);
             fifo_wr_en   : in  std_logic;
@@ -478,12 +476,14 @@ begin
     end process;
 
     with ov7670_xclk_sel select ov7670_xclk_out <=
+	 --with ov7670_xclk_sel select clk_25m <=
         clk_25m             when "00",  -- 25 MHz
         ov7670_xclk_cnt(0)  when "01",  -- 12.5 MHz
         ov7670_xclk_cnt(1)  when "10",  -- 6.25 MHz
         ov7670_xclk_cnt(2)  when others;-- 3.125 MHz
 
     OV7670_XCLK <= ov7670_xclk_out;
+		--OV7670_XCLK <= clk_25m;
 
     bypass_mode <= SW(3);
 
@@ -837,7 +837,7 @@ begin
         port map (
             inclk0  => MAX10_CLK1_50,
             c0      => clk_100m,
-            c1      => clk_dram,
+            c1      => clk_dram,-- 100 Mhz shift -30 for sdram_clk
             c2      => clk_25m,
             locked  => pll_locked
         );
@@ -851,7 +851,7 @@ begin
             pll_locked => pll_locked,
             key0       => KEY(0),
             rst_n      => rst_n,
-            locked_led => open
+            locked_led => pll_locked
         );
 
     -- =========================================================================
@@ -862,19 +862,22 @@ begin
             USE_VENDOR_FIFO => true
         )
         port map (
-            clk_24m      => clk_25m,
-            clk_130m     => clk_100m,
+            clk_100m     => clk_100m,
             rst_n        => rst_n,
             invert_sync  => SW(1),
-            sample_falling => SW(2),
+            sample_falling => '0',
             reverse_bits => SW(6),
             data_map_sel => SW(9 downto 8),
-            swap_bytes   => SW(7),
+            -- TSLB=0x0C (OV7670 register 0x3A) enables OV-side byte swap so the
+            -- low byte of RGB565 is emitted first. Correct assembly in the FPGA
+            -- therefore requires swap_bytes='1' on power-up. SW(7) DOWN (='0')
+            -- selects the correct default; flip SW(7) UP only to deliberately
+            -- reproduce the wrong order for A/B comparisons on hardware.
+            swap_bytes   => not SW(7),
             cam_pclk     => OV7670_PCLK,
             cam_vsync    => cam_vsync_mapped,
             cam_href     => cam_href_mapped,
             cam_d        => OV7670_D,
-            cam_xclk     => open,
             cam_sioc     => OV7670_SIOC,
             cam_siod     => OV7670_SIOD,
             cam_rst_n    => OV7670_RESET_N,
@@ -912,7 +915,7 @@ begin
     -- =========================================================================
     u_sdram : sdram_subsystem
         port map (
-            clk_130m         => clk_100m,
+            clk_100m         => clk_100m,
             rst_n            => rst_n,
             test_mode        => sdram_test_mode,
             test_leds        => sdram_test_leds,
@@ -959,7 +962,7 @@ begin
         )
         port map (
             clk_25m      => clk_25m,
-            clk_130m     => clk_100m,
+            clk_100m     => clk_100m,
             rst_n        => rst_n,
             test_mode    => vga_test_mode,
             fifo_wr_en   => vga_fifo_wr_en_to_vga,

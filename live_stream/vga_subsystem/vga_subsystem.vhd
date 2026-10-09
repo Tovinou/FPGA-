@@ -27,7 +27,7 @@ entity vga_subsystem is
     port (
         -- Clocks
         clk_25m      : in  std_logic;   -- 25 MHz VGA pixel clock
-        clk_130m     : in  std_logic;   -- 100 MHz FIFO write side
+        clk_100m     : in  std_logic;   -- 100 MHz FIFO write side
         rst_n        : in  std_logic;
         test_mode    : in  std_logic_vector(1 downto 0);
 
@@ -70,6 +70,7 @@ end entity vga_subsystem;
 architecture rtl of vga_subsystem is
     -- Prefill before first frame; start reads only at active pixel (0,0).
     constant START_FILL_LEVEL : unsigned(11 downto 0) := to_unsigned(320, 12);
+    constant V_ACTIVE_LINES   : unsigned(9 downto 0) := to_unsigned(480, 10);
 
     -- -------------------------------------------------------------------------
     -- Component declarations
@@ -167,10 +168,14 @@ architecture rtl of vga_subsystem is
     signal vga_active    : std_logic;
     signal vga_h_count   : std_logic_vector(9 downto 0);
     signal vga_v_count   : std_logic_vector(9 downto 0);
-
     signal vsync_sync_wr1 : std_logic := '1';
     signal vsync_sync_wr2 : std_logic := '1';
     signal fifo_rst_n_wr  : std_logic;
+    -- Signals for per-frame FIFO flush (short reset pulse, not level-gated)
+    signal vsync_prev_rd  : std_logic := '1';
+    signal rst_pulse_cnt_rd : unsigned(2 downto 0) := (others => '0');
+    signal vsync_prev_wr  : std_logic := '1';
+    signal rst_pulse_cnt_wr : unsigned(2 downto 0) := (others => '0');
 
 begin
 
@@ -180,27 +185,55 @@ begin
     fifo_usedw_dbg <= fifo_usedw;
     h_count_dbg <= vga_h_count;
     v_count_dbg <= vga_v_count;
-    -- The SDRAM reader restarts at pixel 0 on every VGA VSYNC.  Reset the
-    -- cross-clock FIFO for the same interval so it cannot retain tail pixels
-    -- from the preceding frame; otherwise the next display frame begins at an
-    -- arbitrary source-pixel offset (visible as scrambled colour bars).
-    fifo_rst_n <= rst_n and vga_vsync;
 
-    p_sync_wr_rst : process(clk_130m, rst_n)
+    -- Per-frame FIFO flush: 4-cycle reset pulse on the FALLING edge of
+    -- vga_vsync.  That is: flush RIGHT BEFORE the active display window
+    -- opens (end of vertical blanking).  The previous rising-edge version
+    -- flushed at the START of vertical blanking, after which the SDRAM
+    -- reader could still emit several hundred stale tail pixels from the
+    -- *previous* frame's last rows back into the FIFO during blanking --
+    -- those tail pixels then fed into the new frame's first display rows,
+    -- producing a per-frame variable offset that accumulated into the
+    -- diagonal shear / fingerprint contour pattern on every frame.
+    p_fifo_flush_rd : process(clk_25m, rst_n)
+    begin
+        if rst_n = '0' then
+            vsync_prev_rd <= '1';
+            rst_pulse_cnt_rd <= (others => '0');
+        elsif rising_edge(clk_25m) then
+            vsync_prev_rd <= vga_vsync;
+            if vga_vsync = '0' and vsync_prev_rd = '1' then
+                rst_pulse_cnt_rd <= to_unsigned(4, 3);
+            elsif rst_pulse_cnt_rd /= 0 then
+                rst_pulse_cnt_rd <= rst_pulse_cnt_rd - 1;
+            end if;
+        end if;
+    end process;
+    fifo_rst_n <= '0' when (rst_n = '0' or rst_pulse_cnt_rd /= 0) else '1';
+
+    p_sync_wr_rst : process(clk_100m, rst_n)
     begin
         if rst_n = '0' then
             vsync_sync_wr1 <= '1';
             vsync_sync_wr2 <= '1';
-        elsif rising_edge(clk_130m) then
+            vsync_prev_wr <= '1';
+            rst_pulse_cnt_wr <= (others => '0');
+        elsif rising_edge(clk_100m) then
             vsync_sync_wr1 <= vga_vsync;
             vsync_sync_wr2 <= vsync_sync_wr1;
+            vsync_prev_wr <= vsync_sync_wr2;
+            if vsync_sync_wr2 = '0' and vsync_prev_wr = '1' then
+                rst_pulse_cnt_wr <= to_unsigned(4, 3);
+            elsif rst_pulse_cnt_wr /= 0 then
+                rst_pulse_cnt_wr <= rst_pulse_cnt_wr - 1;
+            end if;
         end if;
     end process;
-    fifo_rst_n_wr <= rst_n and vsync_sync_wr2;
+    fifo_rst_n_wr <= '0' when (rst_n = '0' or rst_pulse_cnt_wr /= 0) else '1';
 
-    -- Back-pressure the producer (sdram_interface, clk_130m domain) once the
+    -- Back-pressure the producer (sdram_interface, clk_100m domain) once the
     -- backlog crosses FIFO_ALMOST_FULL_THRESH, well before the FIFO is
-    -- actually full. fifo_wr_usedw is a clk_130m-domain signal, and this
+    -- actually full. fifo_wr_usedw is a clk_100m-domain signal, and this
     -- comparison is evaluated in that same domain, so no extra CDC is
     -- introduced. fifo_wr_full is OR'd in as a hard backstop in case the
     -- threshold is ever misconfigured above the FIFO depth.
@@ -234,22 +267,21 @@ begin
             -- 0, the check saw 0 >= 320 = FALSE, and the VGA never started
             -- reading, keeping the FIFO permanently full and the SDRAM stuck.
             -- Using fifo_usedw >= 320 is safe because we don't let it fill to 4096.
-            if unsigned(fifo_usedw) >= to_unsigned(320, 12) then
+            if unsigned(fifo_usedw) >= START_FILL_LEVEL then
                 read_start_ready <= '1';
             end if;
 
-            -- Arm during blanking (vga_active='0') AFTER vsync has gone high again.
-            -- Requiring vga_vsync='1' ensures we never try to arm during the
-            -- sync pulse itself, which could race with the disarm above.
+            -- Arm only in vertical blank after VSYNC. Horizontal porches also
+            -- deassert vga_active, but arming there can start a frame mid-image.
             if read_start_armed = '0' and read_start_ready = '1' and
-               vga_vsync = '1' and vga_active = '0' then
+               vga_vsync = '1' and unsigned(vga_v_count) >= V_ACTIVE_LINES then
                 read_start_armed <= '1';
             end if;
         end if;
     end process;
 
     -- -------------------------------------------------------------------------
-    -- Async FIFO: clk_130m write -> clk_25m read
+    -- Async FIFO: clk_100m write -> clk_25m read
     -- Physical depth is 4096 entries, but the producer is now held back at
     -- FIFO_ALMOST_FULL_THRESH (see fifo_almost_full above) so the backlog
     -- normally never exceeds ~1 camera scanline (320 pixels) plus burst
@@ -263,7 +295,7 @@ begin
             USE_DCFIFO => USE_VENDOR_FIFO
         )
         port map (
-            wr_clk   => clk_130m,
+            wr_clk   => clk_100m,
             wr_rst_n => fifo_rst_n_wr,
             wr_en    => fifo_wr_en,
             wr_data  => fifo_wr_data,

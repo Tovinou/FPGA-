@@ -2,6 +2,10 @@
 -- camera_subsystem.vhd  (CORRECTED)
 -- Camera capture subsystem wrapper
 --
+-- new architecture:
+------ stream_top: PLL clk_25m → OV7670_XCLK (directly, no subsystem boundary crossing)
+------_subsystem: no clk_25 port, no cam_xclk port, i2c_top uses clk_100m
+--
 -- Contains:
 --   u_i2c  : i2c_top          -- SCCB master, programs OV7670 on startup
 --   u_cam  : camera_interface -- pixel capture FSM (PCLK domain)
@@ -16,9 +20,9 @@
 --      re-synchronisation in sdram_subsystem
 --
     -- Clock domains:
-    --   clk_24m  : i2c_top (SCCB master), cam_xclk output
-    --   cam_pclk : camera_interface + asyn_fifo write side
-    --   clk_130m : asyn_fifo read side (100MHz) -> sdram_subsystem
+    --   clk_100m : i2c_top (SCCB master) + asyn_fifo read side -> sdram_subsystem
+    --   cam_pclk : camera_interface + asyn_fifo write side (25 MHz from OV7670)
+    --   cam_xclk : driven in stream_top directly from PLL clk_25m (not a subsystem port)
 -- =============================================================================
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -30,8 +34,7 @@ entity camera_subsystem is
     );
     port (
         -- Clocks & reset
-        clk_24m      : in    std_logic;   -- 24 MHz PLL output (XCLK + SCCB)
-        clk_130m     : in    std_logic;   -- 100 MHz (FIFO read side)
+        clk_100m     : in    std_logic;   -- 100 MHz: FIFO read side + SCCB master
         rst_n        : in    std_logic;
         invert_sync  : in    std_logic;   -- tie to SW(1): '1' if VSYNC/HREF polarity wrong
         sample_falling : in  std_logic;   -- tie to SW(2): '1' = capture on falling edge
@@ -44,7 +47,6 @@ entity camera_subsystem is
         cam_vsync    : in    std_logic;   -- frame sync (active high)
         cam_href     : in    std_logic;   -- line valid  (active high)
         cam_d        : in    std_logic_vector(7 downto 0);
-        cam_xclk     : out   std_logic;   -- master clock to OV7670
         cam_sioc     : out   std_logic;   -- SCCB clock
         cam_siod     : inout std_logic;   -- SCCB data
         cam_rst_n    : out   std_logic;   -- OV7670 RESETB (active low)
@@ -109,7 +111,6 @@ architecture rtl of camera_subsystem is
 
     component camera_interface
         port (
-            clk            : in  std_logic;
             pclk           : in  std_logic;
             rst_n          : in  std_logic;
             i2c_done       : in  std_logic;
@@ -182,7 +183,12 @@ begin
     -- XCLK: feed 24 MHz PLL clock directly to OV7670 as master clock
     -- OV7670 uses this to generate its own PCLK output
     -- =========================================================================
-    cam_xclk <= clk_24m;
+    -- cam_xclk (OV7670 master clock) is driven directly in stream_top:
+    --   OV7670_XCLK <= clk_25m;
+    -- Routing PLL -> GPIO directly through the GCLK network avoids
+    -- clock jitter that would result from crossing module boundaries
+    -- as a plain data signal.
+
     i2c_done <= i2c_done_int;
     fifo_wr_pulse <= fifo_wr_en_int;
 
@@ -194,7 +200,7 @@ begin
     -- =========================================================================
     u_i2c : i2c_top
         port map (
-            clk       => clk_24m,        -- 24 MHz, HALF_PERIOD=120 -> 100kHz
+            clk       => clk_100m,      -- 100 MHz -> HALF_PERIOD=1000 -> 50 kHz SCCB
             rst_n     => rst_n,
             sioc      => cam_sioc,
             siod      => cam_siod,
@@ -214,7 +220,6 @@ begin
     -- =========================================================================
     u_cam : camera_interface
         port map (
-            clk            => clk_130m,
             pclk           => cam_pclk,
             rst_n          => rst_n,
             i2c_done       => i2c_done_int,
@@ -259,7 +264,7 @@ begin
             wr_en    => fifo_wr_en_int,
             wr_data  => fifo_wr_data_int,
             wr_full  => fifo_full_int,
-            rd_clk   => clk_130m,
+            rd_clk   => clk_100m,
             rd_rst_n => rst_n,
             rd_en    => fifo_rd_en,
             rd_data  => fifo_rd_data,

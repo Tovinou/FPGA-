@@ -59,11 +59,12 @@ set_false_path -to [get_pins -hierarchical {*|clrn}]
 # =============================================================================
 # 6.  OV7670 CAMERA INPUT TIMING
 # =============================================================================
-set_input_delay -clock {OV7670_PCLK} -max 10.000 \
-    [get_ports {OV7670_D[*] OV7670_HREF OV7670_VSYNC}]
-set_input_delay -clock {OV7670_PCLK} -min  2.000 \
+set_input_delay -clock {OV7670_PCLK} -clock_fall -max 5.000 \
     [get_ports {OV7670_D[*] OV7670_HREF OV7670_VSYNC}]
 
+set_input_delay -clock {OV7670_PCLK} -add_delay -min  8.000 \
+    [get_ports {OV7670_D[*] OV7670_HREF OV7670_VSYNC}]
+  
 # =============================================================================
 # 7.  SDRAM OUTPUT TIMING  (FPGA -> IS42S16320F)
 #
@@ -124,7 +125,16 @@ set_false_path -to   [get_ports {VGA_R[*] VGA_G[*] VGA_B[*] VGA_HS VGA_VS}]
 set_false_path -to   [get_ports {OV7670_XCLK OV7670_SIOC OV7670_RESET_N OV7670_PWDN}]
 set_false_path -to   [get_ports {OV7670_SIOD}]
 set_false_path -from [get_ports {OV7670_SIOD}]
+set_false_path -from [get_ports {SW[*]}] -to [all_registers]
+set_false_path -from [get_ports {altera_reserved_tdi}] -to [all_registers]
+set_false_path -from [get_ports {altera_reserved_tms}] -to [all_registers]
+set_false_path -from [all_registers] -to [get_ports {altera_reserved_tdo}]
+
+set_clock_groups -asynchronous -group {altera_reserved_tck}
+
+set_global_assignment -name GLOBAL_SIGNAL OV7670_PCLK -type CLK
 
 # =============================================================================
 # END OF CONSTRAINTS
 # =============================================================================
+ 

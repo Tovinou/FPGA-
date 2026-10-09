@@ -48,6 +48,7 @@ architecture sim of tb_sdram_interface is
     signal cam_fifo_rd_en   : std_logic;
     signal cam_fifo_rd_data : std_logic_vector(15 downto 0) := x"CACA";
     signal cam_fifo_empty   : std_logic := '1';
+    signal cam_fifo_rd_usedw: std_logic_vector(8 downto 0) := (others => '0');
 
     -- VGA FIFO stub
     signal vga_fifo_wr_en   : std_logic;
@@ -57,7 +58,7 @@ architecture sim of tb_sdram_interface is
     -- SDRAM controller stub
     signal sdram_wr_req   : std_logic;
     signal sdram_wr_addr  : std_logic_vector(24 downto 0);
-    signal sdram_wr_data  : std_logic_vector(15 downto 0);
+    signal sdram_wr_data  : std_logic_vector(127 downto 0);
     signal sdram_wr_ack   : std_logic := '0';
 
     signal sdram_rd_req   : std_logic;
@@ -78,7 +79,7 @@ architecture sim of tb_sdram_interface is
     signal stub_rd_data_val  : std_logic_vector(15 downto 0) := x"D0D0";
 
     -- Frame size constant (matches DUT)
-    constant FRAME_WORDS : integer := 307200;  -- 640*480, matches DUT BANK_WORDS
+    constant FRAME_WORDS : integer := 76800;  -- 320*240, matches DUT BANK_WORDS
 
     procedure clk_wait(n : natural) is
     begin
@@ -179,6 +180,7 @@ begin
             cam_fifo_rd_en   => cam_fifo_rd_en,
             cam_fifo_rd_data => cam_fifo_rd_data,
             cam_fifo_empty   => cam_fifo_empty,
+            cam_fifo_rd_usedw=> cam_fifo_rd_usedw,
             vga_fifo_wr_en   => vga_fifo_wr_en,
             vga_fifo_wr_data => vga_fifo_wr_data,
             vga_fifo_full    => vga_fifo_full,
@@ -192,7 +194,20 @@ begin
             sdram_rd_valid   => sdram_rd_valid,
             sdram_rd_ack     => sdram_rd_ack,
             frame_done_sync  => frame_done_sync,
-            vga_vsync_sync   => vga_vsync_sync
+            vga_vsync_sync   => vga_vsync_sync,
+            debug_cfr01_dbg  => open,
+            debug_cfr23_dbg  => open,
+            debug_cfr45_dbg  => open,
+            debug_cfr67_dbg  => open,
+            debug_vgr01_dbg  => open,
+            debug_vgr23_dbg  => open,
+            debug_vgr45_dbg  => open,
+            debug_vgr67_dbg  => open,
+            debug_vgl0_dbg   => open,
+            debug_vgl60_dbg  => open,
+            debug_vgl120_dbg => open,
+            debug_vgl180_dbg => open,
+            debug_sch_dbg    => open
         );
 
     -- =========================================================================
@@ -287,7 +302,7 @@ begin
                 vga_fifo_full    <= '1';
 
                 wait until rising_edge(clk) and sdram_wr_req = '1';
-                check_equal(sdram_wr_data, std_logic_vector'(x"BEEF"),
+                check_equal(sdram_wr_data(15 downto 0), std_logic_vector'(x"BEEF"),
                     "wr_data must match FIFO output");
 
                 sdram_wr_ack   <= '1';

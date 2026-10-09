@@ -2,7 +2,47 @@
 # OS Files
 # ================================
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ================================
+# Editors / IDEs
+# ================================
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.history/
+
+# ================================
+# Python
+# ================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.env
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
 
 # ================================
 # Quartus Generated Files
@@ -18,8 +58,6 @@ output_files/
 
 *.rpt
 *.summary
-*.sta.rpt
-*.log
 *.jdi
 
 *.sof
@@ -32,20 +70,18 @@ output_files/
 *.vqm
 *.map
 
-*.bak
-*.tmp
 *.qws
+*.sopcinfo
+*.qip
 
 # ================================
 # Vivado Generated Files
 # ================================
 *.jou
-*.log
 *.str
-
 *.backup
-*.Xil
 
+.Xil/
 .cache/
 .hw/
 .ip_user_files/
@@ -53,7 +89,6 @@ output_files/
 .sim/
 .gen/
 
-# DO NOT ignore .srcs/
 # Exported hardware / bitstreams
 *.bit
 *.bin
@@ -61,23 +96,41 @@ output_files/
 *.xsa
 
 .ipcache/
-
 .sdk/
 .vitis/
 *.xpfm
 
 xsim.dir/
 
+# Additional programming / checkpoint files
+*.dcp
+*.pdi
+*.mcs
+
+# DO NOT ignore .srcs/
+
 # ================================
-# Project-specific build / temp files
+# Simulation / Waveforms
 # ================================
 sim_build/
+work/
 work-*
+transcript
+vsim.wlf
 *.ghw
-__pycache__/
+*.vcd
+*.fst
+*.wlf
 
-# Specific generated files
+# ================================
+# Generic temporary files
+# ================================
+*.bak
+*.tmp
+*.orig
+*.log
+
+# ================================
+# Project-specific generated files
+# ================================
 .srcs/utils_1/imports/synth_1/dfx_runtime.txt
-
-# Quartus/Vivado caches
-*.cache/
